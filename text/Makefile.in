@@ -88,9 +88,6 @@ RC = @RC@
 SDLMM_CONFIG = @SDLMM_CONFIG@
 SDLMM_CXXFLAGS = @SDLMM_CXXFLAGS@
 SDLMM_LIBS = @SDLMM_LIBS@
-SDL_CFLAGS = @SDL_CFLAGS@
-SDL_CONFIG = @SDL_CONFIG@
-SDL_LIBS = @SDL_LIBS@
 STRIP = @STRIP@
 VERSION = @VERSION@
 
@@ -233,7 +230,7 @@ libtext.la: $(libtext_la_OBJECTS) $(libtext_la_DEPENDENCIES)
 all-recursive install-data-recursive install-exec-recursive \
 installdirs-recursive install-recursive uninstall-recursive  \
 check-recursive installcheck-recursive info-recursive dvi-recursive:
-	@set fnord $(MAKEFLAGS); amf=$$2; \
+	@set fnord $$MAKEFLAGS; amf=$$2; \
 	dot_seen=no; \
 	target=`echo $@ | sed s/-recursive//`; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
@@ -253,7 +250,7 @@ check-recursive installcheck-recursive info-recursive dvi-recursive:
 
 mostlyclean-recursive clean-recursive distclean-recursive \
 maintainer-clean-recursive:
-	@set fnord $(MAKEFLAGS); amf=$$2; \
+	@set fnord $$MAKEFLAGS; amf=$$2; \
 	dot_seen=no; \
 	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
 	  rev="$$subdir $$rev"; \
@@ -299,7 +296,7 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags  $$unique $(LISP))
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
 mostlyclean-tags:
 
