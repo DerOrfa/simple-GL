@@ -76,3 +76,12 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 	vfprintf(file,text,argList);
 	fprintf(file,"\n");
 }
+
+short sglChkExt(const char* name,const char *msg)
+{
+	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
+	{
+		_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+		return 0;
+	}
+}

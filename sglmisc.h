@@ -72,6 +72,8 @@ void vwriteOut(FILE *out,const char text[], va_list argList);
 
 extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings;
 
+short sglChkExt(const char* name,const char *msg);
+
 inline GLdouble sglGetd(GLenum pname)
 {
 	GLdouble ret;
