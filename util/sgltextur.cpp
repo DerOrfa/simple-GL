@@ -76,6 +76,7 @@ SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
 	ID=0;
 	ResetTransformMatrix();
 	shouldBeLoaded=loaded=false;
+	multitex=NULL;
 }
 
 SGLBaseTex::~SGLBaseTex()
@@ -109,12 +110,22 @@ bool SGLBaseTex::loadTex()
 	}
 	else{SGLprintError("OpenGL kennt die %dD-Textur \"%d\" nicht",dim,ID);}
 	loadMatrix();
+	if(multitex)
+	{
+		glActiveTextureARB(sglGeti(GL_ACTIVE_TEXTURE_ARB)+1);
+		multitex->loadTex();
+	}
 	return ret;
 }
 
 bool SGLBaseTex::unloadTex()
 {
 	GLboolean ret;
+	if(multitex)
+	{
+		multitex->unloadTex();
+		glActiveTextureARB(sglGeti(GL_ACTIVE_TEXTURE_ARB)-1);
+	}
 	unloadMatrix();
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
@@ -129,7 +140,7 @@ bool SGLBaseTex::unloadTex()
 /** No descriptions */
 void SGLBaseTex::SetParams()
 {
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material berschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
@@ -313,4 +324,19 @@ void SGLBaseTex::freeTexture()
 		ID=0;
 		shouldBeLoaded=false;
 	}
+}
+
+
+/*!
+    \fn SGLBaseTex::checkForMultiText(unsigned short cnt)
+ */
+bool SGLBaseTex::checkForMultiText(unsigned short cnt)
+{
+	if(gluCheckExtension((const GLubyte*)"GL_ARB_multitexture",glGetString(GL_EXTENSIONS)))
+	{
+		return (sglGeti(GL_MAX_TEXTURE_UNITS_ARB)>=cnt);
+	}
+	else return false;
+
+	
 }

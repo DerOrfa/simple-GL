@@ -30,6 +30,7 @@ class SGLBaseTex:public SGLMatrixObj
 public:
 	SGLBaseTex();
 	virtual ~SGLBaseTex();
+	SGLBaseTex *multitex;
 	GLuint	ID;
 	GLenum TexType;
 	bool loadTex();
@@ -39,10 +40,11 @@ public:
 	
 	static short TexLoaded;
 	static short def2dim(GLenum def);
-    GLint getTexInfo(GLenum pname);
-    GLint getTexElemBitSize();
-    GLint getTexByteSize();
-    void freeTexture();
+	GLint getTexInfo(GLenum pname);
+	GLint getTexElemBitSize();
+	GLint getTexByteSize();
+	void freeTexture();
+	static bool checkForMultiText(unsigned short cnt);
 	bool weich,repeat,shouldBeLoaded;
 	bool valid,MipMap,loaded;
 };

@@ -136,6 +136,10 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 	DrawVertex();
 }
 
+/**
+Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis zu  GL_TEXTURE0_ARB herunter.
+(Aber immer nur die Selben)
+*/
 void SGLVektor::DrawVertex()
 {
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
@@ -149,9 +153,18 @@ void SGLVektor::DrawVertex()
 		}
 		switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
 		{
-		case 1:glTexCoord1f(texKoord[0]);break;
-		case 2:glTexCoord2f(texKoord[0], texKoord[1]);break;
-		case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);break;
+		case 1:
+			for(unsigned int i=sglGeti(GL_ACTIVE_TEXTURE_ARB);i>=GL_TEXTURE0_ARB;i--)
+				glMultiTexCoord1f(i,texKoord[0]);
+			break;
+		case 2:
+			for(unsigned int i=sglGeti(GL_ACTIVE_TEXTURE_ARB);i>=GL_TEXTURE0_ARB;i--)
+				glMultiTexCoord2f(i,texKoord[0], texKoord[1]);
+			break;
+		case 3:
+			for(unsigned int i=sglGeti(GL_ACTIVE_TEXTURE_ARB);i>=GL_TEXTURE0_ARB;i--)
+				glMultiTexCoord3f(i,texKoord[0], texKoord[1],texKoord[2]);
+			break;
 		default:{
 		SGLprintError("Ungltiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
 		}

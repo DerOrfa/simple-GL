@@ -438,7 +438,9 @@ SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex):SGL
 	if(volumeTex)
 	{
 		if(volumeTex->TexType!=GL_TEXTURE_3D)
-		{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
+		{
+			SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");
+		}
 		Mat->SetTex(volumeTex);
 	}
 }
