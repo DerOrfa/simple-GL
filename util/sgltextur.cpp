@@ -30,7 +30,7 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 	char *buff=new char[strlen(imageFile)+1];
 	strcpy(buff,imageFile);
 	bool ret= Load2DImage(buff, MipMap);
-	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring lï¿½cht / hoffentlich lï¿½cht er ihn wenigstens selber
+	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring löscht / hoffentlich löscht er ihn wenigstens selber
 	return ret;
 }
 
@@ -54,7 +54,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 		ILenum Error;
 		while ((Error = ilGetError()) != IL_NO_ERROR)
 		{
-			SGLprintError("%s [GLerror]", iluErrorString(Error));
+			SGLprintError("%s [GLerror] beim Laden der Textur %s", iluErrorString(Error), imageFile);
 			return GL_FALSE;
 		}
 	}
@@ -73,7 +73,7 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 	glBindTexture(TexType, ID);
 /*	glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &size);
 	genValidSize(GL_LUMINANCE_ALPHA,size,size,size, GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,true);*/
-	//ntzt nichts - er glaubt er bekï¿½e die Tex rein bekommt aber unten trotzem "out of memory"
+	//ntzt nichts - er glaubt er bekäme die Tex rein bekommt aber unten trotzem "out of memory"
 
 	GLubyte *pixels=(GLubyte*)malloc(size*size*size*sizeof(GLubyte)*2);
  
@@ -152,7 +152,7 @@ bool SGLBaseTex::unloadTex()
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
 	if(glIsEnabled(TexType))glDisable(TexType);
-	else{SGLprintWarning("Hï¿½%dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
+	else{SGLprintWarning("Hä %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
 	return ret;
@@ -161,7 +161,7 @@ bool SGLBaseTex::unloadTex()
 /** No descriptions */
 void SGLBaseTex::SetParams()
 {
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material berschreiben - spï¿½er wï¿½e bedingtes GL_MODULATE vielleicht besser
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material berschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
@@ -172,9 +172,9 @@ void SGLBaseTex::SetParams()
 }
 
 /*!
-	Generiert gltige Werte fr Tiefe Breite und Hï¿½e einer Textur.
+	Generiert gltige Werte fr Tiefe Breite und Höhe einer Textur.
 	
-	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nï¿½hstgrï¿½te Zweierpotenz ersetzt.
+	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nächstgrößte Zweierpotenz ersetzt.
 	Ist ein Wert zu groï¿½ wird er halbiert.
 
     \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
