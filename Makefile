@@ -92,7 +92,7 @@ libsgl.a:	core helper primitives util text sample_classes
 libsgl.so:	core helper primitives util text sample_classes
 	-rm -f libsgl.so
 	@echo "===========Linking libsgl.so========"
-	g++ -shared -o libsgl.so -Wl,-soname,libsgl.so $(ALL_OBJ_FILES) 
+	$(CXX) -shared -o libsgl.so -Wl,-soname,libsgl.so $(ALL_OBJ_FILES) 
 
 libs:	libsgl.a libsgl.so
 

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-make -f Makefile.$(uname) $* libs 2>&1 | perl colormake.pl $(stty size)

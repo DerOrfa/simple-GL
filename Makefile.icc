@@ -1,7 +1,7 @@
 export CC=icc
 export CXX=icc
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -fPIC -xB -O3 -DDATA_DIR="\"./data\"" -DGL_GLEXT_PROTOTYPES -pthread
+export CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -fPIC -xB -O2 -DDATA_DIR="\"./data\"" -DGL_GLEXT_PROTOTYPES -pthread -vec_report0
 export CFLAGS=$(CXXFLAGS)
 
 
