@@ -49,7 +49,7 @@ public:
 class SGLCube: public SGLQuader
 {
 public:
-	SGLCube(SGLMaterial *Material,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLCube(SGLMaterial *Material=NULL,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLCube();
 };
 #endif

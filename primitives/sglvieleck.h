@@ -121,7 +121,7 @@ class SGL3DPlane : public SGLRechtEck
 public:
 	SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex);
 	static void setHigh(SGLObjBase *plane,SDL_Event event);
-	void resetTexKoord(GLint xshift,GLint  yshift);
+	void resetTexKoord(GLint xshift,GLint  yshift,GLint zshift);
 	GLfloat depth;
 };
 

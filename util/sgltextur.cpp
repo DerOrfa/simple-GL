@@ -83,7 +83,7 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 			{
 				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
 				{
-					pixels[z][y][x][1]=50;
+					pixels[z][y][x][1]=0;
 					pixels[z][y][x][0]=0;
 				}
 				else 
