@@ -202,13 +202,15 @@ void SGLBaseCam::recalcEcken()
 	else
 	{
 		SGLVektor PosVektor=getLookVektor();
+		
 		double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
 		double c = SIN(Angle)*PosVektor.Len()/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
-	
+
 		Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
 		Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
 		Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
 		Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
+		
 		Ecken[0]=(Ecken[0]*c)+LookAt;
 		Ecken[1]=(Ecken[1]*c)+LookAt;
 		Ecken[2]=(Ecken[2]*c)+LookAt;
