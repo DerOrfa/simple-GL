@@ -256,9 +256,9 @@ void SGLSpace::OnIdle()
 }
 
 /*
-Schaltet den Default fr zweiseitiges Rendering um.
+Schaltet den Default für zweiseitiges Rendering um.
 Danach mssen alle PolygonObjekte neu Compiliert werden.
-(Fr die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
+(Für die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
 */
 void SGLSpace::TwoSided(bool TwoSideRendering)
 {

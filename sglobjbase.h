@@ -14,8 +14,6 @@
 #include <list>
 #include <SDL/SDL.h>
 
-//#include <SDL.h>
-
 class SGLObjList;
 
 /**
