@@ -8,3 +8,4 @@ libsgl_la_SOURCES = sglmetaobj.cpp sglmetaobj.h sglmisc.c sglmisc.h sglobjbase.c
 libsgl_la_LIBADD = $(top_builddir)/libsgl/util/libutil.la $(top_builddir)/libsgl/text/libtext.la $(top_builddir)/libsgl/primitives/libprimitives.la $(top_builddir)/libsgl/helper/libhelper.la
 
 
+

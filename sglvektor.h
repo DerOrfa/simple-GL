@@ -24,6 +24,7 @@
 
 #include <evektor.h>
 #include "sglmisc.h"
+#include <boost/shared_ptr.hpp>
 
 //#include "util/sglmaterial.h"
 
@@ -73,5 +74,16 @@ public:
     void DrawVektorAt(SGLVektor At);
 	void DrawPkt(double size=.1);
 };
+
+typedef boost::shared_ptr<SGLVektor> VektorPtr;
+typedef vector<VektorPtr> VektorList;
+
+#define SET_VEKTPTR_VAL(VEKT,NEW_VAL)									\
+if(VEKT.use_count() > 1)												\
+{}	\
+if(VEKT)*VEKT=NEW_VAL;													\
+else VEKT=VektorPtr(new SGLVektor(NEW_VAL));
+
+#define TOUCH_VEKTPTR(PTR)	if(!PTR)PTR.reset(new SGLVektor)
 
 #endif

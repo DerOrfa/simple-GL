@@ -55,6 +55,7 @@ SGLObjBase::~SGLObjBase()
 
 	if(myList)myList->removeOb(this);
 	glDeleteLists(ID,1);
+	cout << ID << " gelöscht" << endl;
 }
 
 

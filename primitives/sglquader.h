@@ -27,8 +27,7 @@ class SGLQuader : public SGLPolygonObj
 {
 public:
 	SGLQuader(SGLMaterial *Material=NULL,GLdouble breite=1,GLdouble hoehe=1,GLdouble tiefe=1,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
-	~SGLQuader();
-	SGLVektor EckPunkte[6][4];
+	VektorPtr EckPunkte[2][4];
 	void ColorCube();
 
 	GLdouble breite,hoehe,tiefe;
@@ -50,6 +49,5 @@ class SGLCube: public SGLQuader
 {
 public:
 	SGLCube(SGLMaterial *Material=NULL,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
-	~SGLCube();
 };
 #endif

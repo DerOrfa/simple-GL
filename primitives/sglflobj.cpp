@@ -20,7 +20,8 @@
 #include <GL/glu.h>
 #include "../sglmisc.h"
 
-SGLFlObj::SGLFlObj(SGLMaterial* Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
+SGLFlObj::SGLFlObj(SGLMaterial* Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLObj(PosX,PosY,PosZ,SizeFact)
 {
 	GLint MasterPolyMode[2];
 	glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
@@ -29,16 +30,6 @@ SGLFlObj::SGLFlObj(SGLMaterial* Material,GLdouble PosX,GLdouble PosY,GLdouble Po
 	priority=flstd;
 	twoSideRender=false;
 }
-
-SGLFlObj::SGLFlObj(const SGLFlObj& src):SGLObj(src)
-{
-	VisMode=src.VisMode;
-	Mat=src.Mat;
-	twoSideRender=src.twoSideRender;
-}
-
-
-SGLFlObj::~SGLFlObj(){}
 
 GLuint SGLFlObj::Compile()
 {

@@ -22,7 +22,6 @@
 
 #include "../util/sglmaterial.h"
 #include "../sglobj.h"
-#include <boost/shared_ptr.hpp>
 
 /**
   *@author Enrico Reimer
@@ -35,9 +34,7 @@ public:
 		GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,
 		GLdouble SizeFact=1
 		);
-	SGLFlObj(const SGLFlObj& src);
 	
-	~SGLFlObj();
 	GLuint Compile();
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);

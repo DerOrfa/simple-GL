@@ -85,10 +85,18 @@ bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVe
 		screen2welt(screen[i].first,screen[i].second,depth,welt[i]);
 }
 
+bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,VektorPtr welt[],unsigned int Vcnt)
+{
+	GLdouble depth=getDepth(depthVekt);
+	for(int i=0;i<Vcnt;i++)
+		screen2welt(screen[i].first,screen[i].second,depth,*welt[i]);
+}
 
 
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
+	for(int i=0;i<4;i++)
+		Ecken[i].reset(new SGLVektor);
 	ClipFace=1;ClipHoriz=1000;
 	Pos.SGLV_X=PosX;Pos.SGLV_Y=PosY;Pos.SGLV_Z=PosZ;
 	Angle=30;
@@ -279,11 +287,11 @@ void SGLBaseCam::recalcEcken()
 	{
 	case resizeView:
 	{
-		recalcAngle((Ecken[1]-Ecken[2]).Len()/2);
+		recalcAngle((*Ecken[1]-*Ecken[2]).Len()/2);
 	}break;
 	case moveCam:
 	{
-		recalcPos((Ecken[1]-Ecken[2]).Len()/2);
+		recalcPos((*Ecken[1]-*Ecken[2]).Len()/2);
 	}
 	case scaleView:
 	{
@@ -293,15 +301,15 @@ void SGLBaseCam::recalcEcken()
 		double high=TAN(Angle/2)*PosVektor.Len(); //Höhe der senkrechten auf dem Horizont berechnen [tan(alpha)=a/b]
 		double c = high/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte [cos(alpha)=b/c]
 
-		Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
-		Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
-		Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
-		Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
+		*Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
+		*Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
+		*Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
+		*Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
 		
-		Ecken[0]=(Ecken[0]*c)+LookAt;
-		Ecken[1]=(Ecken[1]*c)+LookAt;
-		Ecken[2]=(Ecken[2]*c)+LookAt;
-		Ecken[3]=(Ecken[3]*c)+LookAt;
+		*Ecken[0]=(*Ecken[0]*c)+LookAt;
+		*Ecken[1]=(*Ecken[1]*c)+LookAt;
+		*Ecken[2]=(*Ecken[2]*c)+LookAt;
+		*Ecken[3]=(*Ecken[3]*c)+LookAt;
 	}break;
 	default:
 		SGLprintError("Ungültiger Modus für die Berechnung der Kameradaten");
@@ -339,16 +347,16 @@ void SGLCamera::generate()
 
 	int error;
 	glBegin(GL_LINE_LOOP);
-		Ecken[0].DrawPureVertex();
-		Ecken[1].DrawPureVertex();
-		Ecken[2].DrawPureVertex();
-		Ecken[3].DrawPureVertex();
+		Ecken[0]->DrawPureVertex();
+		Ecken[1]->DrawPureVertex();
+		Ecken[2]->DrawPureVertex();
+		Ecken[3]->DrawPureVertex();
 	glEnd();
 	glBegin(GL_LINES);
-		Pos.DrawPureVertex();Ecken[0].DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[1].DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[2].DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[3].DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[0]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[1]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[2]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[3]->DrawPureVertex();
 	glEnd();
 
 }

@@ -27,10 +27,9 @@
 class SGLPolygon : public SGLFlObj
 {
 public:
-	typedef boost::shared_ptr<SGLVektor> VektorPtr;
-	typedef vector<VektorPtr> VektorList;
 	SGLPolygon();
 	SGLPolygon(SGLVektor Ecken[],short int VektCnt);
+	SGLPolygon(VektorPtr Ecken[],short int VektCnt);
 
 	void generate();
 
@@ -63,11 +62,13 @@ public:
 class SGLVierEck : public SGLPolygon
 {
 public:
-	SGLVierEck();
 	SGLVierEck(SGLVektor Ecken[4]);
-	SGLVierEck(SGLVektor *Ecken[4]);
-	SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor Ecke4);
-	SGLVierEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3,SGLVektor *Ecke4);
+	SGLVierEck(
+		SGLVektor Ecke1=SGLVektor(.5,.5,0),
+		SGLVektor Ecke2=SGLVektor(-.5,.5,0),
+		SGLVektor Ecke3=SGLVektor(-.5,-.5,0),
+		SGLVektor Ecke4=SGLVektor(.5,-.5,0));
+	void Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3,VektorPtr Ecke4);
 	void resetTexKoord();
 	void setupCenter();
 };
@@ -81,9 +82,8 @@ class SGLDreiEck : public SGLPolygon
 {
 public:
 	SGLDreiEck(SGLVektor Ecken[3]);
-	SGLDreiEck(SGLVektor *Ecken[3]);
 	SGLDreiEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3);
-	SGLDreiEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3);
+	void Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3);
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

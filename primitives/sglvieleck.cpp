@@ -50,10 +50,8 @@ SGLPolygon::SGLPolygon()
 /*!
     \fn SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
  */
-SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
-{
-	CopyEckVekt(Ecken,VektCnt);
-}
+SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt){CopyEckVekt(Ecken,VektCnt);}
+SGLPolygon::SGLPolygon(VektorPtr Ecken[],short int VektCnt){LinkEckVekt(Ecken,VektCnt);}
 
 /*!
     \fn SGLPolygon::generate()
@@ -123,15 +121,21 @@ SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor
 	setupCenter();
 }
 
+void SGLVierEck::Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3,VektorPtr Ecke4)
+{
+	VektorPtr tEck[4];
+	tEck[0]=Ecke1;
+	tEck[1]=Ecke2;
+	tEck[2]=Ecke3;
+	tEck[3]=Ecke4;
+	LinkEckVekt(tEck,4);
+	setupCenter();
+}
+
 /*!
     \fn SGLVierEck::SGLVierEck(SGLVektor Ecken[4])
  */
 SGLVierEck::SGLVierEck(SGLVektor Ecken[4]):SGLPolygon(Ecken,4){setupCenter();resetTexKoord();}
-
-/*!
-    \fn SGLVierEck::SGLVierEck()
- */
-SGLVierEck::SGLVierEck(){resetTexKoord();}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
@@ -144,6 +148,15 @@ SGLDreiEck::SGLDreiEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3):SGLPolyg
 	tEck[1]=Ecke2;
 	tEck[2]=Ecke3;
 	CopyEckVekt(tEck,3);
+}
+
+void SGLDreiEck::Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3)
+{
+	VektorPtr tEck[3];
+	tEck[0]=Ecke1;
+	tEck[1]=Ecke2;
+	tEck[2]=Ecke3;
+	LinkEckVekt(tEck,3);
 }
 
 /*!
@@ -280,7 +293,6 @@ void SGLPolygon::generateWithNormales()
 	for(int i=1;i<s-1;i++)
 	{
 		//Normale aus vorherigem, aktuellem und nächsten Vektor bilden
-		cout << EckVektoren[i-1]->size() << endl;
 		Norm[i]=Normale(
 			*EckVektoren[i-1],
 			*EckVektoren[i],
