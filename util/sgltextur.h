@@ -43,6 +43,7 @@ public:
 	GLint getTexInfo(GLenum pname);
 	GLint getTexElemBitSize();
 	GLint getTexByteSize();
+	GLint renderMode;
 	void freeTexture();
 	static bool checkForMultiText(unsigned short cnt);
 	bool weich,repeat,shouldBeLoaded;
