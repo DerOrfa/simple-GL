@@ -18,7 +18,6 @@ class SGLObjList;
 /**
 @author Enrico Reimer
 */
-
 template<class T> struct CompObj : public unary_function<T&, void>
 {
 	CompObj(vector<GLint> *targetList) {Objs=targetList;}
@@ -29,6 +28,9 @@ template<class T> struct CompObj : public unary_function<T&, void>
 	vector<GLint> *Objs;
 };
 
+/**
+  *@author Enrico Reimer
+  */
 class SGLObjBase:public SGLMatrixObj
 {
 public:

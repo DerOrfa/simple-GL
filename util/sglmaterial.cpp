@@ -18,6 +18,8 @@
 #include "sglmaterial.h"
 #include "../sglmisc.h"
 
+using namespace boost;
+
 SGLMaterial::SGLMaterial()
 {
 	resetMat(Innen);
@@ -124,7 +126,7 @@ void SGLMaterial::SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face,bool selbs
 
 }
 
-bool SGLMaterial::SetTex(boost::shared_ptr<SGLBaseTex> TexPtr)
+bool SGLMaterial::SetTex(shared_ptr<SGLBaseTex> TexPtr)
 {
 	if(TexPtr && TexPtr->valid)
 	{
@@ -142,7 +144,7 @@ bool SGLMaterial::SetTex(boost::shared_ptr<SGLBaseTex> TexPtr)
 bool SGLMaterial::SetTex(const char *imageFile)
 //Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {
-	return SetTex(boost::shared_ptr<SGLBaseTex>(new SGLTextur(imageFile)));
+	return SetTex(shared_ptr<SGLBaseTex>(new SGLTextur(imageFile)));
 }
 
 void SGLMaterial::MergeColor(int r, int g, int b, bool doGlanz)

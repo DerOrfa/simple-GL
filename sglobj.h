@@ -23,7 +23,6 @@
 /**
   *@author Enrico Reimer
   */
-
 class SGLObj:public SGLObjBase
 {
 public:
@@ -31,6 +30,9 @@ public:
 	GLuint Compile(bool draw=true);
 };
 
+/**
+  *@author Enrico Reimer
+  */
 class SGLStrecke:public SGLObj
 {
 	bool myPunkte;

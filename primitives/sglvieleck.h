@@ -55,9 +55,6 @@ public:
 /**
   *@author Enrico Reimer
   */
-/**
-  *@author Enrico Reimer
-  */
 class SGLVierEck : public SGLPolygon
 {
 public:

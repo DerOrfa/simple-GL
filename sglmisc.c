@@ -93,6 +93,7 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
+	//@todo mal prüfen, ob das auch so tut, wie es soll
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
 		if(vital>1)
