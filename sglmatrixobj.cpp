@@ -16,7 +16,6 @@
 SGLMatrixObj::SGLMatrixObj(GLenum type)
 {
 	MatrMode= type;
-	identity=false;
 }
 
 
@@ -78,9 +77,7 @@ void SGLMatrixObj::loadMatrix()
 {
 	glMatrixMode(MatrMode);
 	glPushMatrix();
-	if(identity)glLoadIdentity();
 	glMultMatrixd(MyTransformMatrix);
-	GLuint error=0;
 }
 
 /*!
@@ -98,14 +95,16 @@ void SGLMatrixObj::unloadMatrix()
 /*!
     \fn SGLMatrixObj::saveAktMatrix()
  */
-void SGLMatrixObj::saveAktMatrix()
+void SGLMatrixObj::saveAktMatrix(GLdouble dst[16])
 {
-	saveMatrix(sglGeti(GL_MATRIX_MODE));
+	if(dst==0)dst=MyTransformMatrix;
+	saveMatrix(sglGeti(GL_MATRIX_MODE),dst);
 }
-void SGLMatrixObj::saveMatrix(GLenum mode)
+void SGLMatrixObj::saveMatrix(GLenum mode,GLdouble dst[16])
 {
 #define CASE_SET(CASE)	case CASE:type=CASE ## _MATRIX
 	GLenum type;
+	if(dst==0)dst=MyTransformMatrix;
 	switch(mode)
 	{
 		CASE_SET(GL_MODELVIEW);break;
@@ -114,7 +113,7 @@ void SGLMatrixObj::saveMatrix(GLenum mode)
 		CASE_SET(GL_COLOR);break;
 		default:SGLprintError("Unbekannter MatrixMode");break;
 	}
-	glGetDoublev(type,MyTransformMatrix);
+	glGetDoublev(type,dst);
 #undef CASE_SET
 }
 

@@ -88,6 +88,7 @@ bool SGLBaseTex::loadTex()
 {
 	GLboolean ret;
 	glActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
+	glClientActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	short dim=def2dim(TexType);
 	if(glIsTexture(ID))
 	{
@@ -124,6 +125,7 @@ bool SGLBaseTex::unloadTex()
 	GLboolean ret;
 	if(multitex)
 		multitex->unloadTex();
+	glClientActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	glActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	if(multitex_layer)multitex_layer--;
 	unloadMatrix();
@@ -154,19 +156,11 @@ void SGLBaseTex::SetParams()
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_RGB_ARB,GL_SRC_COLOR);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND1_RGB_ARB,GL_ONE_MINUS_SRC_COLOR);
 		}break;
-		case SGL_MTEX_MODE_MASK:
+		case SGL_MTEX_MODE_COLORMASK:
 		{
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_ARB);
 			
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_ALPHA_ARB, GL_REPLACE);
-			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA_ARB, GL_TEXTURE);
- 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA_ARB,GL_SRC_ALPHA);
-			
-
-			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_RGB_ARB, GL_REPLACE);
-			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_RGB_ARB, GL_TEXTURE);
- 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_RGB_ARB,GL_SRC_COLOR);
-/*			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_ALPHA_ARB, GL_REPLACE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA_ARB, GL_PREVIOUS_ARB);
  			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA_ARB,GL_SRC_ALPHA);
 			
@@ -179,7 +173,7 @@ void SGLBaseTex::SetParams()
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND1_RGB_ARB,GL_SRC_COLOR);
 			
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE2_RGB_ARB, GL_TEXTURE);
-			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND2_RGB_ARB,GL_SRC_ALPHA);*/
+			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND2_RGB_ARB,GL_SRC_ALPHA);
 		}break;
 		case SGL_MTEX_MODE_OVERLAY:
 		{

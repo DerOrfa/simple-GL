@@ -41,10 +41,10 @@ public:
 	void ResetTransformMatrix(const GLdouble *newMatrix=NULL);
 	void loadMatrix();
 	void unloadMatrix();
-	void saveMatrix(GLenum type);
-	void saveAktMatrix();
+	void saveMatrix(GLenum type,GLdouble dst[16]=NULL);
+	void saveAktMatrix(GLdouble dst[16]=NULL);
 	virtual const char* guesType();
-	bool identity;
+
 protected:
 	GLdouble MyTransformMatrix[16];
 	GLenum MatrMode;
