@@ -55,7 +55,7 @@ GLuint SGLObj::Compile(bool draw,bool free)
 		glEnable(GLenum(GL_CLIP_PLANE0+i));
 
 	}
-	glEndList();
+	endList();
 	
 	while(error=glGetError())
 	{

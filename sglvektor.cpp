@@ -158,7 +158,7 @@ void SGLVektor::DrawVertex()
 		    SGLprintError("Der aktuelle Texturlayer %d ist ungueltig, nehme 0 an",i);
 		    i=0;
 		}*/
-		int i=0;//@todo uuups glGet darf lt. Spez. nicht zwischen glBegin und glEnd stehen *schaem*
+		int i=GL_TEXTURE0_ARB;//@todo uuups glGet darf lt. Spez. nicht zwischen glBegin und glEnd stehen *schaem*
 		switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
 		{
 		case 1:

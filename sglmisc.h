@@ -55,17 +55,18 @@
 #ifndef __OPTIMIZE__ 
 #define SGLprintDebug	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
 #else
-#define SGLprintDebug
+#define SGLprintDebug	if(0)_SGLprintWarning
 #endif
 
 #define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
 #define SGLprintState	if(SGLshowState)fprintf(stdout,"State: ");_SGLprintState
 
-#define SGLcheckGLError	\
-{																\
-	GLuint gluerr;												\
-	while(gluerr= glGetError())									\
-		{SGLprintError("%s [GLerror]",gluErrorString(gluerr));}	\
+#define SGLcheckGLError																				\
+{																									\
+	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}	\
+	GLuint gluerr;																					\
+	while(gluerr= glGetError())																		\
+		{SGLprintError("%s [GLerror]",gluErrorString(gluerr));}										\
 }
 
 #ifdef __cplusplus
@@ -79,13 +80,17 @@ void _SGLprintState(const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
 
+
+
 extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings,SGLshowState;
+extern short rendering;
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital);
 
 inline GLdouble sglGetd(GLenum pname)
 {
 	GLdouble ret;
+	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
 	glGetDoublev( pname, &ret);
 	return ret;
 }
@@ -93,6 +98,7 @@ inline GLdouble sglGetd(GLenum pname)
 inline GLfloat sglGetf(GLenum pname)
 {
 	GLfloat ret;
+	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
 	glGetFloatv( pname, &ret);
 	return ret;
 }
@@ -100,6 +106,7 @@ inline GLfloat sglGetf(GLenum pname)
 inline GLint sglGeti(GLenum pname)
 {
 	GLint ret;
+	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
 	glGetIntegerv( pname, &ret);
 	return ret;
 }

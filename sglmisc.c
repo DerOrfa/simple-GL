@@ -24,6 +24,7 @@ short SGLshowWarnings=1;
 short SGLshowErrors=1;
 short SGLshowState=1;
 char *lastMsg=NULL;
+short rendering=0;
 
 void _SGLprintError(const char text[], ...)
 {

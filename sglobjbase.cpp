@@ -81,9 +81,8 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 void SGLObjBase::metaGenerate()
 {
 	GLenum error;
-//	SGLcheckGLError;
+	
 	loadMatrix();
-//	SGLcheckGLError;
 	if(FaceAt)
 	{
 		GLdouble XZ_wink,XY_wink;
@@ -96,9 +95,9 @@ void SGLObjBase::metaGenerate()
 		glRotated(90,0,1,0);
 		glRotated(-XY_wink,1,0,0);
 	}
-//	SGLcheckGLError;
+
 	generate();
-//	SGLcheckGLError;
+
 	unloadMatrix();
 	notifyChange();
 }
@@ -204,7 +203,11 @@ GLint SGLObjBase::beginList(bool draw)
 {
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
 	{SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());}
+	rendering=true;
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
 }
 void SGLObjBase::endList()
-{glEndList();}
+{
+	glEndList();
+	rendering=false;
+}

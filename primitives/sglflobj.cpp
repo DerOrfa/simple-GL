@@ -93,9 +93,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			}
 			else Mat->loadMat();
 		}
-//		SGLcheckGLError;
 		metaGenerate();
-//		SGLcheckGLError;
 
 		if(Mat)
 		{
@@ -108,7 +106,6 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			else Mat->unloadMat();
 		}
 
-//		SGLcheckGLError;
 		if(VisMode!=GL_FILL)
 		{
 			glPolygonMode(GL_FRONT,GL_FILL);
@@ -124,7 +121,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			glDisable(GLenum(GL_CLIP_PLANE0+i));
 
 		glColor4f(1,1,1,1);
-	glEndList();
+	endList();
 
 	while(error=glGetError())
 	{
