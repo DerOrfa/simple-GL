@@ -196,7 +196,7 @@ void SGLBaseCam::recalcEcken()
 {
 	if(dontTouchEcken>0)
 	{
-		recalcAngle((Ecken[1].SGLV_Y-Ecken[2].SGLV_Y)/2);
+		recalcAngle((Ecken[1]-Ecken[2]).Len()/2);
 		dontTouchEcken--;
 	}
 	{

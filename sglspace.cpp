@@ -484,9 +484,8 @@ bool SGLSpace::Window2welt(pair<unsigned int,unsigned int> screen[],SGLVektor we
 	GLboolean erg=gluProject(Camera->LookAt.SGLV_X,Camera->LookAt.SGLV_Y,Camera->LookAt.SGLV_Z,model,proj,view,&dummy1,&dummy2,&depth);
 	
 	for(int i=0;i<Vcnt;i++)
-	{
 		erg = erg && gluUnProject(screen[i].first,view[3]-int(screen[i].second),depth,model,proj,view,&welt[i].SGLV_X,&welt[i].SGLV_Y,&welt[i].SGLV_Z);
-	}
+	
 	if(erg==GL_FALSE){SGLprintWarning("Fehler beim Umrechnen der Coordinaten");}
 	
 	Camera->unloadView();
