@@ -235,7 +235,7 @@ void SGLObjList::Compile(bool force)
 	{
 		qsort(ObjPtr,ObjCnt_Ptr,sizeof(SGLObjBase*),compareObj);
 		check_sorting=false;
-		ListInfo();
+//		ListInfo();
 	}
 	for(unsigned int i=0;i<ObjCnt_Ptr;i++)
 		if(render_non_native || ObjPtr[i]->myList==this)
