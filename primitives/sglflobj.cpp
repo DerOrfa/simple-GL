@@ -23,9 +23,7 @@
 SGLFlObj::SGLFlObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObj(PosX,PosY,PosZ,SizeFact)
 {
-	GLint MasterPolyMode[2];
-	glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
-	VisMode=GLenum(MasterPolyMode[0]);
+	VisMode=GL_FALSE;
 	resetMaterial(MaterialPtr(Material));
 	priority=flstd;
 	twoSideRender=false;
@@ -37,6 +35,12 @@ GLuint SGLFlObj::Compile()
 	GLint		CullFace;
 	int i;
 	bool EnableClip[5];
+	if(!VisMode)
+	{
+		GLint MasterPolyMode[2];
+		glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
+		VisMode=GLenum(MasterPolyMode[0]);
+	}
 
 	GLuint error=0;
 	while(error=glGetError())
@@ -73,6 +77,7 @@ GLuint SGLFlObj::Compile()
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
 			if(IgnoreLight)// @todo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
 			{
+				
 				if(Mat->tex)Mat->tex->loadTex();
 				else 
 				{
@@ -87,6 +92,10 @@ GLuint SGLFlObj::Compile()
 			else Mat->loadMat();
 		}
 
+	while(error=glGetError())
+	{
+		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+	}
 		metaGenerate();
 
 		if(Mat)

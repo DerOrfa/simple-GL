@@ -128,7 +128,6 @@ bool SGLMaterial::SetTex(boost::shared_ptr<SGLBaseTex> TexPtr)
 {
 	if(TexPtr && TexPtr->valid)
 	{
-		isMyTex=false;
 		tex=TexPtr;
 		return true;
 	}
@@ -143,11 +142,7 @@ bool SGLMaterial::SetTex(boost::shared_ptr<SGLBaseTex> TexPtr)
 bool SGLMaterial::SetTex(const char *imageFile)
 //Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {
-	if(SetTex(boost::shared_ptr<SGLBaseTex>(new SGLTextur(imageFile))))
-	{
-		isMyTex=true;
-		return true;
-	}else return false;
+	return SetTex(boost::shared_ptr<SGLBaseTex>(new SGLTextur(imageFile)));
 }
 
 void SGLMaterial::MergeColor(int r, int g, int b, bool doGlanz)

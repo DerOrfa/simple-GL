@@ -50,7 +50,6 @@ public:
 		struct{GLfloat Glanz[3],Glow[3],Difus[3],Umgebung[3];}Farbe;
 		GLfloat	GlanzFaktor;
 	}Innen,Aussen;
-	bool isMyTex;
 	boost::shared_ptr<SGLBaseTex> tex;
 	GLfloat Transparenz;
 	bool InnenGleichAussen,UmgebGleichDifus;
