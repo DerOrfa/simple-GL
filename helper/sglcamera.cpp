@@ -187,18 +187,17 @@ void SGLBaseCam::getViewRect(SGLVektor Ecken[4])
 {
 	SGLVektor PosVektor=getLookVektor();
 
-	double gamma = 90-Angle;
-	double a=(SIN(Angle)/SIN(gamma))*PosVektor.Len();
-	double DiagWinkel=ATAN(ViewFormat);
+	double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
+	double c = SIN(Angle)/COS(DiagWinkel)*PosVektor.Len(); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
 
 	Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
 	Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
 	Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
 	Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
-	Ecken[0]=(Ecken[0]*a)+LookAt;
-	Ecken[1]=(Ecken[1]*a)+LookAt;
-	Ecken[2]=(Ecken[2]*a)+LookAt;
-	Ecken[3]=(Ecken[3]*a)+LookAt;
+	Ecken[0]=(Ecken[0]*c)+LookAt;
+	Ecken[1]=(Ecken[1]*c)+LookAt;
+	Ecken[2]=(Ecken[2]*c)+LookAt;
+	Ecken[3]=(Ecken[3]*c)+LookAt;
 }
 
 SGLVektor SGLBaseCam::getLookVektor()
