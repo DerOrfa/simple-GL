@@ -22,15 +22,15 @@
 
 #include "../sglobjbase.h"
 
-#define MAX_OBJ_CNT	512
-
 /**
   *@author Enrico Reimer
   */
 class SGLObjList
 {
 public:
-	SGLObjList(bool transp);
+	SGLObjList(bool transp=false);
+	SGLObjList(const SGLObjList &src);
+	SGLObjList& operator=(const SGLObjList &src);
 	~SGLObjList();
 	bool	removeOb(GLuint ListID);
 	bool	removeOb(SGLObjBase *obj);
@@ -38,9 +38,10 @@ public:
     bool	AddOb(SGLObjBase* obj);
 	void	Clear();
 	SGLObjBase	**ObjPtr;
-	GLuint	*Objects_CW;
-	GLuint	*Objects_CCW;
+	GLuint		*Objects_CW;
+	GLuint		*Objects_CCW;
 	unsigned int	ObjCnt_CW,ObjCnt_CCW,ObjCnt_Ptr;
+	unsigned int	ObjSize_CW,ObjSize_CCW,ObjSize_Ptr;
 	void	CallAllLists();
 	void	Compile(bool force=false);
 	bool	check_recompile,check_sorting;
@@ -51,8 +52,7 @@ private:
 	bool	removeOb_CW(GLuint ListID);
 	bool	removeOb_CCW(GLuint ListID);
 	bool	removeOb_Ptr(SGLObjBase *obj);
-	template<class T> bool grow(T* &liste,unsigned int &cnt,unsigned int newsize);
-	template<class T> unsigned int getListSize(T *liste);
+	template<class T> bool grow(T *&liste,unsigned int &size,unsigned int newsize);
 	static int compareObj(const void *elem1,const void *elem2);
 };
 

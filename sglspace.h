@@ -86,7 +86,9 @@ public:
 	SGLBaseCam		*Camera;
 	SGLLight		*StdLight;
 
-	static SGLObjList ObjLst,TranspObjLst;
+	SGLObjList ObjLst;
+	SGLObjList TranspObjLst;
+
 	SGLSpace(unsigned int XSize=800,unsigned  int YSize=600,unsigned int R=0,unsigned int G=0,unsigned int B=0);
 	virtual ~SGLSpace();
 	virtual void OnResize(int width, int height);

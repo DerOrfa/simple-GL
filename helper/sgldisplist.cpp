@@ -19,12 +19,40 @@ SGLObjList::SGLObjList(bool transp)
 	ObjPtr=NULL;
 	Objects_CW=Objects_CCW=NULL;
 	ObjCnt_CW=ObjCnt_CCW=ObjCnt_Ptr=0;
-	grow(Objects_CW,ObjCnt_CW,5);
-	grow(Objects_CCW,ObjCnt_CCW,5);
-	grow(ObjPtr,ObjCnt_Ptr,5);
+	ObjSize_CW=ObjSize_CCW=ObjSize_Ptr=0;
+	grow(Objects_CW,ObjSize_CW,5);
+	grow(Objects_CCW,ObjSize_CCW,5);
+	grow(ObjPtr,ObjSize_Ptr,5);
 	Clear();
 	renderTransparent=transp;
 }
+
+SGLObjList::SGLObjList(const SGLObjList &src)
+{
+	this->operator=(src);
+}
+
+SGLObjList& SGLObjList::operator=(const SGLObjList &src)
+{
+	ObjPtr=NULL;
+	Objects_CW=Objects_CCW=NULL;
+	ObjSize_CW=ObjSize_CCW=ObjSize_Ptr=0;
+	grow(Objects_CW,ObjSize_CW,src.ObjSize_CW);
+	grow(Objects_CCW,ObjSize_CCW,src.ObjSize_CCW);
+	grow(ObjPtr,ObjSize_Ptr,src.ObjSize_Ptr);
+	renderTransparent=src.renderTransparent;
+	
+	ObjCnt_CW=src.ObjCnt_CW;
+	ObjCnt_CCW=src.ObjCnt_CCW;
+	ObjCnt_Ptr=src.ObjCnt_Ptr;
+	memcpy(Objects_CW,src.Objects_CW,ObjCnt_CW*sizeof(GLuint));
+	memcpy(Objects_CCW,src.Objects_CCW,ObjCnt_CCW*sizeof(GLuint));
+	memcpy(ObjPtr,src.ObjPtr,ObjCnt_Ptr*sizeof(SGLObjBase*));
+	check_recompile=src.check_recompile;
+	check_sorting=src.check_sorting;
+}
+
+
 SGLObjList::~SGLObjList ()
 {
 }
@@ -64,12 +92,22 @@ bool SGLObjList::AddOb(SGLObjBase* obj)
 {
 	if(removeOb(obj))
 	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
-	if(ObjCnt_Ptr>=getListSize(ObjPtr))
-		grow(ObjPtr,ObjCnt_Ptr,ObjCnt_Ptr*2);
-	if(Objects_CW)
+	ListInfo();
+/*	if(!strcmp("12GLvlCutPlane",obj->guesType()))
+	{
+		SGLprintInfo("Füge CutPlane hinzu");
+	}
+	if(!strcmp("9SGLCamera",obj->guesType()))
+	{
+		SGLprintInfo("Füge Camera hinzu");
+	}*/
+	if(ObjCnt_Ptr>=ObjSize_Ptr)
+		grow(ObjPtr,ObjSize_Ptr,ObjCnt_Ptr*2);
+	if(ObjPtr)
 	{
 		ObjPtr[ObjCnt_Ptr++]=obj;
 		//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
+		if(obj->myList){SGLprintWarning("Das %s-Objekt (ID:%d) scheint schon einer Liste anzugehören",obj->guesType(),obj->ID);}
 		obj->myList=this;
 		obj->compileNextTime();
 		check_sorting=check_recompile=true;
@@ -80,19 +118,23 @@ bool SGLObjList::AddOb(SGLObjBase* obj)
 
 bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
 {
+	if(!glIsList(ListID))
+	{
+		SGLprintError("Es existiert kein Objekt mit der ID %d",ListID);
+	}
 	switch(Face)
 	{
 	case GL_CW:
-		if(ObjCnt_CW>=getListSize(Objects_CW))
-			grow(Objects_CW,ObjCnt_CW,ObjCnt_CW*2);
+		if(ObjCnt_CW>=ObjSize_CW)
+			grow(Objects_CW,ObjSize_CW,ObjCnt_CW*2);
 		if(Objects_CW)
 		{
 			Objects_CW[ObjCnt_CW++]=ListID;
 			return true;
 		}
 	case GL_CCW:
-		if(ObjCnt_CCW>=getListSize(Objects_CCW))
-			grow(Objects_CCW,ObjCnt_CCW,ObjCnt_CCW*2);
+		if(ObjCnt_CCW>=ObjSize_CCW)
+			grow(Objects_CCW,ObjSize_CCW,ObjCnt_CCW*2);
 		if(Objects_CCW)
 		{
 			Objects_CCW[ObjCnt_CCW++]=ListID;
@@ -122,8 +164,10 @@ bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
 	int i=0;
 	if(!ObjCnt_Ptr)return false;
 	while(ObjPtr[i]!=obj)
-		if(ObjPtr[i])i++;
-		else return false; //Objekt wurde NICHT gefunden
+		if(ObjPtr[i])
+			i++;
+		else 
+			return false; //Objekt wurde NICHT gefunden
 	for(i++;i<ObjCnt_Ptr;i++)
 		ObjPtr[i-1]=ObjPtr[i];
 	ObjPtr[i-1]=NULL;
@@ -149,7 +193,7 @@ bool SGLObjList::removeOb_CW(GLuint ListID)
 bool SGLObjList::removeOb_CCW(GLuint ListID)
 {
 	int i=0;
-	if(!ObjCnt_CW)return false;
+	if(!ObjCnt_CCW)return false;
 	while(Objects_CCW[i]!=ListID)
 		if(Objects_CCW[i])i++;
 		else return false;
@@ -173,10 +217,8 @@ void SGLObjList::Clear()
 /*!
     \fn template<class T> bool SGLObjList::grow(T *&liste,unsigned int &cnt,unsigned int newsize)
  */
-template<class T> bool SGLObjList::grow(T *&liste,unsigned int &cnt,unsigned int newsize)
+template<class T> bool SGLObjList::grow(T *&liste,unsigned int &oldsize,unsigned int newsize)
 {
-	short elsize=sizeof(T);
-	int oldsize=getListSize(liste);
 	if(oldsize>=newsize){SGLprintWarning("kein Resize nötig");return false;}
 	if(!(liste=(T*)realloc(liste,newsize*sizeof(T))))
 	{
@@ -185,15 +227,9 @@ template<class T> bool SGLObjList::grow(T *&liste,unsigned int &cnt,unsigned int
 		//@todo hier müssten ALLE Objekte neu kompiliert werden, wenn das die Objekt-Pointerliste ist, haben wir ein "Problem" => nich das gelbe vom Ei
 		if(!liste){SGLprintError("*argn* calloc konnte's auch nicht richten");return false;}
 	}
+	oldsize=newsize;
 	return true;
 }
-
-template<class T> unsigned int SGLObjList::getListSize(T *liste)
-{
-	unsigned int size=liste ? sizeof(liste):0;
-	return size ? size/sizeof(T):0;
-}
-
 
 /*!
 

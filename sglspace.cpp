@@ -118,6 +118,7 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	bgColor.g=float(G)/255;
 	bgColor.b=float(B)/255;
 
+	Camera=NULL;;
 	MouseInfo.FollowMouse=true;
 	resizeMode=scaleView;
 	isMyCam=DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
@@ -428,6 +429,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[1]=Grids.Y->Compile();
 	Grids.Beschr[2]=Grids.Z->Compile();
 
+	assert(!isMyCam);
 	defaultCam(new SGLCamera());
 	isMyCam=true;
 
@@ -451,7 +453,8 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 void SGLSpace::defaultCam(SGLBaseCam *cam)
 {
 	assert(cam);
-	if(isMyCam)delete Camera;
+	if(isMyCam)
+		delete Camera;
 	isMyCam=false;
 	registerObj(Camera=cam);
 	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight);
@@ -466,10 +469,6 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	Camera->link(Grids.Y);
 	Camera->link(Grids.Z);
 }
-
-SGLObjList SGLSpace::ObjLst(false);
-SGLObjList SGLSpace::TranspObjLst(true);
-
 
 /*!
     \fn SGLSpace::welt2Window(SGLVektor weltCoord)
