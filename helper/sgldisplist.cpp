@@ -16,6 +16,9 @@
 
 SGLObjList::SGLObjList()
 {
+	ObjPtr=NULL;
+	Objects_CW=Objects_CCW=NULL;
+	ObjCnt_CW=ObjCnt_CCW=ObjCnt_Ptr=0;
 	grow(Objects_CW,ObjCnt_CW,5);
 	grow(Objects_CCW,ObjCnt_CCW,5);
 	grow(ObjPtr,ObjCnt_Ptr,5);
@@ -35,22 +38,22 @@ void SGLObjList::CallAllLists()
 	if(check_recompile)Compile();
 	
 	glFrontFace(GL_CW);
-/*	for(int i=ObjCnt_CW;i;i--) @todo sollte schon noch geprüft werden (wenigstens im Debug)
+	for(int i=ObjCnt_CW;i;i--) @todo sollte schon noch geprüft werden (wenigstens im Debug)
 		if(!glIsList(Objects_CW[i]))
 		{
 			SGLprintError("Es existiert kein Objekt mit der ID %d",Objects_CW[i]);
-		}*/
+		}
 	glCallLists(ObjCnt_CW,GL_UNSIGNED_INT,Objects_CW);
 	
 	glFrontFace(GL_CCW);
-/*	for(int i=ObjCnt_CCW;i;i--)
+	for(int i=ObjCnt_CCW;i;i--)
 		if(!glIsList(Objects_CW[i]))
 		{
 			SGLprintError("Es existiert kein Objekt mit der ID %d",Objects_CW[i]);
-		}*/
+		}
 	glCallLists(ObjCnt_CCW,GL_UNSIGNED_INT,Objects_CCW);
 	if(renderTransparent)
-		glDisable(GL_BLEND);//Ab hier transparent
+		glDisable(GL_BLEND);//Ab hier nicht mehr transparent
 }
 
 

@@ -13,7 +13,7 @@
 #include "sglmatrixobj.h"
 #include <list>
 
-#include <SDL.h>
+//#include <SDL.h>
 
 class SGLObjList;
 
@@ -37,7 +37,7 @@ public:
 	enum Prio{floor=INT_MIN,under=-10,std=0,flstd=10,ontop=INT_MAX};
 	SGLObjBase(const SGLObjBase &src);
 	SGLObjBase(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
-	~SGLObjBase();
+	virtual ~SGLObjBase();
 	virtual GLuint Compile()=0;
 	virtual void generate()=0;
 
@@ -68,9 +68,11 @@ protected:
 
 #include "helper/sgldisplist.h"
 
+#ifdef SDL_EVENT
 struct SDLEventListener
 {
 	SGLObjBase *target;
 	void (*target_func)(SGLObjBase *target,SDL_Event event);
 };
+#endif
 #endif

@@ -37,8 +37,9 @@ $(PRIMITIVES_DIR)sglquadricobj.o
 
 SAMPLE_CLASSES_OBJFILES = \
 $(SAMPLE_CLASSES_DIR)sglrekgeb.o \
-$(SAMPLE_CLASSES_DIR)sglpointcloud.o \
 $(SAMPLE_CLASSES_DIR)sglplanet.o
+
+#$(SAMPLE_CLASSES_DIR)sglpointcloud.o \
 
 UTIL_OBJFILES = \
 $(UTIL_DIR)readtex.o  \

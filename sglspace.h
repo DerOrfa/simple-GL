@@ -38,7 +38,6 @@
 #include "text/sglconsole.h"
 
 #include "primitives/sglflobj.h"
-#include <SDL/SDL.h>
 #include <map>
 
 
@@ -49,12 +48,8 @@
 class SGLSpace
 {
 public:
-//	bool reCompile();
-	bool Go(unsigned int Mode=1);
 	int DoIdle;
 	void OnIdle();
-	
-	multimap<Uint8, SDLEventListener> eventListeners;
 	
 	struct
 	{
@@ -73,7 +68,7 @@ public:
 		short doGrid;
 	}Grids;
 
-	struct
+	struct MSVC_IST_IMMERNOCH_ZU_BLEOD_FUER_ANONYME_KONSTRUKTOREN
 	{
 		bool glServerReady,Processing,update,FullScreen;
 		char StatusString[4096];
@@ -86,21 +81,15 @@ public:
 		GLfloat r,g,b;
 	}bgColor;
 
-	bool FullScreen(bool FullScreen=true);
 
 	SGLClipPlane	*ClipPlanes[5];
 	SGLBaseCam		*Camera;
 	SGLLight		*StdLight;
-    SGLConsole		*mainConsole;
 
 	SGLObjList ObjLst,TranspObjLst;
-	SGLSpace(int XSize=800, int YSize=600,unsigned int R=0,unsigned int G=0,unsigned int B=0);
-	~SGLSpace();
-	virtual void OnDraw();
-	virtual void OnMouseMove( int x, int y, unsigned int BtnDown );
-	virtual void OnMouseBtn(int button, int state, int x, int y);
+	SGLSpace(unsigned int XSize=800,unsigned  int YSize=600,unsigned int R=0,unsigned int G=0,unsigned int B=0);
+	virtual ~SGLSpace();
 	virtual void OnResize(int width, int height);
-	virtual void OnKey(SDL_keysym k, bool down);
 	virtual void setFlags(bool reCompile=true);
 	virtual void reDraw();
 
@@ -115,32 +104,22 @@ public:
 	void CompileIntObs();
 	bool reCompileIntObs(bool redraw=true);
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
-	void OnMouseClick(int button, int x, int y);
 	void registerObj(SGLFlObj *Obj);
 	void registerObj(SGLObj *Obj);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
-	void setTitle(const char title[]);
-
-	void procEvent(SDL_Event e);
-
-	virtual void OnQuit();
-	void CallQuit();
-	bool setVideoMode(int xsize=800, int ysize=600, bool FullScreen=false,bool fixedSize=false);
-	void addEventListener(Uint8 eventType,SDLEventListener evl);
-	void addEventListener(Uint8 eventType,SGLObjBase *target_obj,void (*target_func)(SGLObjBase *target,SDL_Event event));
-	void callEventListeners(Uint8 type,SDL_Event &event);
+	virtual bool setup_video(int w,int h)=0;
+	void sglInit(unsigned int w=100,unsigned int h=100);
 	static bool globalColorAktive;
+	SGLConsole	*mainConsole;
 
-private:
-	bool setup_video(int w,int h);
-	void resetView(short mode=0);
+protected:
 	void callHelper(int stage=1);
+	void resetView(short mode=0);
 	void DrawExtObjs();
 	void show_status();
+	bool initVis(unsigned int XSize, unsigned int YSize);
 };
-
-bool SGLSpace::globalColorAktive=false;
 
 #endif

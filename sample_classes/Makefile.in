@@ -97,7 +97,7 @@ VERSION = @VERSION@
 INCLUDES = 
 METASOURCES = AUTO
 lib_LTLIBRARIES = libsample_classes.la
-libsample_classes_la_SOURCES = sglplanet.cpp sglplanet.h sglpointcloud.cpp sglpointcloud.h sglrekgeb.cpp sglrekgeb.h
+libsample_classes_la_SOURCES = sglplanet.cpp sglplanet.h sglrekgeb.cpp sglrekgeb.h
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -110,8 +110,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libsample_classes_la_LDFLAGS = 
 libsample_classes_la_LIBADD = 
-libsample_classes_la_OBJECTS =  sglplanet.lo sglpointcloud.lo \
-sglrekgeb.lo
+libsample_classes_la_OBJECTS =  sglplanet.lo sglrekgeb.lo
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -129,7 +128,7 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/sglplanet.P .deps/sglpointcloud.P .deps/sglrekgeb.P
+DEP_FILES =  .deps/sglplanet.P .deps/sglrekgeb.P
 SOURCES = $(libsample_classes_la_SOURCES)
 OBJECTS = $(libsample_classes_la_OBJECTS)
 
