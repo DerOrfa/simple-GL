@@ -25,6 +25,7 @@ SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 	ResetTransformMatrix(src.MyTransformMatrix);
 	priority = src.priority;
 	should_compile = true;
+	shared=false;
 }
 
 SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLMatrixObj(GL_MODELVIEW)
@@ -38,6 +39,7 @@ SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFa
 	FaceAt=NULL;
 	myList=NULL;
 	should_compile=1;
+	shared=false;
 }
 SGLObjBase::~SGLObjBase()
 {

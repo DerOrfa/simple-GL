@@ -31,7 +31,6 @@ public:
 	SGLObjList(bool transp=false);
 	SGLObjList(const SGLObjList &src);
 	SGLObjList& operator=(const SGLObjList &src);
-	~SGLObjList();
 	bool	removeOb(GLuint ListID);
 	bool	removeOb(SGLObjBase *obj);
 	bool	AddOb(GLuint ListID,GLenum Face);
@@ -45,8 +44,8 @@ public:
 	void	CallAllLists();
 	void	Compile(bool force=false);
 	bool	check_recompile,check_sorting;
-	bool	renderTransparent;
-    void ListInfo();
+	bool	renderTransparent,render_non_native;
+    void	ListInfo();
 
 private:
 	bool	removeOb_CW(GLuint ListID);

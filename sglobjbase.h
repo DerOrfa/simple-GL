@@ -43,7 +43,7 @@ public:
 	static SGLVektor Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3);
 
 	GLuint ID;
-	bool IgnoreClip,IgnoreLight;
+	bool IgnoreClip,IgnoreLight,shared;
 	GLenum FrontFace;
 	SGLVektor* FaceAt;
 	void metaGenerate();

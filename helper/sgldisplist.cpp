@@ -25,11 +25,12 @@ SGLObjList::SGLObjList(bool transp)
 	grow(ObjPtr,ObjSize_Ptr,5);
 	Clear();
 	renderTransparent=transp;
+	render_non_native=true;
 }
 
 SGLObjList::SGLObjList(const SGLObjList &src)
 {
-	this->operator=(src);
+	operator=(src);
 }
 
 SGLObjList& SGLObjList::operator=(const SGLObjList &src)
@@ -41,6 +42,7 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 	grow(Objects_CCW,ObjSize_CCW,src.ObjSize_CCW);
 	grow(ObjPtr,ObjSize_Ptr,src.ObjSize_Ptr);
 	renderTransparent=src.renderTransparent;
+	render_non_native=src.render_non_native;
 	
 	ObjCnt_CW=src.ObjCnt_CW;
 	ObjCnt_CCW=src.ObjCnt_CCW;
@@ -50,11 +52,6 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 	memcpy(ObjPtr,src.ObjPtr,ObjCnt_Ptr*sizeof(SGLObjBase*));
 	check_recompile=src.check_recompile;
 	check_sorting=src.check_sorting;
-}
-
-
-SGLObjList::~SGLObjList ()
-{
 }
 
 void SGLObjList::CallAllLists()
@@ -92,24 +89,19 @@ bool SGLObjList::AddOb(SGLObjBase* obj)
 {
 	if(removeOb(obj))
 	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
-	ListInfo();
-/*	if(!strcmp("12GLvlCutPlane",obj->guesType()))
-	{
-		SGLprintInfo("Füge CutPlane hinzu");
-	}
-	if(!strcmp("9SGLCamera",obj->guesType()))
-	{
-		SGLprintInfo("Füge Camera hinzu");
-	}*/
 	if(ObjCnt_Ptr>=ObjSize_Ptr)
 		grow(ObjPtr,ObjSize_Ptr,ObjCnt_Ptr*2);
 	if(ObjPtr)
 	{
 		ObjPtr[ObjCnt_Ptr++]=obj;
 		//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
-		if(obj->myList){SGLprintWarning("Das %s-Objekt (ID:%d) scheint schon einer Liste anzugehören",obj->guesType(),obj->ID);}
-		obj->myList=this;
-		obj->compileNextTime();
+		if(obj->myList)obj->shared=true;
+		else 
+		{
+			obj->myList=this;
+			obj->compileNextTime();
+			//Wenn das obj schon ner Liste angehört, gehen wir mal von aus, daß es schon kompiliert ist
+		}
 		check_sorting=check_recompile=true;
 		return true;
 	}
@@ -246,7 +238,8 @@ void SGLObjList::Compile(bool force)
 		ListInfo();
 	}
 	for(unsigned int i=0;i<ObjCnt_Ptr;i++)
-		AddOb(ObjPtr[i]->metaCompile(force),ObjPtr[i]->FrontFace);
+		if(render_non_native || ObjPtr[i]->myList==this)
+			AddOb(ObjPtr[i]->metaCompile(force),ObjPtr[i]->FrontFace);
 	check_recompile=false;
 }
 int SGLObjList::compareObj(const void *elem1,const void *elem2)

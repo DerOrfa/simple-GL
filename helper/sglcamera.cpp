@@ -33,7 +33,7 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	ResetUpVect();
 	dontTouchEcken=0;
 }
-
+	
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 {
 	if(lockGierAim && lockKippAim)return;
