@@ -120,7 +120,7 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 
 	Camera=NULL;;
 	MouseInfo.FollowMouse=true;
-	resizeMode=scaleView;
+	resizeMode=SGLBaseCam::scaleView;
 	isMyCam=DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
@@ -148,7 +148,7 @@ void SGLSpace::OnResize(int width, int height)
 	StatusInfo.WindowWidth=width,StatusInfo.WindowHeight=height;
 	if(Camera)
 	{
-		if(resizeMode!=scaleView)
+		if(resizeMode!=SGLBaseCam::scaleView)
 		{
 			pair<unsigned int,unsigned int> screen[4]=
 			{
@@ -158,8 +158,8 @@ void SGLSpace::OnResize(int width, int height)
 				pair<unsigned int,unsigned int>(width,height)
 			};
 			Window2welt(screen,Camera->Ecken,4);
-			Camera->dontTouchEcken++;
 		}
+		Camera->recalcEckenMode=resizeMode;
 		Camera->ViewFormat=double(width)/double(height);
 		Camera->Compile();
 	}

@@ -38,6 +38,7 @@ class SGLLensFlare;
 class SGLBaseCam: public SGLHelper
 {
 public:
+	enum ViewModi{resizeView,moveCam,scaleView}recalcEckenMode;
 	SGLBaseCam(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=10);
 	void RotateAim(GLdouble Xdeg, GLdouble Ydeg);
 	void RotateCam(GLdouble Xdeg, GLdouble Ydeg);
@@ -64,12 +65,13 @@ public:
     void recalcEcken();
 	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
 	SGLVektor getLookVektor();
+	void setLookVektor(SGLVektor Vekt);
 	void recalcAngle(GLdouble height);
+	void recalcPos(GLdouble height);
     bool showCross,move_cam_with_aim;
 	bool lockRoll,lockGierCam,lockKippCam;
 	bool lockGierAim,lockKippAim;
 	bool lockMoveZoom,lockOptZoom,loaded;
-	int dontTouchEcken;
 	void loadView();
 	void unloadView();
 	SGLVektor Ecken[4];

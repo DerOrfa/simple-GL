@@ -121,7 +121,7 @@ public:
 	void defaultCam(SGLBaseCam *cam);
 	bool isMyCam;
 	struct {unsigned int x,y;}Size;
-	enum {resizeView,scaleView}resizeMode;
+	SGLBaseCam::ViewModi resizeMode;
 
 protected:
 	void callHelper(int stage=1);

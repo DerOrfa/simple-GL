@@ -31,7 +31,7 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	loaded=lockGierAim=lockKippAim=false;
 	lockMoveZoom=lockOptZoom=false;
 	ResetUpVect();
-	dontTouchEcken=0;
+	recalcEckenMode=scaleView;
 }
 	
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
@@ -194,12 +194,18 @@ void SGLBaseCam::getCross(SGLVektor Horiz[2],SGLVektor Vert[2])
  */
 void SGLBaseCam::recalcEcken()
 {
-	if(dontTouchEcken>0)
+	switch(recalcEckenMode)
+	{
+	case resizeView:
 	{
 		recalcAngle((Ecken[1]-Ecken[2]).Len()/2);
-		dontTouchEcken--;
+		recalcEckenMode=scaleView;
+	}break;
+	case moveCam:
+	{
+		recalcPos((Ecken[1]-Ecken[2]).Len()/2);
 	}
-	else
+	case scaleView:
 	{
 		SGLVektor PosVektor=getLookVektor();
 		
@@ -216,13 +222,15 @@ void SGLBaseCam::recalcEcken()
 		Ecken[1]=(Ecken[1]*c)+LookAt;
 		Ecken[2]=(Ecken[2]*c)+LookAt;
 		Ecken[3]=(Ecken[3]*c)+LookAt;
+	}break;
+	default:
+		SGLprintError("Ungültiger Modus für die Berechnung der Kameradaten");
+		break;
 	}
 }
 
-SGLVektor SGLBaseCam::getLookVektor()
-{
-	return SGLVektor(Pos-LookAt);
-}
+SGLVektor SGLBaseCam::getLookVektor(){return SGLVektor(Pos-LookAt);}
+void SGLBaseCam::setLookVektor(SGLVektor Vekt){Pos=Vekt+LookAt;}
 
 SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,PosY,PosZ)
 {
@@ -288,8 +296,17 @@ void SGLBaseCam::unloadView()
 /*!
     \fn SGLBaseCam::recalcAngle()
 	Berechnet den Sichtwinkel aus der Höhe des Sichtfensters (in Weltkoordinaten) und dem Abstand der Cam zu LookAt neu.
+	tan(alpha)=a/b
  */
 void SGLBaseCam::recalcAngle(GLdouble height)
 {
-	Angle=ATAN(height/getLookVektor().Len())*2; // atan(a/b)
+	Angle=ATAN(height/getLookVektor().Len())*2; // alpha=atan(a/b) (*2 weil wir den Winkel auf der mittelachse berechnet haben, brauchen aber den gesamten Winkel
+}
+
+void SGLBaseCam::recalcPos(GLdouble height)
+{
+	SGLVektor LookVekt=getLookVektor();
+	double oldlen=LookVekt.Len();
+	double newlen=height/TAN(Angle/2);//b=a/tan(alpha)
+	setLookVektor(LookVekt*(newlen /oldlen));// newlen : oldlen = newvek : oldvek => newvek = (newlen : oldlen)*oldvek
 }
