@@ -351,7 +351,6 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 {
 	if(setup_video(XSize,YSize))
 	{
-	  char TitleString[255];
 	  ilInit();
 	  iluInit();
 	  ilutRenderer(ILUT_OPENGL);

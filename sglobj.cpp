@@ -31,6 +31,10 @@ GLuint SGLObj::Compile()
 	GLuint error=0,i;
 	bool EnableClip[5];
 
+	if(!(glIsList(ID) || (ID=glGenLists(1))))
+	{
+		SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());
+	}
 	glNewList(ID,GL_COMPILE_AND_EXECUTE);
 	{
 		if(IgnoreLight)

@@ -12,6 +12,7 @@
 
 #include "sglmatrixobj.h"
 #include <list>
+#include <SDL/SDL.h>
 
 //#include <SDL.h>
 

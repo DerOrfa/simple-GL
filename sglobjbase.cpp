@@ -10,10 +10,11 @@
 #include "sglobjbase.h"
 #include "sglmisc.h"
 #include <typeinfo> 
+#include <GL/glu.h>
 
 SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 {
-	ID=glGenLists(1);
+	ID=0;
 	changeReciver = src.changeReciver;
 	changeSender = src.changeSender;
 	FaceAt = src.FaceAt;
@@ -28,7 +29,7 @@ SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 
 SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLMatrixObj(GL_MODELVIEW)
 {
-	ID=glGenLists(1);
+	ID=0;
 	ResetTransformMatrix();
 	if(PosX || PosY || PosZ)Move(PosX,PosY,PosZ);
 	if(SizeFact!=1)Scale(SizeFact,SizeFact,SizeFact);

@@ -44,6 +44,10 @@ GLuint SGLFlObj::Compile()
 	bool EnableClip[5];
 
 	GLuint error=0;
+	if(!(glIsList(ID) || (ID=glGenLists(1))))
+	{
+		SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());
+	}
 	while(error=glGetError())
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
