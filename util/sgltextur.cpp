@@ -159,8 +159,8 @@ void SGLBaseTex::SetParams()
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
 
-	if(MipMap)	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,weich ? GL_LINEAR_MIPMAP_LINEAR:GL_NEAREST_MIPMAP_NEAREST);
-	else		glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,weich ? GL_LINEAR:GL_NEAREST);
+	if(MipMap)	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
+	else		glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,weich ? GL_LINEAR:GL_NEAREST);
 }
 
