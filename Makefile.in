@@ -100,7 +100,7 @@ METASOURCES = AUTO
 SUBDIRS = util text primitives helper sample_classes
 
 lib_LTLIBRARIES = libsgl.la
-libsgl_la_SOURCES = sglmetaobj.cpp sglmetaobj.h sglmisc.c sglmisc.h sglobjbase.cpp sglobjbase.h sglobj.cpp sglobj.h sglspace.cpp sglspace.h sglvektor.cpp sglvektor.h
+libsgl_la_SOURCES = sglmetaobj.cpp sglmetaobj.h sglmisc.c sglmisc.h sglobjbase.cpp sglobjbase.h sglobj.cpp sglobj.h sglspace.cpp sglspace.h sglvektor.cpp sglvektor.h sglmatrixobj.cpp sglmatrixobj.h
 libsgl_la_LIBADD = $(top_builddir)/libsgl/util/libutil.la $(top_builddir)/libsgl/text/libtext.la $(top_builddir)/libsgl/primitives/libprimitives.la $(top_builddir)/libsgl/helper/libhelper.la
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
@@ -118,7 +118,7 @@ $(top_builddir)/libsgl/text/libtext.la \
 $(top_builddir)/libsgl/primitives/libprimitives.la \
 $(top_builddir)/libsgl/helper/libhelper.la
 libsgl_la_OBJECTS =  sglmetaobj.lo sglmisc.lo sglobjbase.lo sglobj.lo \
-sglspace.lo sglvektor.lo
+sglspace.lo sglvektor.lo sglmatrixobj.lo
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
@@ -136,8 +136,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/sglmetaobj.P .deps/sglmisc.P .deps/sglobj.P \
-.deps/sglobjbase.P .deps/sglspace.P .deps/sglvektor.P
+DEP_FILES =  .deps/sglmatrixobj.P .deps/sglmetaobj.P .deps/sglmisc.P \
+.deps/sglobj.P .deps/sglobjbase.P .deps/sglspace.P .deps/sglvektor.P
 SOURCES = $(libsgl_la_SOURCES)
 OBJECTS = $(libsgl_la_OBJECTS)
 

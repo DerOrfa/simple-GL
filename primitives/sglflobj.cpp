@@ -40,17 +40,17 @@ GLuint SGLFlObj::Compile()
 {
 	GLboolean	doCullFaces=false,doBlend=false;
 	GLint		CullFace;
-	GLuint error=0;
 	int i;
 	bool EnableClip[5];
 
+	GLuint error=0;
 	while(error=glGetError())
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
 
 	//NVIDIA optimiert Setzoperationen komplett raus aus den Listen, wenn der Wert schon gesetzt ist
-	//Deshalb bringt das vorsorgliche glPolygonMode nix mehr (es kann nicht garantiert werden, daß es
+	//Deshalb bringt das vorsorgliche glPolygonMode nix mehr (es kann nicht garantiert werden, daï¿½es
 	//auch in der Liste landet)
 	//Behandle GL_FILL jetzt als Normfall, und alle anderen setzen ihren Modus UND nehmen ihn auch
 	//wieder raus
@@ -76,7 +76,7 @@ GLuint SGLFlObj::Compile()
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
-			if(IgnoreLight)// @dodo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
+			if(IgnoreLight)// @dodo nochmal berlegen wie Textur, Material und Farbe sich untereinander verhalten
 			{
 				if(Mat->tex)Mat->tex->loadTex();
 				else 
@@ -86,7 +86,7 @@ GLuint SGLFlObj::Compile()
 					Mat->Aussen.Farbe.Glow[1],
 					Mat->Aussen.Farbe.Glow[2],
 					1-Mat->Transparenz);//Wenn Selbstleuchtend, und keine Textur
-					SGLMaterial::MatLoaded=true; //really dirty Hack :-) (sorgt dafür, daß er denkt er hätte ein Mat. -> DrawVertex heult nich rum)
+					SGLMaterial::MatLoaded=true; //really dirty Hack :-) (sorgt dafr, daï¿½er denkt er hï¿½te ein Mat. -> DrawVertex heult nich rum)
 				}
 			}
 			else Mat->loadMat();
@@ -147,7 +147,7 @@ void SGLFlObj::resetMaterial(SGLMaterial *NewMaterial)
 	else Mat=NewMaterial;
 /*	if(Mat && Mat->tex && Mat->tex->valid)
 		resetTexKoord();*/
-	//nicht mehr nötig, da ALLE Texturkoordinaten haben
+	//nicht mehr nï¿½ig, da ALLE Texturkoordinaten haben
 }
 
 /*!

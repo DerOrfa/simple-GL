@@ -131,7 +131,7 @@ SGLFlObj(NULL,PosX,PosY,PosZ,1)
 	if(PktCnt)make_rand_pts(PktCnt);
 }
 
-//macht zufällige Liste
+//macht zufï¿½lige Liste
 void subSGLPointCloud::make_rand_pts(int cnt)
 {
 	if(punkte.size())punkte.clear();
@@ -253,7 +253,7 @@ void SGLPointCloud::compileSubObjects()
 	Objs.push_back(cloud->Compile());
 
 	cout << distance(seiten.begin(), seiten.end())<<" Dreiecke" << endl;
-	for_each(seiten.begin(), seiten.end(), compObj<SGLFlObj>(&Objs));
+	for_each(seiten.begin(), seiten.end(), CompObj<SGLFlObj>(&Objs));
 }
 
 SGLVektor SGLPointCloud::getCenter()
@@ -268,7 +268,7 @@ SGLVektor SGLPointCloud::getCenter()
 void SGLPointCloud::init()
 {
 	SGLVektor *pt1,*pt2,*pt3,*pt4;
-	//vier möglichst weit voneinander entfernte Punkte finden
+	//vier mï¿½lichst weit voneinander entfernte Punkte finden
 	cloud->getTetraeder(pt1,pt2,pt3,pt4);
 
 	seiten.clear();
@@ -337,7 +337,7 @@ double SGLPointCloud::grow()
 	SGLVektor *maxPkt=NULL;
 	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
-	//Punkt mit möglichst großer Entf zur Fläche suchen
+	//Punkt mit mï¿½lichst groï¿½r Entf zur Flï¿½he suchen
 	double maxEntf=0;
 	bool sawn;
 	list<SGLVektor>::iterator it=cloud->punkte.begin();
@@ -347,7 +347,7 @@ double SGLPointCloud::grow()
 		itCnt++;
 		SGLVektor *pkt=&*it;
 		sawn=false;
-		//Punke die zum dreieck gehören sind unintressant
+		//Punke die zum dreieck gehï¿½en sind unintressant
 		if(	dEck->EckVektoren.Vekt[0]==pkt ||
 			dEck->EckVektoren.Vekt[1]==pkt ||
 			dEck->EckVektoren.Vekt[2]==pkt)sawn=true;
@@ -355,7 +355,7 @@ double SGLPointCloud::grow()
 		{
 			double entf=dEck->spat(*pkt);
 			if(mode == 1 && entf<0)
-			//Punkt liegt auf Falscher Seite - könnte möglicherweise weg
+			//Punkt liegt auf Falscher Seite - kï¿½nte mï¿½licherweise weg
 			{
 				for(list<QHDreiEck>::iterator itDr=seiten.begin();itDr!=seiten.end();itDr++)
 				{
@@ -444,7 +444,7 @@ double SGLPointCloud::grow2()
 	SGLVektor *maxPkt=NULL;
 	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
-	//Punkt mit möglichst großer Entf zur Fläche suchen
+	//Punkt mit mï¿½lichst groï¿½r Entf zur Flï¿½he suchen
 	double maxEntf=0;
 
 
@@ -453,7 +453,7 @@ double SGLPointCloud::grow2()
 		it++)
 	{
 		SGLVektor *pkt=*it;
-		//Punke die zum dreieck gehören sind unintressant
+		//Punke die zum dreieck gehï¿½en sind unintressant
 		double entf=dEck->spat(*pkt);
 		if(entf>maxEntf)
 		{
@@ -554,7 +554,7 @@ void SGLPointCloud::DreiEck2Kante(list<SGLVektor*> &punkte,QHDreiEck *dEck,SGLVe
 		}
 	}
 	if(growBase==dEck->I)growBase++;
-	SGLprintInfo("Lösche Dreieck %d, es hatte %d Punkte zu beachten",dEck->ID,dEck->myPunkte.size());
+	SGLprintInfo("Lï¿½che Dreieck %d, es hatte %d Punkte zu beachten",dEck->ID,dEck->myPunkte.size());
 	punkte.insert(punkte.end(), dEck->myPunkte.begin(), dEck->myPunkte.end());
 	SGLprintInfo("Es gibt jetzt %d \"Waisen\"",punkte.size());
 

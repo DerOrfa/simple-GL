@@ -17,17 +17,12 @@
 
 #include "sgltextur.h"
 #include "../sglmisc.h"
-
 #include <IL/ilut.h>
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
-	ID=0;
+	weich=repeat=true;	
 	if(imageFile)Load2DImage(imageFile);
-}
-SGLTextur::~SGLTextur()
-{
-	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);
 }
 
 bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
@@ -35,7 +30,7 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 	char *buff=new char[strlen(imageFile)+1];
 	strcpy(buff,imageFile);
 	bool ret= Load2DImage(buff, MipMap);
-	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring löscht
+	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring lï¿½cht / hoffentlich lï¿½cht er ihn wenigstens selber
 	return ret;
 }
 
@@ -52,7 +47,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 		ilBindImage(ImageId);
 		if(IL_FALSE!=ilLoadImage(imageFile))ID=ilutGLBindMipmaps();
 	}
-	else ID = ilutGLLoadImage(imageFile);//@todo in der openil-Doku steht nix über Fehler-Return *grml*
+	else ID = ilutGLLoadImage(imageFile);//@todo in der openil-Doku steht nix ber Fehler-Return *grml*
 
 	if(!ID)
 	{
@@ -72,47 +67,58 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
 	this->MipMap=false;
 	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
-	TexType=GL_TEXTURE_3D;
-#define	size 64 //@todo glPixelStore könnte das tunen - Multitexture wär vielleicht auch nich schlecht
+	TexType=GL_TEXTURE_3D_EXT;
+	GLint size=256;
+	glGenTextures(1, &ID);
+	glBindTexture(TexType, ID);
+/*	glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &size);
+	genValidSize(GL_LUMINANCE_ALPHA,size,size,size, GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,true);*/
+	//ntzt nichts - er glaubt er bekï¿½e die Tex rein bekommt aber unten trotzem "out of memory"
 
-	GLubyte pixels[size][size][size][2];
+	GLubyte *pixels=(GLubyte*)malloc(size*size*size*sizeof(GLubyte)*2);
  
-	for(int x=0;x<size;x++)
+	for(int z=0;z<size;z++)
 		for(int y=0;y<size;y++)
-			for(int z=0;z<size;z++)
+			for(int x=0;x<size;x++)
 			{
 				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
 				{
-					pixels[z][y][x][1]=0;
-					pixels[z][y][x][0]=0;
+					pixels[x*2+(size*y*2)+(size*size*z*2)+1]=0;
+					pixels[x*2+(size*y*2)+(size*size*z*2)]=0;
 				}
 				else 
 				{
-					if((x/(size/4) + y/(size/4) + z/(size/4))%2)
-					{
-						pixels[z][y][x][0]=255;
-					}
-					else pixels[z][y][x][0]=0;
-					pixels[z][y][x][1]=255;
+					if(x%20 && y%20 && z%20)
+						pixels[x*2+(size*y*2)+(size*size*z*2)]=255;
+					else 
+						pixels[x*2+(size*y*2)+(size*size*z*2)]=0;
+					pixels[x*2+(size*y*2)+(size*size*z*2)+1]=255;
 				}
 			}
 
-	glGenTextures(1, &ID);
-	glBindTexture(TexType, ID);
-
-	glTexImage3D(TexType,0,GL_LUMINANCE_ALPHA,size,size,size,0,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,pixels);
+	glTexImage3DEXT(TexType,0,GL_COMPRESSED_LUMINANCE_ALPHA_ARB,size,size,size,0,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,pixels);
 
 	GLuint gluerr = glGetError();
 	if(gluerr)
 	{
-		SGLprintError("%s [GLerror]",gluErrorString(gluerr));
+		SGLprintError("%s beim Laden der Textur [GLerror]",gluErrorString(gluerr));
 		return GL_FALSE;
 	}
+	free(pixels);
 	return valid=true;
-#undef size
+}
+	
+SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
+{
+	ID=0;
 }
 
-bool SGLTextur::loadTex()
+SGLBaseTex::~SGLBaseTex()
+{
+	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);
+}
+
+bool SGLBaseTex::loadTex()
 {
 	GLboolean ret;
 	short dim=def2dim(TexType);
@@ -135,25 +141,27 @@ bool SGLTextur::loadTex()
 		}
 	}
 	else{SGLprintError("OpenGL kennt die %dD-Textur \"%d\" nicht",dim,ID);}
+	loadMatrix();
 	return ret;
 }
 
-bool SGLTextur::unloadTex()
+bool SGLBaseTex::unloadTex()
 {
 	GLboolean ret;
+	unloadMatrix();
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
 	if(glIsEnabled(TexType))glDisable(TexType);
-	else{SGLprintWarning("Hä, %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
+	else{SGLprintWarning("Hï¿½%dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
 	return ret;
 }
 
 /** No descriptions */
-void SGLTextur::SetParams()
+void SGLBaseTex::SetParams()
 {
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material berschreiben - spï¿½er wï¿½e bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
@@ -163,4 +171,46 @@ void SGLTextur::SetParams()
 	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,weich ? GL_LINEAR:GL_NEAREST);
 }
 
-short SGLTextur::TexLoaded=0;
+/*!
+	Generiert gltige Werte fr Tiefe Breite und Hï¿½e einer Textur.
+	
+	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nï¿½hstgrï¿½te Zweierpotenz ersetzt.
+	Ist ein Wert zu groï¿½ wird er halbiert.
+
+    \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
+ */
+bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei &width,GLsizei &height,GLsizei &depth, GLenum format,GLenum type,bool border)
+{
+	if(!glIsTexture(ID)){SGLprintError("OpenGL kennt die Textur \"%d\" nicht",ID);}
+	GLsizei w=2,h=2,d=2;
+	for(GLint x, y, z;;) 
+	{
+		glTexImage3DEXT(GL_PROXY_TEXTURE_3D_EXT,0,internalFormat,w+(border ? 2:0),h+(border ? 2:0),d+(border ? 2:0),(border ? 1:0),format,type,NULL);
+		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_WIDTH,  &x);
+		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_HEIGHT, &y);
+		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_DEPTH,  &z);
+		if (x > 0 && y > 0 && z > 0 && (w<width || h<height || d<depth)) 
+		{
+			if(w<width)w=w<<1;
+			if(h<height)h=h<<1;
+			if(d<depth)d=d<<1;
+		}
+		else break;
+	}
+	width = w;
+	if(&height != &width)height= h;
+	if(&depth != &height && &depth != &width)depth=d;
+}
+
+short SGLBaseTex::TexLoaded=0;
+
+short SGLBaseTex::def2dim(GLenum def)
+{
+	switch(def)
+	{
+	case GL_TEXTURE_1D:return 1;
+	case GL_TEXTURE_2D:return 2;
+	case GL_TEXTURE_3D:return 3;
+	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);}
+	}
+}

@@ -57,7 +57,7 @@ bool SGLSpace::setup_video(int width, int height)
 		SGLprintError("Konnte SDL's video-subsystem nicht initialisieren: %s",SDL_GetError( ) );
 		exit(1);
 	}
-	else atexit(SDL_Quit);//Bei exit autom. Aufräumen
+	else atexit(SDL_Quit);//Bei exit autom. Aufrï¿½men
 
 	setVideoMode(width, height);
 
@@ -98,7 +98,7 @@ void SGLSpace::resetView(short mode)
 	break;
 	case 1:
 	//2-Dimensionale Display-Ansicht (HUD z.B.)
-	// @todo Nochmal SAUBER lösen
+	// @todo Nochmal SAUBER lï¿½en
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -298,7 +298,7 @@ void SGLSpace::OnMouseMove( int x, int y ,unsigned int BtnDown)
 void SGLSpace::OnMouseBtn(int button, int state, int x, int y)
 {
 	if(state==SDL_PRESSED)
-	  {	//gedrückt
+	  {	//gedrckt
 	    MouseInfo.MovedPastDownBtn=false;
 	    MouseInfo.DownBtns=button;
 	  }
@@ -339,22 +339,22 @@ void SGLSpace::OnKey(SDL_keysym k, bool down)
 	case SDLK_F1:Grids.doGrid^=1;break;
 	case SDLK_F2:Grids.doGrid^=2;break;
 	case SDLK_F3:Grids.doGrid^=4;break;
-	case SDLK_F12:FullScreen(!StatusInfo.FullScreen);break;// @todo Crasht unter Win ... (ka warum ... bleibt in NTDLL hängen)
+	case SDLK_F12:FullScreen(!StatusInfo.FullScreen);break;// @todo Crasht unter Win ... (ka warum ... bleibt in NTDLL hï¿½gen)
 	case SDLK_RETURN:Camera->ResetView();break;//Enter
 	case SDLK_DELETE:Camera->Roll(1);break;//Entf
 	case SDLK_ESCAPE:CallQuit();break;//ESC
 	default:
 		StatusInfo.StatusString[0]=0;
-		//@todo Wenn das Event mehrfach aufgerufen wird, ohne das show_status aufgerufen wurde, wird das ganze immer länger. Und läuft irgendwann über
-		//@todo Diese Lösung ist aber auch nicht so toll, denn damit geht alles was vorher hier stand verloren
+		//@todo Wenn das Event mehrfach aufgerufen wird, ohne das show_status aufgerufen wurde, wird das ganze immer lï¿½ger. Und lï¿½ft irgendwann ber
+		//@todo Diese Lï¿½ung ist aber auch nicht so toll, denn damit geht alles was vorher hier stand verloren
 		sprintf(StatusInfo.StatusString,"%sF1-F3 => Koordinatensysteme umschalten\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%slinke Maus / Cursor => Kamera rotieren (um das Ziel)\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%srechte Maus => Ziel rotieren (um die Kamera)\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%srechte Maus Click => Kameralicht ein/aus\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%sMausrad / BildAuf|BildAb => Phys. Zoom (Kamera auf Ziel zubew.)\n",StatusInfo.StatusString);
-		sprintf(StatusInfo.StatusString,"%sHome|End => Opt. Zoom (Brennweite ändern)\n",StatusInfo.StatusString);
+		sprintf(StatusInfo.StatusString,"%sHome|End => Opt. Zoom (Brennweite ï¿½dern)\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%sIns|Del => Kamera rollen (auf Sichtachse rotieren)\n",StatusInfo.StatusString);
-		sprintf(StatusInfo.StatusString,"%sEnter => Kamera zurück auf Ausgangspos.\n",StatusInfo.StatusString);
+		sprintf(StatusInfo.StatusString,"%sEnter => Kamera zurck auf Ausgangspos.\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%sESC => beenden\n",StatusInfo.StatusString);
 	break;
 	}
@@ -428,7 +428,7 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 
 	Cam->RotateAim(XRot*20,-YRot*20);
 
-	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f° in X-Richtung und um: %.3f° in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
+	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
 }
 
 void SGLSpace::MoveCam(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
@@ -441,7 +441,7 @@ void SGLSpace::MoveCam(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 	Camera->RotateCam(-XRot*XRotateFact*40,-YRot*YRotateFact*40);
 	Camera->Roll(XRot*30*XRollFact-YRot*30*YRollFact);
 
-	sprintf(StatusInfo.StatusString,"%sCamera rotiert um: %.3f° in X-Richtung und um: %.3f° in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
+	sprintf(StatusInfo.StatusString,"%sCamera rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
 	sprintf(StatusInfo.StatusString,"%sXRotateFact: %.3f, XRollFact: %.3f\nYRotateFact: %.3f,YRollFact: %.3f\n",StatusInfo.StatusString,XRotateFact,XRollFact,YRotateFact,YRollFact);
 }
 
@@ -453,7 +453,7 @@ void SGLSpace::OnIdle()
 
 bool SGLSpace::Go(unsigned int Mode)
 {
-	//Mode MUß zwischen 1 und 5 liegen
+	//Mode MUï¿½zwischen 1 und 5 liegen
 	// @todo .... naja mal schauen
 	DoIdle=Mode-1;
 	if(StatusInfo.glServerReady)
@@ -487,9 +487,9 @@ bool SGLSpace::Go(unsigned int Mode)
 }
 
 /*
-Schaltet den Default für zweiseitiges Rendering um.
-Danach müssen alle PolygonObjekte neu Compiliert werden.
-(Für die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
+Schaltet den Default fr zweiseitiges Rendering um.
+Danach mssen alle PolygonObjekte neu Compiliert werden.
+(Fr die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
 */
 void SGLSpace::TwoSided(bool TwoSideRendering)
 {
@@ -511,7 +511,7 @@ void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 
 /*
 Wird aufgerufen, wenn "geklickt" wurde.
-(eine Maustaste gedrückt und wieder losgelassen, ohne die Maus zu bewegen)
+(eine Maustaste gedrckt und wieder losgelassen, ohne die Maus zu bewegen)
 */
 void SGLSpace::OnMouseClick(int button, int x, int y)
 {
@@ -527,7 +527,7 @@ void SGLSpace::OnMouseClick(int button, int x, int y)
 	case 5:
 	  {
 	    Camera->MoveZoom(1.05);
-	    sprintf(StatusInfo.StatusString,"%sEntfernung zum Ziel erhöht auf %.3f\n",StatusInfo.StatusString,Camera->ViewLength());
+	    sprintf(StatusInfo.StatusString,"%sEntfernung zum Ziel erhï¿½t auf %.3f\n",StatusInfo.StatusString,Camera->ViewLength());
 	  }break;
 	}
 }
@@ -618,7 +618,10 @@ void SGLSpace::CallQuit()
     \fn SGLSpace::OnQuit()
  */
 void SGLSpace::OnQuit()
-{SGLprintInfo("Quit-Event raised");}
+{
+	SDL_Quit();
+	SGLprintInfo("Quit-Event raised");
+}
 
 /*!
     \fn SGLSpace::setVideoMode(int xsize, int ysize, bool FullScreen=false,bool fixedSize=false)

@@ -18,6 +18,8 @@
 #include	"sglvektor.h"
 #include	"sglmisc.h"
 #include	<GL/glu.h>
+#include	"util/sgltextur.h"
+#include	"util/sglmaterial.h"
 
 SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):EVektor<GLdouble>(3)
 {
@@ -148,14 +150,14 @@ void SGLVektor::DrawVertex()
 		case 2:glTexCoord2f(texKoord[0], texKoord[1]);break;
 		case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);break;
 		default:{
-		SGLprintError("Ungültiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
+		SGLprintError("Ungltiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
 		}
 		texOK=true;//@todo naja nich immer
 	}
 	if(!SGLMaterial::MatLoaded && !texOK)
 	{
 		if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);
-		else{SGLprintWarning("Keine Farbinformationen verfügbar beim Zeichnen des Vertex \"%s\"",buff);}
+		else{SGLprintWarning("Keine Farbinformationen verfgbar beim Zeichnen des Vertex \"%s\"",buff);}
 	}
 	DrawPureVertex();
 }
@@ -210,7 +212,7 @@ void SGLVektor::DrawVektor(SGLVektor from)
 	bool Light=glIsEnabled(GL_LIGHTING);
 /*	Bringt nur was, wenn diese Flags IN der GL-Maschine gesetzt sind
 	ein glEnable weiter ober in dieser oder einer anderen Liste steht zwar dort,
-	aber es kann nicht garantiert werden, daß es schon "wirkt".
+	aber es kann nicht garantiert werden, daï¿½es schon "wirkt".
 	Man sollte deshalb in der aufrufenden Funktion selbst, mit unbedingten glEnable/glDisable vorbeugen.
 	Und denkt daran, nvidia optimiert "obselote" Flag-Setzungen weg => Reihenfolge beibehalten
 	if(Texture2D)glDisable(GL_TEXTURE_2D);
@@ -234,7 +236,7 @@ void SGLVektor::DrawVektor(SGLVektor from)
  */
 void SGLVektor::DrawVektorAt(SGLVektor At)
 {
-	SGLVektor DrawV=*this;//Um alle Attribute (z.B. Farbe in DrawV zu übertr.)
+	SGLVektor DrawV=*this;//Um alle Attribute (z.B. Farbe in DrawV zu bertr.)
 	DrawV +=(At);
 	DrawV.DrawVektor(At);
 }

@@ -11,7 +11,7 @@
 #include "sglmisc.h"
 #include <typeinfo> 
 
-SGLObjBase::SGLObjBase(const SGLObjBase &src)
+SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 {
 	ID=glGenLists(1);
 	changeReciver = src.changeReciver;
@@ -26,7 +26,7 @@ SGLObjBase::SGLObjBase(const SGLObjBase &src)
 	should_compile = true;
 }
 
-SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
+SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLMatrixObj(GL_MODELVIEW)
 {
 	ID=glGenLists(1);
 	ResetTransformMatrix();
@@ -42,7 +42,7 @@ SGLObjBase::~SGLObjBase()
 {
 	list<SGLObjBase*>::iterator i=changeReciver.begin();
 	list<SGLObjBase*>::size_type len=changeReciver.size();
-	while(len--)//lt. STL-Standart sollten Iteratoren trotz remove gültig bleiben
+	while(len--)//lt. STL-Standart sollten Iteratoren trotz remove gltig bleiben
 		unlink(*i++);
 
 	i=changeSender.begin();
@@ -66,74 +66,19 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 	return Normale(SGLVektor(Pkt2-Pkt1),SGLVektor(Pkt3-Pkt1));
 }
 
-void SGLObjBase::MoveTo(SGLVektor to){MoveTo(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
-void SGLObjBase::Move(SGLVektor to){Move(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
-
-void SGLObjBase::MoveTo(GLdouble x,GLdouble y, GLdouble z)
-{
-	ResetTransformMatrix(NULL);
-	Move(x,y,z);
-}
-
-void SGLObjBase::Move(GLdouble x,GLdouble y, GLdouble z)
-{
-	glPushMatrix();
-	glLoadMatrixd(MyTransformMatrix);
-	glTranslated(x,y,z);
-	glGetDoublev(GL_MODELVIEW_MATRIX,MyTransformMatrix);
-	glPopMatrix();
-}
-
-void SGLObjBase::Scale(GLdouble xfact,GLdouble yfact, GLdouble zfact)
-{
-	glPushMatrix();
-	glLoadMatrixd(MyTransformMatrix);
-	glScaled(xfact,yfact,zfact);
-	glGetDoublev(GL_MODELVIEW_MATRIX,MyTransformMatrix);
-
-	glPopMatrix();
-}
-void SGLObjBase::Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdouble amount)
-{
- 	glPushMatrix();
-	glLoadMatrixd(MyTransformMatrix);
-	glRotated(amount,xfact,yfact,zfact);
-	glGetDoublev(GL_MODELVIEW_MATRIX,MyTransformMatrix);
-	glPopMatrix();
-}
-
-void SGLObjBase::ResetTransformMatrix(const GLdouble *newMatrix)
-{
-	for(int i=0;i<16;i++)
-	{
-		if(newMatrix)
-		{
-			MyTransformMatrix[i]=newMatrix[i];
-		}
-		else
-		{
-			if(i%5)MyTransformMatrix[i]=0;
-			else MyTransformMatrix[i]=1;
-		}
-	}
-}
-
-void SGLObjBase::Scale(GLdouble fact)
-{Scale(fact,fact,fact);}
 
 /*!
     \fn SGLObjBase::metaGenerate()
  */
 void SGLObjBase::metaGenerate()
 {
-	glPushMatrix();
-	glMultMatrixd(MyTransformMatrix);
+	loadMatrix();
 	if(FaceAt)
 	{
 		GLdouble XZ_wink,XY_wink;
 		SGLVektor tVekt=getCenterInSpace();
 		tVekt.resize(3);
-		//Für toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
+		//Fr toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
 		tVekt=(*FaceAt)-tVekt;
 		tVekt.toWink(XZ_wink,XY_wink);
 		glRotated(-XZ_wink,0,1,0);
@@ -142,7 +87,7 @@ void SGLObjBase::metaGenerate()
 	}
 //	SGLprintInfo("Generiere \"%s\" Prio: %d ID: %d",guesType(),priority,ID);
 	generate();
-	glPopMatrix();
+	unloadMatrix();
 }
 
 /*!
@@ -178,7 +123,7 @@ SGLVektor SGLObjBase::getMyPos()
 
 
 /*!
-	Stellt sicher, das eine CallListe für dieses Objekt in der OpenGL-Pipeline
+	Stellt sicher, das eine CallListe fr dieses Objekt in der OpenGL-Pipeline
 	vorliegt, und liefert sie. ES WIRD ABER NICHT GEZEICHNET
     \fn SGLObjBase::metaCompile(bool force_compile=false)
  */
@@ -195,7 +140,7 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 
 
 /*!
-	Stellt sicher, daß das Objekt bei nächster Gelegenheit mindestens einmal Kompiliert wird
+	Stellt sicher, daï¿½das Objekt bei nï¿½hster Gelegenheit mindestens einmal Kompiliert wird
     \fn SGLObjBase::compileNextTime
  */
 void SGLObjBase::compileNextTime()
@@ -203,7 +148,7 @@ void SGLObjBase::compileNextTime()
 	if(myList)myList->check_recompile=true;
 	else
 	{
-//@todo		SGLprintWarning("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daß es neu generiert werden muß",guesType());
+//@todo		SGLprintWarning("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daï¿½es neu generiert werden muï¿½,guesType());
 	}
 	if(!should_compile)should_compile=1;
 }
@@ -215,7 +160,7 @@ void SGLObjBase::compileNextTime()
 void SGLObjBase::link(SGLObjBase *obj)
 {
 	//Der unwarscheinliche Fall, das obj mehrfach eingetr. wird ist nich weiter schlimm
-	//jedesmal die liste durchsuchen wäre "schlimmer"
+	//jedesmal die liste durchsuchen wï¿½e "schlimmer"
 	changeReciver.push_back(obj);
 	obj->changeSender.push_back(this);
 }

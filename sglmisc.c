@@ -77,14 +77,3 @@ void writeOut(FILE *file,const char text[], ...)
 
 	va_end(argList);
 }
-
-short def2dim(GLenum def)
-{
-	switch(def)
-	{
-	case GL_TEXTURE_1D:return 1;
-	case GL_TEXTURE_2D:return 2;
-	case GL_TEXTURE_3D:return 3;
-	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);}
-	}
-}

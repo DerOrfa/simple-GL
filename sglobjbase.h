@@ -10,16 +10,7 @@
 #ifndef SGLOBJBASE_H
 #define SGLOBJBASE_H
 
-#ifdef WIN32
-	#include <windows.h>								// Header File For Windows
-	#include <gl\gl.h>								// Header File For The OpenGL32 Library
-	#include <gl\glu.h>								// Header File For The GLu32 Library
-	#include <gl\glaux.h>								// Header File For The GLaux Library
-#else
-	#include <GL/gl.h>
-#endif
-
-#include "sglvektor.h"
+#include "sglmatrixobj.h"
 #include <list>
 
 #include <SDL.h>
@@ -30,9 +21,9 @@ class SGLObjList;
 @author Enrico Reimer
 */
 
-template<class T> struct compObj : public unary_function<T&, void>
+template<class T> struct CompObj : public unary_function<T&, void>
 {
-	compObj(vector<GLint> *targetList) {Objs=targetList;}
+	CompObj(vector<GLint> *targetList) {Objs=targetList;}
 	void operator() (T &x) 
 	{
 		Objs->push_back(x.Compile()); 
@@ -40,10 +31,10 @@ template<class T> struct compObj : public unary_function<T&, void>
 	vector<GLint> *Objs;
 };
 
-class SGLObjBase{
+class SGLObjBase:public SGLMatrixObj
+{
 public:
 	enum Prio{floor=INT_MIN,under=-10,std=0,flstd=10,ontop=INT_MAX};
-	void Scale(GLdouble fact);
 	SGLObjBase(const SGLObjBase &src);
 	SGLObjBase(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLObjBase();
@@ -53,16 +44,6 @@ public:
 	static SGLVektor Normale(SGLVektor Vekt1,SGLVektor Vekt2);
 	static SGLVektor Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3);
 
-	void Scale(GLdouble xfact,GLdouble yfact, GLdouble zfact);
-	void Move(SGLVektor to);
-	void Move(GLdouble x,GLdouble y, GLdouble z);
-	void MoveTo(SGLVektor to);
-	void MoveTo(GLdouble x,GLdouble y, GLdouble z);
-	void Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdouble amount);
-
-	void ResetTransformMatrix(const GLdouble *newMatrix=NULL);
-
-	GLdouble MyTransformMatrix[16];
 	GLuint ID;
 	bool IgnoreClip,IgnoreLight;
 	GLenum FrontFace;

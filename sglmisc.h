@@ -70,9 +70,29 @@ void _SGLprintInfo(const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
 void writeOut(FILE *out,const char text[], ...);
-short def2dim(GLenum def);
 
 extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings;
+
+inline GLdouble sglGetd(GLenum pname)
+{
+	GLdouble ret;
+	glGetDoublev( pname, &ret);
+	return ret;
+}
+
+inline GLfloat sglGetf(GLenum pname)
+{
+	GLfloat ret;
+	glGetFloatv( pname, &ret);
+	return ret;
+}
+
+inline GLint sglGeti(GLenum pname)
+{
+	GLint ret;
+	glGetIntegerv( pname, &ret);
+	return ret;
+}
 
 #ifdef __cplusplus
 };

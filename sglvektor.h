@@ -23,8 +23,9 @@
 #endif
 
 #include <evektor.h>
+#include "sglmisc.h"
 
-#include "util/sglmaterial.h"
+//#include "util/sglmaterial.h"
 
 #define	SGLV_X	operator[](0)
 #define	SGLV_Y	operator[](1)

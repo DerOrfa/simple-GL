@@ -18,29 +18,38 @@
 #ifndef SGLTEXTUR_H
 #define SGLTEXTUR_H
 
-#include "sglimagefile.h"
+//#include "sglimagefile.h"
+#include "../sglmatrixobj.h"
 
 
 /**
   *@author Enrico Reimer
   */
-class SGLTextur
+class SGLBaseTex:public SGLMatrixObj
+{
+public:
+	SGLBaseTex();
+	virtual ~SGLBaseTex();
+	GLuint	ID;
+	GLenum TexType;
+	bool loadTex();
+	bool unloadTex();
+	virtual void SetParams();
+	bool genValidSize(GLint internalFormat,GLsizei &width,GLsizei &height,GLsizei &depth, GLenum format,GLenum type,bool border);
+	
+	static short TexLoaded;
+	static short def2dim(GLenum def);
+	bool weich,repeat;
+	bool valid,MipMap;
+};
+
+class SGLTextur:public SGLBaseTex
 {
 public:
 	SGLTextur(const char *imageFile=0);
-	~SGLTextur();
-	GLuint	ID;
-	GLenum TexType;
-	bool valid,MipMap;
 	bool Load2DImage(const char *imageFile, bool MipMap=true);
 	bool Load2DImage(char *imageFile, bool MipMap=true);
 	bool Load3DImage(char *imageFile, bool MipMap=true);
-	bool loadTex();
-	bool unloadTex();
-	static short TexLoaded;
-	virtual void SetParams();
-	void DisableTex();
-    bool weich,repeat;
 };
 
 #endif
