@@ -148,7 +148,7 @@ void SGLSpace::OnResize(int width, int height)
 	StatusInfo.WindowWidth=width,StatusInfo.WindowHeight=height;
 	if(Camera)
 	{
-		if(resizeMode==resizeView)
+		if(resizeMode!=scaleView)
 		{
 			pair<unsigned int,unsigned int> screen[4]=
 			{
