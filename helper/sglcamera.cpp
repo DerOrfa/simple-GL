@@ -186,9 +186,8 @@ void SGLBaseCam::getCross(SGLVektor Horiz[2],SGLVektor Vert[2])
 void SGLBaseCam::getViewRect(SGLVektor Ecken[4])
 {
 	SGLVektor PosVektor=getLookVektor();
-
 	double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
-	double c = SIN(Angle)/COS(DiagWinkel)*PosVektor.Len(); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
+	double c = SIN(Angle)*PosVektor.Len()/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
 
 	Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
 	Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);

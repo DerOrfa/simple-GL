@@ -116,6 +116,7 @@ public:
 	SGLConsole	*mainConsole;
 	void defaultCam(SGLBaseCam *cam);
 	bool isMyCam;
+	struct {unsigned int x,y;}Size;
 
 protected:
 	void callHelper(int stage=1);

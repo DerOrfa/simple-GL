@@ -159,6 +159,8 @@ void SGLSpace::OnResize(int width, int height)
 	{
 		SGLprintError("Keine aktuelle Camera");
 	}
+	Size.x=width;
+	Size.y=height;
 	glViewport(0, 0, width, height);
  	reDraw();
 }

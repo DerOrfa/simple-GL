@@ -219,19 +219,19 @@ void SGLObjList::ListInfo()
 {
 	char *elemente=new char[1];elemente[0]=0;
 	unsigned int size=0;
-	char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d";
+	char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
 	unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
 
 	for(unsigned int i=0;i<ObjCnt_Ptr;i++)
 	{
 		int oldlen=strlen(elemente);
-		int newnlen=oldlen+FormatStr_Len+strlen(i)+strlen(ObjPtr[i]->guesType())+strlen(ObjPtr[i]->priority);
+		int newnlen=oldlen+FormatStr_Len+strlen(i)+strlen(ObjPtr[i]->guesType())+strlen(ObjPtr[i]->priority)+strlen(ObjPtr[i]->ID);
 		if(newnlen>size)
 		{
 			elemente=(char*)realloc(elemente,(newnlen+1)*sizeof(char));
 			size=newnlen;
 		}
-		sprintf(elemente+oldlen,FormatStr,i,ObjPtr[i]->guesType(),ObjPtr[i]->priority);
+		sprintf(elemente+oldlen,FormatStr,i,ObjPtr[i]->guesType(),ObjPtr[i]->priority,ObjPtr[i]->ID);
 	}
 	SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
 }
