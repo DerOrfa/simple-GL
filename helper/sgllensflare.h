@@ -43,7 +43,7 @@ typedef struct t_flare {
 class SGLLensFlare : public SGLHelper
 {
 public:
-	typedef struct _ImageRec
+	struct _ImageRec
 	{
 		unsigned short imagic;
 		unsigned short type;
@@ -74,12 +74,12 @@ private:
 	float position[3];
 	GLfloat	size;
 
-	void SGLLensFlare::ConvertShort(unsigned short *array, unsigned int length);
-	void SGLLensFlare::ConvertUint(unsigned *array, unsigned int length);
-	_ImageRec *SGLLensFlare::ImageOpen(char *fileName);
-	void SGLLensFlare::ImageClose(_ImageRec * image);
-	void SGLLensFlare::ImageGetRow(_ImageRec * image, unsigned char *buf, int y, int z);
-	unsigned char *SGLLensFlare::load_luminance(char *name, int *width, int *height, int *components);
+	void ConvertShort(unsigned short *array, unsigned int length);
+	void ConvertUint(unsigned *array, unsigned int length);
+	_ImageRec *ImageOpen(char *fileName);
+	void ImageClose(_ImageRec * image);
+	void ImageGetRow(_ImageRec * image, unsigned char *buf, int y, int z);
+	unsigned char *load_luminance(char *name, int *width, int *height, int *components);
 
 public:
 	SGLLensFlare(SGLCamera *Camera,SGLLight  *Light);

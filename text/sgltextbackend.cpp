@@ -17,7 +17,7 @@ SGLTextBackend::~SGLTextBackend()
 void SGLTextBackend::replace(string &myText,string findText,string replString)
 {
 	string::size_type pos;
-	while((pos = myText.find(findText))>=0 && (pos < myText.length()))
+	while((pos = myText.find(findText)) && (pos < myText.length()))
 		myText.replace(pos,findText.length(),replString);
 }
 

@@ -68,7 +68,7 @@ public:
 	SGLSignal<void ()> notifyChange;
 	GLint beginList(bool draw);
 	void endList();
-	short priority;
+	Prio priority;
 	short should_compile;
 	SGLObjList* myList;
 };

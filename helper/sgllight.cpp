@@ -82,7 +82,7 @@ void SGLLight::CamLight()
 	glPopMatrix();
 }
 
-GLuint SGLLight::Compile()
+GLuint SGLLight::Compile(bool draw,bool free)
 {
 	SetUp();
 	return SGLObj::Compile();

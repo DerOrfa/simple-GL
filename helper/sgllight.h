@@ -38,7 +38,7 @@ public:
 	bool IsOn();
 	void generate();
 	void CamLight();
-	GLuint Compile();
+	virtual GLuint Compile(bool draw=true,bool free=false);
 	void SetParam(GLenum pname,GLfloat param);
 	void SetParam(GLenum pname,const GLfloat *params);
 	void SetUp();

@@ -123,7 +123,6 @@ bool SGLBaseTex::loadTex()
 
 bool SGLBaseTex::unloadTex()
 {
-	GLboolean ret;
 	if(multitex)
 		multitex->unloadTex();
 	glClientActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
@@ -137,7 +136,7 @@ bool SGLBaseTex::unloadTex()
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
 	loaded=false;
-	return ret;
+	return true;
 }
 
 /** No descriptions */
