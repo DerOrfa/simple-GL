@@ -47,6 +47,7 @@ public:
 	void setTexKoord(int eckNr,GLfloat x,GLfloat y,GLfloat z);
     void generateWithNormales();
     void generateWithoutNormales();
+    bool canSee(SGLVektor aim);
 	SGLVektor Center;
 	bool useCenter;
 };

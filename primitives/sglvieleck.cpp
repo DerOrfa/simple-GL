@@ -387,3 +387,21 @@ void SGLPolygon::generateWithoutNormales()
 		if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex();
 	glEnd();
 }
+
+
+/*!
+    \fn SGLPolygon::canSee(SGLVektor aim)
+ */
+bool SGLPolygon::canSee(SGLVektor aim)
+{
+	if(EckVektoren.Cnt<3)
+	{
+		SGLprintError("Keine Fläche");
+		return false;
+	}
+	SGLVektor stuetzV(*EckVektoren.Vekt[0]);
+	SGLVektor V1(*EckVektoren.Vekt[EckVektoren.Cnt-1]-stuetzV);
+	SGLVektor V2(*EckVektoren.Vekt[1]-stuetzV);
+	aim-=stuetzV;
+	return(V1.spatprod(V2,aim)<=0);
+}

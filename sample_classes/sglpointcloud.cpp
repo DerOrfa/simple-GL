@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "../sglobj.h"
+#include <map>
 
 
 subSGLPointCloud::subSGLPointCloud(int PktCnt,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ):
@@ -16,7 +17,7 @@ SGLFlObj(NULL,PosX,PosY,PosZ,1)
 	if(PktCnt)
 	{
 		make_rand_pts(PktCnt);
-		qsort(punkte,PktCnt,sizeof(SGLVektor),sortZ);
+//		qsort(punkte,PktCnt,sizeof(SGLVektor),sortZ);
 	}
 }
 
@@ -93,6 +94,7 @@ SGLMetaObj(PosX,PosY,PosZ,1)
 {
 	cloud=new subSGLPointCloud(PktCnt,breite,hoehe,tiefe,PosX,PosY,PosZ);
 	init();
+	grow(0);
 	compileSubObjects();
 }
 
@@ -126,10 +128,27 @@ void SGLPointCloud::init()
 	SGLVektor *pt1,*pt2,*pt3,*pt4;
 	cloud->getTetraeder(pt1,pt2,pt3,pt4);
 	
-	seiten.push_back(SGLDreiEck(pt1,pt3,pt2));
-	seiten.push_back(SGLDreiEck(pt1,pt2,pt4));
-	seiten.push_back(SGLDreiEck(pt1,pt4,pt3));
-	seiten.push_back(SGLDreiEck(pt2,pt3,pt4));
+	if(SGLDreiEck(pt1,pt2,pt3).canSee(*pt4))
+		seiten.push_back(SGLDreiEck(pt1,pt3,pt2));
+	else
+		seiten.push_back(SGLDreiEck(pt1,pt2,pt3));
+	
+	if(SGLDreiEck(pt1,pt2,pt4).canSee(*pt3))
+		seiten.push_back(SGLDreiEck(pt1,pt4,pt2));
+	else
+		seiten.push_back(SGLDreiEck(pt1,pt2,pt4));
+
+	
+	if(SGLDreiEck(pt1,pt3,pt4).canSee(*pt2))
+		seiten.push_back(SGLDreiEck(pt1,pt4,pt3));
+	else
+		seiten.push_back(SGLDreiEck(pt1,pt3,pt4));
+	
+	if(SGLDreiEck(pt2,pt3,pt4).canSee(*pt1))
+		seiten.push_back(SGLDreiEck(pt2,pt4,pt3));
+	else
+		seiten.push_back(SGLDreiEck(pt2,pt3,pt4));
+	
 	compileNextTime();
 }
 
@@ -195,4 +214,47 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 			vier=&punkte[i];
 		}
 	}
+}
+
+
+/*!
+    \fn SGLPointCloud::grow
+ */
+int SGLPointCloud::grow(unsigned int seite)
+{
+	SGLDreiEck *dEck=&seiten[seite];
+		
+	double maxEntf=0;
+	SGLVektor *maxPkt=NULL;
+	for(int i=0;i<cloud->pktCnt;i++)
+	{
+		//@todo Punke die zum dreieck gehören sind unintressant
+		SGLVektor stuetzV(*dEck->EckVektoren.Vekt[0]);
+		SGLVektor aim(cloud->punkte[i]-stuetzV);
+		SGLVektor V1(*dEck->EckVektoren.Vekt[dEck->EckVektoren.Cnt-1]-stuetzV);
+		SGLVektor V2(*dEck->EckVektoren.Vekt[1]-stuetzV);
+		double entf=-V1.spatprod(V2,aim);
+		
+		if(entf>maxEntf)
+		{
+			maxEntf=entf;
+			maxPkt=&cloud->punkte[i];
+		}
+		else if(entf<0)
+		{}
+	}
+	
+	std::map<SGLVektor*,unsigned int> touched;
+	
+	if(maxPkt)
+	{
+		touched[dEck->EckVektoren.Vekt[0]]=2;
+		touched[dEck->EckVektoren.Vekt[1]]=2;
+		touched[dEck->EckVektoren.Vekt[2]]=2;
+		
+		seiten.push_back(SGLDreiEck(dEck->EckVektoren.Vekt[0],dEck->EckVektoren.Vekt[1],maxPkt));
+		seiten.erase(seiten.begin()+seite);
+		compileNextTime();
+	}
+	return maxPkt ? 1:0;
 }

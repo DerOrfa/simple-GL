@@ -38,6 +38,7 @@ public:
 	void compileSubObjects();
 	SGLVektor getCenter();
     void init();
+    int grow(unsigned int seite);
 	vector<SGLDreiEck> seiten;
 	vector<SGLStrecke> hilfsLinien;
 };
