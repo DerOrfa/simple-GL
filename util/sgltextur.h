@@ -65,6 +65,9 @@ public:
     void addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed);
 	void addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
 	void addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
+	void delMTex(boost::shared_ptr<SGLBaseTex> delTex,bool call_changed);
+	void delMTexEnd(bool call_changed);
+	void delMTexBegin(bool call_changed);
 	bool weich,repeat,shouldBeLoaded;
 	bool valid,MipMap,loaded;
 	GLfloat envColor[4];

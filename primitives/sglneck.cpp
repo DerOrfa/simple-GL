@@ -15,7 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <emath_misc.h>
+#include <eclasses/emath_misc.h>
 #include "sglneck.h"
 #include "../sglvektor.h"
 

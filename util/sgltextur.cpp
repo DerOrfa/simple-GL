@@ -447,13 +447,48 @@ void SGLBaseTex::addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_change
 }
 void SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
 {
-	boost::shared_ptr<SGLBaseTex> mtex=multitex;
+	assert(tex);
+	if(multitex)
+	{
+		boost::shared_ptr<SGLBaseTex> mtex=multitex;
+		while(mtex->multitex)
+			if(mtex->multitex==before)break;
+			else mtex=mtex->multitex;
+		
+		if(mtex)mtex->addMTexBegin(tex,false);//Wenn es ein multitex gab ist mtex entwder am ende, oder tex soll vor mtex->multitex eingef werden
+		else addMTexBegin(tex,false);//Wenn es kein multitex gab (mtex von vornherein NULL war)
+		if(call_changed)changed();
+	}
+	else addMTexBegin(tex,call_changed);
+}
 
-	while(mtex->multitex)
-		if(mtex->multitex==before)break;
-		else mtex=mtex->multitex;
-	
-	if(mtex)mtex->addMTexBegin(tex,false);//Wenn es ein multitex gab ist mtex entwder am ende, oder tex soll vor mtex->multitex eingef werden
-	else addMTexBegin(tex,false);//Wenn es kein multitex gab (mtex von vornherein NULL war)
-	if(call_changed)changed();
+void SGLBaseTex::delMTexEnd(bool call_changed)
+{
+	boost::shared_ptr<SGLBaseTex> mtex=multitex;
+	if(mtex->multitex)
+	{	while(mtex->multitex->multitex)
+			mtex=mtex->multitex;
+		mtex->delMTexBegin(call_changed);
+	}
+	else delMTexBegin(call_changed);
+}
+void SGLBaseTex::delMTexBegin(bool call_changed)
+{
+	if(multitex)
+	{
+		multitex=multitex->multitex;
+		if(call_changed)changed();
+	}
+	else{SGLprintDebug("Die Textur 0x%x (%s) hat keine Subtextur",this,guesType());}
+}
+void SGLBaseTex::delMTex(boost::shared_ptr<SGLBaseTex> delTex,bool call_changed)
+{
+	if(multitex==delTex)delMTexBegin(call_changed);
+	else
+	{
+		boost::shared_ptr<SGLBaseTex> mtex=multitex;
+		while(mtex->multitex)
+			if(mtex->multitex==delTex){mtex->delMTexBegin(call_changed);break;}
+			else mtex=mtex->multitex;
+	}
 }

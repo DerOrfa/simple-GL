@@ -1,4 +1,4 @@
-CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -O2 -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread
+CXXFLAGS= -O2 -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread
 CFLAGS=$(CXXFLAGS)
 
 CORE_DIR=
