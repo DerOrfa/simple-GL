@@ -3,7 +3,61 @@
 #include <stdlib.h>
 #include "../sglobj.h"
 #include <map>
+#include "../sglmisc.h"
 
+QHDreiEck::QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei):SGLDreiEck(eins,zwei,drei)
+{
+	Nachbar[0]=Nachbar[1]=Nachbar[2]=NULL;
+	twoSideRender=false;
+}
+
+bool QHDreiEck::addNachbar(QHDreiEck *Nachbar)
+{
+	unsigned int Kante;
+	for(int i=0;i<3;i++)
+	{
+		if(Kante=Nachbar->hasKante(EckVektoren.Vekt[i],EckVektoren.Vekt[(i+1)%3]))
+		{
+			if(Nachbar->Nachbar[Kante-1]){SGLprintWarning("Der Nachbar %d ist schon belegt",Kante-1);}
+			this->Nachbar[i]=Nachbar;
+			Nachbar->Nachbar[Kante-1]=this;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool QHDreiEck::delNachbar(QHDreiEck *Nachbar)
+{
+	for(int i=0;i<3;i++)
+	{
+		if(this->Nachbar[i]==Nachbar)
+		{
+			for(int n=0;n<3;n++)
+			{
+				if(Nachbar->Nachbar[n]==this)
+					Nachbar->Nachbar[n]=NULL;
+			}
+			this->Nachbar[i]=NULL;
+		}
+	}
+	return false;
+}
+
+unsigned int QHDreiEck::hasKante(SGLVektor *eins,SGLVektor *zwei)
+{
+	for(int i=0;i<3;i++)
+	{
+		if(EckVektoren.Vekt[i]==eins)
+		{
+			if(EckVektoren.Vekt[(i+1)%3]==zwei)
+				return i+1;
+			if(EckVektoren.Vekt[(i+2)%3]==zwei)
+				return i?(i+4)%4:3;
+		}
+	}
+	return 0;
+}
 
 subSGLPointCloud::subSGLPointCloud(int PktCnt,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ):
 SGLFlObj(NULL,PosX,PosY,PosZ,1)
@@ -127,27 +181,35 @@ void SGLPointCloud::init()
 {
 	SGLVektor *pt1,*pt2,*pt3,*pt4;
 	cloud->getTetraeder(pt1,pt2,pt3,pt4);
-	
-	if(SGLDreiEck(pt1,pt2,pt3).canSee(*pt4))
-		seiten.push_back(SGLDreiEck(pt1,pt3,pt2));
+	seiten.clear();
+	if(QHDreiEck(pt1,pt2,pt3).canSee(*pt4))
+		seiten.push_back(QHDreiEck(pt1,pt3,pt2));
 	else
-		seiten.push_back(SGLDreiEck(pt1,pt2,pt3));
+		seiten.push_back(QHDreiEck(pt1,pt2,pt3));
 	
-	if(SGLDreiEck(pt1,pt2,pt4).canSee(*pt3))
-		seiten.push_back(SGLDreiEck(pt1,pt4,pt2));
+	if(QHDreiEck(pt1,pt2,pt4).canSee(*pt3))
+		seiten.push_back(QHDreiEck(pt1,pt4,pt2));
 	else
-		seiten.push_back(SGLDreiEck(pt1,pt2,pt4));
+		seiten.push_back(QHDreiEck(pt1,pt2,pt4));
+	
+	seiten[0].addNachbar(&seiten.back());
 
-	
-	if(SGLDreiEck(pt1,pt3,pt4).canSee(*pt2))
-		seiten.push_back(SGLDreiEck(pt1,pt4,pt3));
+	if(QHDreiEck(pt1,pt3,pt4).canSee(*pt2))
+		seiten.push_back(QHDreiEck(pt1,pt4,pt3));
 	else
-		seiten.push_back(SGLDreiEck(pt1,pt3,pt4));
+		seiten.push_back(QHDreiEck(pt1,pt3,pt4));
+
+	seiten[0].addNachbar(&seiten.back());
+	seiten[1].addNachbar(&seiten.back());
 	
-	if(SGLDreiEck(pt2,pt3,pt4).canSee(*pt1))
-		seiten.push_back(SGLDreiEck(pt2,pt4,pt3));
+	if(QHDreiEck(pt2,pt3,pt4).canSee(*pt1))
+		seiten.push_back(QHDreiEck(pt2,pt4,pt3));
 	else
-		seiten.push_back(SGLDreiEck(pt2,pt3,pt4));
+		seiten.push_back(QHDreiEck(pt2,pt3,pt4));
+	
+	seiten[0].addNachbar(&seiten.back());
+	seiten[1].addNachbar(&seiten.back());
+	seiten[2].addNachbar(&seiten.back());
 	
 	compileNextTime();
 }
@@ -222,10 +284,13 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
  */
 int SGLPointCloud::grow(unsigned int seite)
 {
-	SGLDreiEck *dEck=&seiten[seite];
+	QHDreiEck *dEck=&seiten[seite];
+	struct kante{SGLVektor *start,*end;};
 		
 	double maxEntf=0;
 	SGLVektor *maxPkt=NULL;
+	queue<*QHDreiEck> offen;
+	queue<kante> kanten;
 	for(int i=0;i<cloud->pktCnt;i++)
 	{
 		//@todo Punke die zum dreieck gehören sind unintressant
@@ -248,12 +313,26 @@ int SGLPointCloud::grow(unsigned int seite)
 	
 	if(maxPkt)
 	{
+		for(offen.push(dEck);!offen.empty();offen.pop())
+		{
+			dEck=stack.front();
+			for(int i=0;i<3;i++)
+			{
+				if(dEck->Nachbar[i]->canSee(maxPkt))
+					offen.push(dEck->Nachbar[i]);
+				else
+				{
+					kante kt={dEck->EckVektoren.Vekt[i],dEck->EckVektoren.Vekt[(i+1)%3]};
+					kanten.push(kt);
+				}
+			}
+		}
 		touched[dEck->EckVektoren.Vekt[0]]=2;
 		touched[dEck->EckVektoren.Vekt[1]]=2;
 		touched[dEck->EckVektoren.Vekt[2]]=2;
 		
-		seiten.push_back(SGLDreiEck(dEck->EckVektoren.Vekt[0],dEck->EckVektoren.Vekt[1],maxPkt));
-		seiten.erase(seiten.begin()+seite);
+/*		seiten.push_back(QHDreiEck(dEck->EckVektoren.Vekt[0],dEck->EckVektoren.Vekt[1],maxPkt));
+		seiten.erase(seiten.begin()+seite);*/
 		compileNextTime();
 	}
 	return maxPkt ? 1:0;

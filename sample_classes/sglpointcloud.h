@@ -28,6 +28,16 @@ public:
     void getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor *&drei,SGLVektor *&vier);
 };
 
+class QHDreiEck : public SGLDreiEck
+{
+public:
+	QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei);
+	QHDreiEck *Nachbar[3];
+	unsigned int hasKante(SGLVektor *eins,SGLVektor *zwei);
+	bool addNachbar(QHDreiEck *Nachbar);
+	bool delNachbar(QHDreiEck *Nachbar);
+};
+
 class SGLPointCloud : public SGLMetaObj
 {
 public:
@@ -39,6 +49,6 @@ public:
 	SGLVektor getCenter();
     void init();
     int grow(unsigned int seite);
-	vector<SGLDreiEck> seiten;
+	vector<QHDreiEck> seiten;
 	vector<SGLStrecke> hilfsLinien;
 };
