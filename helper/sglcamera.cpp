@@ -42,13 +42,14 @@ void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
 
 bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
+	update();
 	if(gluProject(src.SGLV_X,src.SGLV_Y,src.SGLV_Z,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))
 	{
 		dst.SGLV_Y=view[3]-dst.SGLV_Y;
 		return true;
 	}
 	else{
-	SGLprintError("Fehler beim Umrechnen der Coordinaten");
+	SGLprintError("Fehler beim Umrechnen der Coordinaten %g %g %g",src.SGLV_X,src.SGLV_Y,src.SGLV_Z);
 	return false;
 	}
 }
@@ -72,9 +73,10 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor 
 
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
 {
+	update();
 	if(gluUnProject(x,view[3] - int(y) ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
 	else{
-	SGLprintError("Fehler beim Umrechnen der Coordinaten");
+	SGLprintError("Fehler beim Umrechnen der Coordinaten %g %g %g",x,y,depth);
 	return false;}
 }
 
