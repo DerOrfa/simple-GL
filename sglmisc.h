@@ -19,14 +19,12 @@
 #define SGLMISC_H
 
 #include <stdio.h>
-#include <GL/gl.h>
-#include <GL/glext.h>
 
 #define X_AXE	1
 #define Y_AXE	2
 #define Z_AXE	4
 
-
+#include <GL/gl.h>
 
 #ifdef WIN32
 #include <process.h>

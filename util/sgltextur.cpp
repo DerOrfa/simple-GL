@@ -73,23 +73,22 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
 	this->MipMap=false;
 	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
-	TexType=GL_TEXTURE_3D;
+	TexType=GL_TEXTURE_3D_EXT;
+#define	size 128
 
-	GLfloat pixels[32][32][32][3];
+	GLubyte pixels[size][size][size];
 
-	for(int x=0;x<32;x++)
-		for(int y=0;y<32;y++)
-			for(int z=0;z<32;z++)
-			{
-				pixels[x][y][z][0]=x/32.;
-				pixels[x][y][z][1]=y/32.;
-				pixels[x][y][z][2]=z/32.;
-			}
+	for(int x=0;x<size;x++)
+		for(int y=0;y<size;y++)
+			for(int z=0;z<size;z++)
+				if((x/(size/4) + y/(size/4) + z/(size/4))%2)
+					pixels[z][y][x]=255;
+				else pixels[z][y][x]=0;
 
 	glGenTextures(1, &ID);
-	glBindTexture(GL_TEXTURE_3D, ID);
+	glBindTexture(TexType, ID);
 
-	glTexImage3D(GL_TEXTURE_3D,0,3,32,32,32,0,GL_RGB,GL_FLOAT,pixels);
+	glTexImage3DEXT(TexType,0,3,size,size,size,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pixels);
 
 	GLuint gluerr = glGetError();
 	if(gluerr)

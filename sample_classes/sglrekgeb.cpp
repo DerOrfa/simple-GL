@@ -1,6 +1,4 @@
-
 #include "sglrekgeb.h"
-#include <misc.h>
 // @todo den headernamen in Emath ändern
 #include "../sglmisc.h"
 

@@ -415,7 +415,7 @@ SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex):SGLR
 	if(!volumeTex->TexType!=GL_TEXTURE_3D)
 	{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
 	this->Mat->SetTex(volumeTex);
-	
+
 	depth=0;
 	resetTexKoord(0);
 }
@@ -431,7 +431,8 @@ void SGL3DPlane::resetTexKoord(GLfloat depth)
 
 void SGL3DPlane::setHigh(SGLObjBase *plane,SDL_Event event)
 {
-	if(event.key.keysym.sym==SDLK_SPACE)((SGL3DPlane*)plane)->depth+=.01;
+	if(event.key.keysym.sym==SDLK_SPACE)((SGL3DPlane*)plane)->depth+=.1;
 	((SGL3DPlane*)plane)->resetTexKoord(((SGL3DPlane*)plane)->depth);
 	((SGL3DPlane*)plane)->compileNextTime();
+	cout << ((SGL3DPlane*)plane)->depth << endl;
 }

@@ -149,7 +149,7 @@ void SGLSpace::show_status()
 {
 	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps);
 	PrintOnScreen(StatusInfo.StatusString);StatusInfo.StatusString[0]=0;
-//	if(!mainConsole->empty)glCallList(mainConsole->metaCompile());
+	if(!mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
 
 void SGLSpace::OnDraw()
@@ -381,7 +381,7 @@ void SGLSpace::setFlags(bool reCompile)
 
 	glCullFace( GL_BACK );
 	glShadeModel( GL_SMOOTH );
-	
+
 	//Die Texturen aktivieren, und deaktivieren ihre entspr. Modi selbst.
 	glDisable(GL_TEXTURE_1D);
 	glDisable(GL_TEXTURE_2D);
@@ -472,7 +472,7 @@ bool SGLSpace::Go(unsigned int Mode)
 						OnIdle();
 					}
 					else if(SDL_WaitEvent(&e))procEvent(e);//Kein Idle => wartet auf Event
-					
+
 					while(SDL_PollEvent(&e))procEvent(e);//Events einsammeln
 					if(StatusInfo.update)
 						OnDraw();//bei Bedarf neu Zeichnen
@@ -683,5 +683,5 @@ void SGLSpace::callEventListeners(Uint8 type,SDL_Event &event)
 		Uint8 newType=it->first;
 		if(newType!=type)break;
 	}
-}  
+}
 
