@@ -21,6 +21,9 @@
 //#include "sglimagefile.h"
 #include "../sglmatrixobj.h"
 
+#define SGL_MTEX_MODE_TINT NON_GL_ENUM_BLOCK_BEGIN+1
+#define SGL_MTEX_MODE_OVERLAY NON_GL_ENUM_BLOCK_BEGIN+2
+#define SGL_MTEX_MODE_MASK NON_GL_ENUM_BLOCK_BEGIN+3
 
 /**
   *@author Enrico Reimer
