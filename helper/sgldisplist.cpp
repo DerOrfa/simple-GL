@@ -30,8 +30,9 @@ void SGLObjList::CallAllLists()
 {
 	if(ObjCnt_Ptr<=0)return;
 
+	if(renderTransparent)
+		glEnable(GL_BLEND);//Ab hier transparent
 	if(check_recompile)Compile();
-	if(renderTransparent)glEnable(GL_BLEND);//Ab hier transparent
 	
 	glFrontFace(GL_CW);
 /*	for(int i=ObjCnt_CW;i;i--) @todo sollte schon noch geprüft werden (wenigstens im Debug)
@@ -48,7 +49,8 @@ void SGLObjList::CallAllLists()
 			SGLprintError("Es existiert kein Objekt mit der ID %d",Objects_CW[i]);
 		}*/
 	glCallLists(ObjCnt_CCW,GL_UNSIGNED_INT,Objects_CCW);
-	if(renderTransparent)glDisable(GL_BLEND);//Ab hier transparent
+	if(renderTransparent)
+		glDisable(GL_BLEND);//Ab hier transparent
 }
 
 

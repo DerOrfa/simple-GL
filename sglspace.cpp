@@ -366,6 +366,7 @@ void SGLSpace::setFlags(bool reCompile)
 	GLuint error=0;
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_NORMALIZE);
+	
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);

@@ -17,7 +17,7 @@ SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
 	text = new SGLConsoleText(breite,hoehe, fontname);
 	background->Mat->Transparenz=.5;
 	background->Mat->SetColor(.3,.3,.3);
-//	background->IgnoreLight=true;// @todo wenn das aktiviert ist, wird das ganze Obj weiß :-(
+	background->IgnoreLight=true;
 	IgnoreClip=true;
 
 	compileSubObjects();

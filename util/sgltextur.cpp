@@ -73,26 +73,30 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 	this->MipMap=false;
 	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
 	TexType=GL_TEXTURE_3D;
-#define	size 64
+#define	size 64 //@todo glPixelStore könnte das tunen - Multitexture wär vielleicht auch nich schlecht
 
-	GLubyte pixels[size][size][size];
+	GLubyte pixels[size][size][size][2];
  
 	for(int x=0;x<size;x++)
 		for(int y=0;y<size;y++)
 			for(int z=0;z<size;z++)
 			{
-				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
-					pixels[z][y][x]=128;
-				else if((x/(size/4) + y/(size/4) + z/(size/4))%2)
-					pixels[z][y][x]=255;
+				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)pixels[z][y][x][1]=0;
 				else 
-					pixels[z][y][x]=0;
+				{
+					if((x/(size/4) + y/(size/4) + z/(size/4))%2)
+					{
+						pixels[z][y][x][0]=255;
+					}
+					else pixels[z][y][x][0]=0;
+					pixels[z][y][x][1]=255;
+				}
 			}
 
 	glGenTextures(1, &ID);
 	glBindTexture(TexType, ID);
 
-	glTexImage3D(TexType,0,3,size,size,size,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pixels);
+	glTexImage3D(TexType,0,GL_LUMINANCE_ALPHA,size,size,size,0,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,pixels);
 
 	GLuint gluerr = glGetError();
 	if(gluerr)
@@ -107,14 +111,15 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 bool SGLTextur::loadTex()
 {
 	GLboolean ret;
+	short dim=def2dim(TexType);
 	if(glIsTexture(ID))
 	{
-		short dim=def2dim(TexType);
 		if(glIsEnabled(TexType))
 		{
 			SGLprintWarning("%dD-Texturen sind schon aktiviert",dim,ID);
 			glDisable(TexType);
 		}
+		
 		glEnable(TexType);
 		glBindTexture(TexType,ID);
 		SetParams();
@@ -122,10 +127,10 @@ bool SGLTextur::loadTex()
 
 		if(!glAreTexturesResident(1,&ID,&ret))
 		{
-			SGLprintWarning("Die Textur \"%d\" ist nicht im Grafikspeicher",ID);
+			SGLprintWarning("Die %dD-Textur \"%d\" ist nicht im Grafikspeicher",dim,ID);
 		}
 	}
-	else{SGLprintError("OpenGL kennt die Textur \"%d\" nicht",ID);}
+	else{SGLprintError("OpenGL kennt die %dD-Textur \"%d\" nicht",dim,ID);}
 	return ret;
 }
 
@@ -144,17 +149,14 @@ bool SGLTextur::unloadTex()
 /** No descriptions */
 void SGLTextur::SetParams()
 {
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
 
-	GLint filter;
-	if(weich)filter=MipMap ? GL_LINEAR_MIPMAP_LINEAR:GL_LINEAR;
-	else filter=MipMap ? GL_NEAREST_MIPMAP_NEAREST:GL_NEAREST;
-	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,filter);
-	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,filter);
-
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+	if(MipMap)	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,weich ? GL_LINEAR_MIPMAP_LINEAR:GL_NEAREST_MIPMAP_NEAREST);
+	else		glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,weich ? GL_LINEAR:GL_NEAREST);
+	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,weich ? GL_LINEAR:GL_NEAREST);
 }
 
 short SGLTextur::TexLoaded=0;

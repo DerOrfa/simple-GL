@@ -76,7 +76,16 @@ GLuint SGLFlObj::Compile()
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
-			if(IgnoreLight)glColor3fv(Mat->Aussen.Farbe.Glow);
+			if(IgnoreLight)// @Todo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
+			{
+				if(Mat->tex)Mat->tex->loadTex();
+				else glColor4f(
+					Mat->Aussen.Farbe.Glow[0],
+					Mat->Aussen.Farbe.Glow[1],
+					Mat->Aussen.Farbe.Glow[2],
+					1-Mat->Transparenz);//Wenn Selbstleuchtend, und keine Textur
+
+			}
 			else Mat->loadMat();
 		}
 
@@ -85,7 +94,10 @@ GLuint SGLFlObj::Compile()
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
-			if(IgnoreLight)glColor3fv(Mat->Aussen.Farbe.Glow);
+			if(IgnoreLight)// @todo Tex NUR hier laden - is sauberer
+			{
+				if(Mat->tex)Mat->tex->unloadTex();
+			}
 			else Mat->unloadMat();
 		}
 
@@ -103,6 +115,7 @@ GLuint SGLFlObj::Compile()
 		for(i=0;i<5;i++)if(EnableClip[i])
 			glDisable(GLenum(GL_CLIP_PLANE0+i));
 
+		glColor4f(1,1,1,1);
 	glEndList();
 
 	while(error=glGetError())

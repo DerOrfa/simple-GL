@@ -59,7 +59,8 @@ void SGLMaterial::loadMat()
 		setMatParams(GL_FRONT,Aussen);
 		setMatParams(GL_BACK,Innen);
 	}
-	if(tex)tex->loadTex();
+	if(tex)tex->loadTex(); 
+
 	SGLMaterial::MatLoaded=true;
 }
 
@@ -209,14 +210,15 @@ void SGLMaterial::resetMat(faerbung &f)
  */
 void SGLMaterial::setMatParams(GLenum FACE,faerbung &f)
 {
-	if(UmgebGleichDifus)SetMat(f.Farbe.Difus,Transparenz,FACE,GL_AMBIENT_AND_DIFFUSE);
+	GLfloat tr=tex?.5:Transparenz;//Wenn das Objekt eine Textur hat, gilt deren alpha-Kanal
+	if(UmgebGleichDifus)SetMat(f.Farbe.Difus,tr,FACE,GL_AMBIENT_AND_DIFFUSE);
 	else
 	{
-		SetMat(f.Farbe.Umgebung,Transparenz,FACE,GL_AMBIENT);
-		SetMat(f.Farbe.Difus,Transparenz,FACE,GL_DIFFUSE);
+		SetMat(f.Farbe.Umgebung,tr,FACE,GL_AMBIENT);
+		SetMat(f.Farbe.Difus,tr,FACE,GL_DIFFUSE);
 	}
 	SetMat(f.Farbe.Glanz,0,FACE,GL_SPECULAR);
-	SetMat(f.Farbe.Glow,Transparenz,FACE,GL_EMISSION);
+	SetMat(f.Farbe.Glow,tr,FACE,GL_EMISSION);
 	glMaterialf(FACE,GL_SHININESS,f.GlanzFaktor);
 }
 

@@ -134,40 +134,34 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 void SGLVektor::DrawVertex()
 {
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
-	if(SGLMaterial::MatLoaded)
+	bool colorAvail=false;
+	if(SGLMaterial::MatLoaded)colorAvail=true;
+	if(SGLTextur::TexLoaded)
 	{
-		if(SGLTextur::TexLoaded)
+		short coord=texKoord.size();
+		if(coord<SGLTextur::TexLoaded)
 		{
-			short coord=texKoord.size();
-			if(coord<SGLTextur::TexLoaded)
-			{
-				SGLprintWarning("Die geladene Textur hat %d Dimensionen, die Texturkoordinaten des Vertex \"%s\" sind aber nur %d-Dimensional",SGLTextur::TexLoaded,buff,coord);
-			}
-			switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
-			{
-			case 1:glTexCoord1f(texKoord[0]);break;
-			case 2:glTexCoord2f(texKoord[0], texKoord[1]);break;
-			case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);break;
-			default:{
-			SGLprintError("Ungültiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
-			}
+			SGLprintWarning("Die geladene Textur hat %d Dimensionen, die Texturkoordinaten des Vertex \"%s\" sind aber nur %d-Dimensional",SGLTextur::TexLoaded,buff,coord);
 		}
+		switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
+		{
+		case 1:glTexCoord1f(texKoord[0]);break;
+		case 2:glTexCoord2f(texKoord[0], texKoord[1]);break;
+		case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);break;
+		default:{
+		SGLprintError("Ungültiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
+		}
+		colorAvail=true;//@todo naja nich immer
 	}
-	else if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);
-	else
+	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
 	{
-		SGLprintWarning("Keine Farbinformationen verfügbar beim Zeichnen des Vertex \"%s\"",buff);
+		glColor3dv(Color);
+		colorAvail=true;//@todo naja nich immer
 	}
+	if(!colorAvail)
+		SGLprintWarning("Keine Farbinformationen verfügbar beim Zeichnen des Vertex \"%s\"",buff);
 	DrawPureVertex();
 }
-
-inline void SGLVektor::DrawPureVertex()
-{
-	glVertex3d(SGLV_X,SGLV_Y,SGLV_Z);
-}
-
-inline void SGLVektor::SetNormale()
-{glNormal3d(SGLV_X,SGLV_Y,SGLV_Z);}
 
 void SGLVektor::SetColor(GLdouble R, GLdouble G, GLdouble B)
 {
