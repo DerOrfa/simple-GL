@@ -37,7 +37,12 @@
 #define SGLprintWarning	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
 #define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
 
-
+#define SGLcheckGLError	\
+{																\
+	GLuint gluerr;												\
+	while(gluerr= glGetError())									\
+		{SGLprintError("%s [GLerror]",gluErrorString(gluerr));}	\
+}
 
 #ifdef __cplusplus
 extern "C" {

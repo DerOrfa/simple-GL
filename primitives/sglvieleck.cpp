@@ -203,12 +203,6 @@ SGLDreiEck::SGLDreiEck(SGLVektor Ecken[3]):SGLPolygon(Ecken,3){}
  */
 SGLDreiEck::SGLDreiEck(SGLVektor *Ecken[3]):SGLPolygon(Ecken,3){}
 
-/*!
-    \fn SGLDreiEck::SGLDreiEck()
- */
-SGLDreiEck::SGLDreiEck(){}
-SGLDreiEck::~SGLDreiEck(){}
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*!
@@ -217,7 +211,6 @@ SGLDreiEck::~SGLDreiEck(){}
 SGLRechtEck::SGLRechtEck(GLdouble breite,GLdouble hoehe):
 SGLVierEck(SGLVektor(-breite/2,-hoehe/2),SGLVektor(breite/2,-hoehe/2),SGLVektor(breite/2,hoehe/2),SGLVektor(-breite/2,hoehe/2))
 {}
-SGLRechtEck::~SGLRechtEck(void){}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

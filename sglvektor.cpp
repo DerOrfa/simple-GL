@@ -133,14 +133,21 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 
 void SGLVektor::DrawVertex()
 {
-	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
-		glColor3dv(Color);
+	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);
 	else
 	{
 		switch(texKoord.size())
 		{
-		case 2:glTexCoord2f(texKoord[0], texKoord[1]);
+		case 2:
+			glTexCoord2f(texKoord[0], texKoord[1]);
+			break;
 		case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);
+			break;
+		default:
+			{
+				char buff[50];sprint(buff);
+				SGLprintError("Weder Farbinformationen, noch Texturkoordinaten verfügbar beim Zeichnen des Vertex \"%s\"",buff);
+			}break;
 		}
 	}
 	glVertex3d(SGLV_X,SGLV_Y,SGLV_Z);

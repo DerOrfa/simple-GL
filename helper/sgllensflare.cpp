@@ -223,6 +223,7 @@ void SGLLensFlare::generate()
 	if(Texture2D)glDisable(GL_TEXTURE_2D);
 	if(!DoBlend)glDisable(GL_BLEND);
 	glBlendFunc(blendSrc,blendDst);
+	glDisable(GL_TEXTURE_2D);
 }
 
 Flare SGLLensFlare::set_flare(int type, float location, float scale, GLfloat color[3], float colorScale)
@@ -363,6 +364,7 @@ void SGLLensFlare::setup_texture(char *filename, GLuint texobj, GLenum minFilter
 	SGLprintInfo("%s loaded: %dx%dx%d",filename, width, height, components);
 
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 1, width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf);
+	SGLcheckGLError;
 	free(buf);
 }
 

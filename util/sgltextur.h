@@ -32,9 +32,11 @@ public:
 	GLuint	ID;
 	GLenum TexType;
 	bool valid;
-	bool Load2DImage(const char *imageFile, bool MipMap=0);
-	bool Load2DImage(char *imageFile, bool MipMap=0);
-	bool DoTexCalls();
+	bool Load2DImage(const char *imageFile, bool MipMap=true);
+	bool Load2DImage(char *imageFile, bool MipMap=true);
+	bool Load3DImage(char *imageFile, bool MipMap=true);
+	bool loadTex();
+	bool unloadTex();
 	virtual void SetParams();
 	void DisableTex();
 };

@@ -39,7 +39,8 @@ public:
 	SGLMaterial(GLfloat R,GLfloat G, GLfloat B,GLenum Face=GL_FRONT_AND_BACK,bool selbstLeuchtend=false);
 	SGLMaterial(const char *imageFile);
 	~SGLMaterial();
-	void DoMatCalls();
+	void loadMat();
+	void unloadMat();
 	void SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face=GL_FRONT_AND_BACK,bool selbstLeuchtend=false);
 	bool SetTex(const char *imageFile);
 	bool SetTex(SGLTextur *TexPtr);

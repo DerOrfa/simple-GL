@@ -193,6 +193,8 @@ SGLSpace::SGLSpace(int XSize, int YSize,unsigned int R,unsigned int G,unsigned i
 	if(setup_video(XSize,YSize))
 	{
 	  char TitleString[255];
+	  ilInit();
+	  iluInit();
 	  ilutRenderer(ILUT_OPENGL);
 
 	  sprintf(TitleString,"OpenGL: %s, Renderer: %s von %s",glGetString(GL_VERSION),glGetString(GL_RENDERER),glGetString(GL_VENDOR));
@@ -368,7 +370,7 @@ void SGLSpace::setFlags(bool reCompile)
 	glDisable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
-//	glEnable(GL_LINE_SMOOTH);
+	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_LIGHTING);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
@@ -379,7 +381,11 @@ void SGLSpace::setFlags(bool reCompile)
 
 	glCullFace( GL_BACK );
 	glShadeModel( GL_SMOOTH );
-
+	
+	//Die Texturen aktivieren, und deaktivieren ihre entspr. Modi selbst.
+	glDisable(GL_TEXTURE_1D);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_3D);
 
 	if(reCompile)
 	  {

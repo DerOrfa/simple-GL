@@ -28,10 +28,10 @@ SGLObjBase(PosX,PosY,PosZ,SizeFact)
 
 GLuint SGLObj::Compile()
 {
-	GLuint error=0,i;;
+	GLuint error=0,i;
 	bool EnableClip[5];
 
-	glNewList(ID,GL_COMPILE);
+	glNewList(ID,GL_COMPILE_AND_EXECUTE);
 	{
 		if(IgnoreLight)
 			glDisable(GL_LIGHTING);
@@ -48,7 +48,7 @@ GLuint SGLObj::Compile()
 
 	}
 	glEndList();
-
+	
 	while(error=glGetError())
 	{SGLprintError("[GLerror] %s beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());}
 	return ID;

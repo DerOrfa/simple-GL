@@ -44,13 +44,17 @@ GLuint SGLFlObj::Compile()
 	int i;
 	bool EnableClip[5];
 
+	while(error=glGetError())
+	{
+		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+	}
 
 	//NVIDIA optimiert Setzoperationen komplett raus aus den Listen, wenn der Wert schon gesetzt ist
 	//Deshalb bringt das vorsorgliche glPolygonMode nix mehr (es kann nicht garantiert werden, daﬂ es
 	//auch in der Liste landet)
 	//Behandle GL_FILL jetzt als Normfall, und alle anderen setzen ihren Modus UND nehmen ihn auch
 	//wieder raus
-	glNewList(ID,GL_COMPILE);
+	glNewList(ID,GL_COMPILE_AND_EXECUTE);
 		for(i=0;i<5;i++)
 			if(EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i))))
 				glDisable(GLenum(GL_CLIP_PLANE0+i));
@@ -73,11 +77,18 @@ GLuint SGLFlObj::Compile()
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
 			if(IgnoreLight)glColor3fv(Mat->Aussen.Farbe.Glow);
-			else Mat->DoMatCalls();
+			else Mat->loadMat();
 		}
 
 		metaGenerate();
 
+		if(Mat)
+		{
+			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
+			if(IgnoreLight)glColor3fv(Mat->Aussen.Farbe.Glow);
+			else Mat->unloadMat();
+		}
+		
 		if(VisMode!=GL_FILL)
 		{
 			glPolygonMode(GL_FRONT,GL_FILL);
@@ -95,7 +106,9 @@ GLuint SGLFlObj::Compile()
 	glEndList();
 
 	while(error=glGetError())
-	{SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());}
+	{
+		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+	}
 	return ID;
 }
 

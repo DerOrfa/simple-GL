@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "sglmaterial.h"
+#include "../sglmisc.h"
 
 SGLMaterial::SGLMaterial()
 {
@@ -50,26 +51,20 @@ SGLMaterial::~SGLMaterial()
 	if(isMyTex)delete tex;
 }
 
-void SGLMaterial::DoMatCalls()
+void SGLMaterial::loadMat()
 {
-
 	if(InnenGleichAussen)setMatParams(GL_FRONT_AND_BACK,Aussen);
 	else
 	{
 		setMatParams(GL_FRONT,Aussen);
 		setMatParams(GL_BACK,Innen);
 	}
-	if(tex)tex->DoTexCalls();
-	else
-	{
-		glDisable(GL_TEXTURE_1D);
-		glDisable(GL_TEXTURE_2D);
-		#ifdef WIN32
-		#ifdef GL_TEXTURE_3D
-		glDisable(GL_TEXTURE_3D);
-		#endif
-		#endif
-	}
+	if(tex)tex->loadTex();
+}
+
+void SGLMaterial::unloadMat()
+{
+	if(tex)tex->unloadTex();
 }
 
 void SGLMaterial::SetMat(GLfloat col[3],GLfloat Transp,GLenum Face,GLenum ColorID)
@@ -137,7 +132,12 @@ bool SGLMaterial::SetTex(SGLTextur *TexPtr)
 		isMyTex=false;
 		tex=TexPtr;
 		return true;
-	}else return false;
+	}
+	else
+	{
+		SGLprintWarning("ignoriere ungültige Textur");
+		return false;
+	}
 }
 bool SGLMaterial::SetTex(const char *imageFile)
 {

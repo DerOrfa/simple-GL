@@ -82,12 +82,10 @@ public:
 class SGLDreiEck : public SGLPolygon
 {
 public:
-	SGLDreiEck();
 	SGLDreiEck(SGLVektor Ecken[3]);
 	SGLDreiEck(SGLVektor *Ecken[3]);
 	SGLDreiEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3);
 	SGLDreiEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3);
-	~SGLDreiEck();
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -98,7 +96,6 @@ class SGLRechtEck : public SGLVierEck
 {
 public:
 	SGLRechtEck(GLdouble breite,GLdouble hoehe);
-	~SGLRechtEck();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +107,6 @@ class SGLQuadrat : public SGLRechtEck
 {
 public:
 	SGLQuadrat(GLdouble SeitenLaenge);
-	~SGLQuadrat();
 };
 
 #endif

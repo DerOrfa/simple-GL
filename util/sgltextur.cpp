@@ -22,32 +22,34 @@
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
-	if(imageFile)valid=Load2DImage(imageFile);
-	else valid=false;
+	ID=-1;
+	if(imageFile)Load2DImage(imageFile);
 }
 SGLTextur::~SGLTextur()
 {
-	if(glIsTexture(ID))glDeleteTextures(1,&ID);
+	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);
 }
 
 bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 {
-	char *buff=new char[sizeof(imageFile)];
+	char *buff=new char[strlen(imageFile)+1];
+	strcpy(buff,imageFile);
 	bool ret= Load2DImage(buff, MipMap);
-	delete buff;
+	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring löscht
 	return ret;
 }
 
 bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 {
-	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	TexType=GL_TEXTURE_2D;
 
 	if(MipMap)
 	{
 		ILuint ImageId;
 		ilGenImages(1, &ImageId);
 		ilBindImage(ImageId);
-		if(IL_FALSE!=ilLoadImage(&imageFile[0]))ID=ilutGLBindMipmaps();
+		if(IL_FALSE!=ilLoadImage(imageFile))ID=ilutGLBindMipmaps();
 	}
 	else ID = ilutGLLoadImage(imageFile);
 
@@ -61,20 +63,74 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 			return GL_FALSE;
 		}
 	}
-	return true;
+	SGLcheckGLError;
+
+	return valid=true;
 }
 
-bool SGLTextur::DoTexCalls()
+bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
+{
+	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	TexType=GL_TEXTURE_3D;
+	
+	GLfloat pixels[32][32][32][3];
+	
+	for(int x=0;x<32;x++)
+		for(int y=0;y<32;y++)
+			for(int z=0;z<32;z++)
+			{
+				pixels[x][y][z][0]=x* (256./32.);
+				pixels[x][y][z][1]=y* (256./32.);
+				pixels[x][y][z][2]=z* (256./32.);
+			}
+
+	glGenTextures(1, &ID);
+	glBindTexture(GL_TEXTURE_3D, ID);
+	
+	glTexImage3D(GL_TEXTURE_3D,0,3,32,32,32,0,GL_RGB,GL_FLOAT,pixels);
+
+	GLuint gluerr = glGetError();
+	if(!gluerr)SetParams();
+	else
+	{
+		SGLprintError("%s [GLerror]",gluErrorString(gluerr));
+		return GL_FALSE;
+	}
+	return valid=true;
+}
+
+bool SGLTextur::loadTex()
 {
 	GLboolean ret;
-	if(glIsTexture(ID) && glAreTexturesResident(1,&ID,&ret))
+	if(glIsTexture(ID))
 	{
+		if(glIsEnabled(TexType))
+		{
+			SGLprintWarning("%dD-Texturen sind schon aktiviert",TexType-GL_TEXTURE_1D+1,ID);
+			glDisable(TexType);
+		}
 		glEnable(TexType);
 		glBindTexture(TexType,ID);
+		if(!glAreTexturesResident(1,&ID,&ret))
+		{
+			SGLprintWarning("Die Textur \"%d\" ist nicht im Grafikspeicher",ID);
+		}
 	}
-	else glDisable(TexType);
+	else{SGLprintError("OpenGL kennt die Textur \"%d\" nicht",ID);}
 	return ret;
 }
+
+bool SGLTextur::unloadTex()
+{
+	GLboolean ret;
+	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
+		
+	if(glIsEnabled(TexType))glDisable(TexType);
+	else{SGLprintWarning("Hä, %dD-Texturen waren gar nicht aktiv ?",TexType-GL_TEXTURE_1D+1);}
+	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
+	return ret;
+}
+
 /** No descriptions */
 void SGLTextur::SetParams()
 {
@@ -87,8 +143,4 @@ void SGLTextur::SetParams()
 	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-}
-/** No descriptions */
-void SGLTextur::DisableTex()
-{
 }
