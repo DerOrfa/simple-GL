@@ -121,6 +121,8 @@ protected:
 	void DrawExtObjs();
 	void show_status();
 	bool initVis(unsigned int XSize, unsigned int YSize);
+	bool cloned;
+	bool isMyCam;
 };
 
 #endif

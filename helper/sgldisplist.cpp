@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 
-SGLObjList::SGLObjList()
+SGLObjList::SGLObjList(bool transp)
 {
 	ObjPtr=NULL;
 	Objects_CW=Objects_CCW=NULL;
@@ -23,7 +23,7 @@ SGLObjList::SGLObjList()
 	grow(Objects_CCW,ObjCnt_CCW,5);
 	grow(ObjPtr,ObjCnt_Ptr,5);
 	Clear();
-	renderTransparent=false;
+	renderTransparent=transp;
 }
 SGLObjList::~SGLObjList ()
 {
@@ -105,7 +105,8 @@ bool SGLObjList::removeOb(GLuint ListID)
 
 bool SGLObjList::removeOb(SGLObjBase *obj)
 {
-	if(!removeOb_Ptr(obj))return false;
+	if(!removeOb_Ptr(obj))
+		return false;
 	switch(obj->FrontFace)
 	{
 	case GL_CW:return removeOb_CW(obj->ID);

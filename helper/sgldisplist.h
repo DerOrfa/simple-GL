@@ -30,7 +30,7 @@
 class SGLObjList
 {
 public:
-	SGLObjList();
+	SGLObjList(bool transp);
 	~SGLObjList();
 	bool	removeOb(GLuint ListID);
 	bool	removeOb(SGLObjBase *obj);

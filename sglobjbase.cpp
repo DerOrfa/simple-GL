@@ -52,6 +52,7 @@ SGLObjBase::~SGLObjBase()
 		(*i++)->unlink(this);
 
 	glDeleteLists(ID,1);
+	if(myList)myList->removeOb(this);
 }
 
 

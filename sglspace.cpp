@@ -126,19 +126,24 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	DoIdle=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
-
+	cloned=false;
+	isMyCam=false;
 }
 
 SGLSpace::~SGLSpace()
 {
-	delete Grids.Grid1;
-	delete Grids.Grid2;
-	delete Grids.Grid3;
-	delete Grids.X;
-	delete Grids.Y;
-	delete Grids.Z;
-	delete Camera;
-	for(int i=0;i<5;i++)delete ClipPlanes[i];
+	if(!cloned)//@todo Dieses cloned wird nicht automatisch gesetzt
+	{
+		delete Grids.Grid1;
+		delete Grids.Grid2;
+		delete Grids.Grid3;
+		delete Grids.X;
+		delete Grids.Y;
+		delete Grids.Z;
+		for(int i=0;i<5;i++)delete ClipPlanes[i];
+	}
+	if(isMyCam)delete Camera;
+
 }
 
 void SGLSpace::OnResize(int width, int height)
@@ -394,6 +399,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[2]=Grids.Z->Compile();
 
 	defaultCam(new SGLCamera());
+	isMyCam=true;
 
 	Grids.doGrid=1;
 
@@ -414,6 +420,8 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 
 void SGLSpace::defaultCam(SGLBaseCam *cam)
 {
+	if(isMyCam)delete Camera;
+	isMyCam=false;
 	registerObj(Camera=cam);
 	Grids.X->FaceAt=&Camera->Pos;
 	Grids.Y->FaceAt=&Camera->Pos;
@@ -424,5 +432,5 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	Camera->link(Grids.Z);
 }
 
-SGLObjList SGLSpace::ObjLst;
-SGLObjList SGLSpace::TranspObjLst;
+SGLObjList SGLSpace::ObjLst(false);
+SGLObjList SGLSpace::TranspObjLst(true);
