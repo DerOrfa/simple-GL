@@ -61,6 +61,10 @@ public:
 	GLint renderMode;
 	void freeTexture();
 	static bool checkForMultiText(unsigned short cnt);
+	void replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed);
+    void addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed);
+	void addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
+	void addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
 	bool weich,repeat,shouldBeLoaded;
 	bool valid,MipMap,loaded;
 	GLfloat envColor[4];

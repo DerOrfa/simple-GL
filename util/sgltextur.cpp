@@ -412,3 +412,43 @@ bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 
 SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
 void SGLBaseTex::updateSlot::operator()() const{mytex->changed();}
+
+
+void SGLBaseTex::replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
+{
+	boost::shared_ptr<SGLBaseTex> &mtex=multitex;
+	while(mtex)
+	{
+		if(mtex==before)mtex=tex;
+		else mtex=mtex->multitex;
+		if(call_changed)changed();
+	}
+}
+
+
+/*!
+    \fn SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
+ */
+void SGLBaseTex::addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
+{
+	assert(
+	addMTex(tex,boost::shared_ptr<SGLBaseTex>(),call_changed);
+}
+void SGLBaseTex::addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
+{
+	boost::shared_ptr<SGLBaseTex> tmp=multitex;
+	multitex=tex;
+	if(tmp)multitex->multitex=tmp;
+	if(call_changed)changed();
+}
+void SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
+{
+	boost::shared_ptr<SGLBaseTex> mtex=multitex;
+	while(mtex)
+	{
+		if(mtex==before)
+		{
+			before->addMTexBegin(before,
+		if(call_changed)changed();
+	}
+}
