@@ -22,7 +22,7 @@
 
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
-	ClipFace=1;ClipHoriz=500;
+	ClipFace=1;ClipHoriz=1000;
 	Pos.SGLV_X=PosX;Pos.SGLV_Y=PosY;Pos.SGLV_Z=PosZ;
 	Angle=30;
 	ViewFormat=1;

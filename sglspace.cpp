@@ -477,13 +477,13 @@ bool SGLSpace::Window2welt(pair<unsigned int,unsigned int> screen[],SGLVektor we
 {
 	GLdouble model[16];
 	GLdouble proj[16];
-	GLint view[4];
+	GLint view[4]={0,0,StatusInfo.WindowWidth,StatusInfo.WindowHeight};
 	SGLVektor ret;
 	GLdouble depth,dummy1,dummy2;
 
 	Camera->loadView();
 	
-	glGetIntegerv(GL_VIEWPORT,view);
+//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind auﬂer beim Aufruf aus resize falsch 
 	glGetDoublev(GL_MODELVIEW_MATRIX,model);
 	glGetDoublev(GL_PROJECTION_MATRIX,proj);
 	
@@ -512,13 +512,13 @@ SGLVektor SGLSpace::Window_welt_trans(SGLVektor Coord,bool toWelt)
 {
 	GLdouble model[16];
 	GLdouble proj[16];
-	GLint view[4];
+	GLint view[4]={0,0,StatusInfo.WindowWidth,StatusInfo.WindowHeight};
 	SGLVektor ret;
 
 	Camera->loadView();
 	
 	GLenum error;
-	glGetIntegerv(GL_VIEWPORT,view);
+//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind auﬂer beim Aufruf aus resize falsch 
 	glGetDoublev(GL_MODELVIEW_MATRIX,model);
 	glGetDoublev(GL_PROJECTION_MATRIX,proj);
 	
