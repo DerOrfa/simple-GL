@@ -40,10 +40,19 @@ class SGLSphere : public SGLQuadricObj
 {
 public:
 	SGLSphere(MaterialPtr Material=MaterialPtr(),GLint slices=0,GLint stacks=0,GLdouble Size=1);
-	~SGLSphere();
 	GLdouble size;
 	GLint slices,stacks;
 	void generate();
+};
+
+class SGLZylinder : public SGLQuadricObj
+{
+public:
+	SGLZylinder(MaterialPtr Material=MaterialPtr(),GLint slices=0,GLdouble height=1,GLdouble Size_top=1,GLdouble Size_bottom=1);
+	GLdouble size_top,size_bottom;
+	GLint slices,stacks;
+	void generate();
+	GLdouble height;
 };
 
 #endif
