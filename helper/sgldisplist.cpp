@@ -69,7 +69,7 @@ void SGLObjList::CallAllLists()
 
 	glFrontFace(GL_CW);
 	for(int i=ObjCnt_CW;i;i--) //@todo sollte schon noch geprüft werden (wenigstens im Debug)
-		if(!glIsList(Objects_CW[i]))
+		if(!glIsList(Objects_CW[i-1]))
 		{
 			SGLprintError("Es existiert kein Objekt mit der ID %d",Objects_CW[i-1]);
 		}
