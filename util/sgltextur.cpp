@@ -63,54 +63,11 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 	return valid=true;
 }
 
-bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
-{
-	this->MipMap=false;
-	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
-	TexType=GL_TEXTURE_3D_EXT;
-	GLint size=256;
-	glGenTextures(1, &ID);
-	glBindTexture(TexType, ID);
-/*	glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &size);
-	genValidSize(GL_LUMINANCE_ALPHA,size,size,size, GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,true);*/
-	//ntzt nichts - er glaubt er bekäme die Tex rein bekommt aber unten trotzem "out of memory"
-
-	GLubyte *pixels=(GLubyte*)malloc(size*size*size*sizeof(GLubyte)*2);
- 
-	for(int z=0;z<size;z++)
-		for(int y=0;y<size;y++)
-			for(int x=0;x<size;x++)
-			{
-				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
-				{
-					pixels[x*2+(size*y*2)+(size*size*z*2)+1]=0;
-					pixels[x*2+(size*y*2)+(size*size*z*2)]=0;
-				}
-				else 
-				{
-					if(x%20 && y%20 && z%20)
-						pixels[x*2+(size*y*2)+(size*size*z*2)]=255;
-					else 
-						pixels[x*2+(size*y*2)+(size*size*z*2)]=0;
-					pixels[x*2+(size*y*2)+(size*size*z*2)+1]=255;
-				}
-			}
-
-	glTexImage3DEXT(TexType,0,GL_COMPRESSED_LUMINANCE_ALPHA_ARB,size,size,size,0,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,pixels);
-
-	GLuint gluerr = glGetError();
-	if(gluerr)
-	{
-		SGLprintError("%s beim Laden der Textur [GLerror]",gluErrorString(gluerr));
-		return GL_FALSE;
-	}
-	free(pixels);
-	return valid=true;
-}
 	
 SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
 {
 	ID=0;
+	ResetTransformMatrix();
 }
 
 SGLBaseTex::~SGLBaseTex()

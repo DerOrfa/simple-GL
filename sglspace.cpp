@@ -478,7 +478,7 @@ bool SGLSpace::Go(unsigned int Mode)
 					if(StatusInfo.update)
 						OnDraw();//bei Bedarf neu Zeichnen
 				}
-				else {SGLprintWarning("Tue grad tun");break;}
+				else {SGLprintError("Tue grad tun");break;}
 			}
 		}
 		else return false;
@@ -688,4 +688,3 @@ void SGLSpace::callEventListeners(Uint8 type,SDL_Event &event)
 		if(newType!=type)break;
 	}
 }
-

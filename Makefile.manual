@@ -12,7 +12,8 @@ $(CORE_DIR)sglobj.o \
 $(CORE_DIR)sglobjbase.o \
 $(CORE_DIR)sglspace.o \
 $(CORE_DIR)sglvektor.o \
-$(CORE_DIR)sglmetaobj.o
+$(CORE_DIR)sglmetaobj.o \
+$(CORE_DIR)sglmatrixobj.o
 
 HELPER_OBJFILES = \
 $(HELPER_DIR)sglcamera.o \

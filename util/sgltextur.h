@@ -49,7 +49,6 @@ public:
 	SGLTextur(const char *imageFile=0);
 	bool Load2DImage(const char *imageFile, bool MipMap=true);
 	bool Load2DImage(char *imageFile, bool MipMap=true);
-	bool Load3DImage(char *imageFile, bool MipMap=true);
 };
 
 #endif

@@ -433,7 +433,7 @@ bool SGLPolygon::canSee(SGLVektor aim)
 /*!
     \fn SGL3DPlane::SGL3DPlane(GLdouble SeitenLaenge)
  */
-SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex):SGLRechtEck(breite,hoehe)
+SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex):SGLRechtEck(breite,hoehe)
 {
 	depth=0;
 	useCenter=false;

@@ -128,7 +128,7 @@ void SGLMaterial::SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face,bool selbs
 
 }
 
-bool SGLMaterial::SetTex(SGLTextur *TexPtr)
+bool SGLMaterial::SetTex(SGLBaseTex *TexPtr)
 {
 	if(TexPtr && TexPtr->valid)
 	{
