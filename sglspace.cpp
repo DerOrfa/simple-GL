@@ -146,7 +146,7 @@ void SGLSpace::show_status()
 {
 	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps);
 	PrintOnScreen(StatusInfo.StatusString);StatusInfo.StatusString[0]=0;
-	if(!mainConsole->empty)glCallList(mainConsole->metaCompile());
+//	if(!mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
 
 void SGLSpace::OnDraw()

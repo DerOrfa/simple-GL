@@ -4,6 +4,8 @@
 #include "../sglvektor.h"
 #include "../primitives/sglquader.h"
 #include "../primitives/sglvieleck.h"
+#include "../util/sglmaterial.h"
+#include <queue>
 
 class subSGLPointCloud : public SGLFlObj
 {
@@ -33,10 +35,16 @@ class QHDreiEck : public SGLDreiEck
 public:
 	QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei);
 	~QHDreiEck();
+	static list<QHDreiEck>::iterator newDreiEck(list<QHDreiEck> *List,SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei);
+
+	
 	QHDreiEck *Nachbar[3];
+	list<QHDreiEck>::iterator I;
+	
 	unsigned int hasKante(SGLVektor *eins,SGLVektor *zwei);
 	bool addNachbar(QHDreiEck *Nachbar);
 	bool delNachbar(QHDreiEck *Nachbar);
+	
 };
 
 class SGLPointCloud : public SGLMetaObj
@@ -44,12 +52,21 @@ class SGLPointCloud : public SGLMetaObj
 public:
 	SGLPointCloud(int PktCnt=128,GLdouble breite=1,GLdouble hoehe=1,GLdouble tiefe=1,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0);
 	~SGLPointCloud();
+	
+	struct kante{SGLVektor *start,*end;QHDreiEck *nachbar;};
+	
 
 	subSGLPointCloud *cloud;
+	bool rdy;
+	
 	void compileSubObjects();
 	SGLVektor getCenter();
 	void init();
-	int grow(list<QHDreiEck>::iterator seite);
-	static void on_mouse(SGLObjBase *target,SDL_Event event);
+	double grow();
+	static void do_grow(SGLObjBase *target,SDL_Event event);
 	list<QHDreiEck> seiten;
+	SGLMaterial Mat1,Mat2,Mat3;
+	list<QHDreiEck>::iterator growBase;
+	unsigned int growCnt;
+	void DreiEck2Kante(QHDreiEck *dEck,SGLVektor *maxPkt,SGLVektor *start,queue<kante> *kanten);
 };

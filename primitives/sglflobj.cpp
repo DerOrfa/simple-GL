@@ -102,7 +102,8 @@ GLuint SGLFlObj::Compile()
 void SGLFlObj::DrahtGitter(bool DO)
 {
 	if(DO)VisMode=GL_LINE;
-	else VisMode=GL_FILL;
+	else 
+		VisMode=GL_FILL;
 }
 
 void SGLFlObj::ResetMaterial(SGLMaterial *NewMaterial)

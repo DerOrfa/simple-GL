@@ -29,7 +29,7 @@ SGLPolygon::SGLPolygon()
 /*!
     \fn SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
  */
-SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
+SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr):SGLFlObj(PolygonPtr)
 {
 	MyVekt=PolygonPtr.MyVekt;
 	EckVektoren.Cnt=PolygonPtr.EckVektoren.Cnt;
@@ -40,8 +40,9 @@ SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
 		else
 			EckVektoren.Vekt[i]=PolygonPtr.EckVektoren.Vekt[i];
 	}
-	useCenter=false;
-	twoSideRender=true;
+	useCenter=PolygonPtr.useCenter;
+	twoSideRender=PolygonPtr.twoSideRender;
+	if(PolygonPtr.MatIsMine)Mat=NULL;//@todo Material sollte auch kopiert werden
 }
 
 /*!

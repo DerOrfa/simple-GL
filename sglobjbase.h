@@ -33,7 +33,10 @@ class SGLObjList;
 template<class T> struct compObj : public unary_function<T&, void>
 {
 	compObj(vector<GLint> *targetList) {Objs=targetList;}
-	void operator() (T &x) {Objs->push_back(x.Compile()); }
+	void operator() (T &x) 
+	{
+		Objs->push_back(x.Compile()); 
+	}
 	vector<GLint> *Objs;
 };
 

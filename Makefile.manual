@@ -55,6 +55,15 @@ TEXT_BACKEND_GLF_OBJFILES = \
 $(TEXT_BACKEND_GLF_DIR)glf.o \
 $(TEXT_BACKEND_GLF_DIR)sgltextbackend_glf.o
 
+ALL_OBJ_FILES = \
+$(CORE_OBJFILES) \
+$(HELPER_OBJFILES) \
+$(PRIMITIVES_OBJFILES) \
+$(UTIL_OBJFILES) \
+$(TEXT_OBJFILES) \
+$(TEXT_BACKEND_GLF_OBJFILES) \
+$(SAMPLE_CLASSES_OBJFILES) \
+$(EMATH_DIR)/misc.o 
 
 all:	core test
 
@@ -79,21 +88,21 @@ text:	$(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES)
 libsgl.a:	core helper primitives util text sample_classes
 	-rm -f libsgl.a
 	@echo "===========Linking libsgl.a========"
-	$(AR) crus libsgl.a $(CORE_OBJFILES) $(HELPER_OBJFILES) $(PRIMITIVES_OBJFILES) $(UTIL_OBJFILES) $(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES) $(SAMPLE_CLASSES_OBJFILES) $(EMATH_DIR)/misc.o
+	$(AR) crus libsgl.a $(ALL_OBJ_FILES)
 
-libsgl.so:	libsgl.a
+libsgl.so:	core helper primitives util text sample_classes
 	-rm -f libsgl.so
 	@echo "===========Linking libsgl.so========"
-	$(LD) -shared -o libsgl.so $(CORE_OBJFILES) $(HELPER_OBJFILES) $(PRIMITIVES_OBJFILES) $(UTIL_OBJFILES) $(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES) $(EMATH_DIR)/misc.o
+	g++ -shared -o libsgl.so -Wl,-soname,libsgl.so $(ALL_OBJ_FILES)
 
-libs:	libsgl.a
+libs:	libsgl.a libsgl.so
 
 test: libsgl.a test.o
 	$(CXX) $(CXXFLAGS) test.o -o test $(LINK_LIBS) -L. -lsgl
 
 clean:
-	-rm -f $(CORE_OBJFILES) $(HELPER_OBJFILES) $(PRIMITIVES_OBJFILES) $(UTIL_OBJFILES) $(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES) $(SAMPLE_CLASSES_OBJFILES)
-	-rm -f libsgl.a
+	-rm -f $(ALL_OBJ_FILES)
+	-rm -f libsgl.*
 	-rm -f test test.o
 
 depsclean:
