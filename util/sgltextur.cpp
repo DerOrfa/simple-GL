@@ -78,6 +78,7 @@ SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
 	shouldBeLoaded=loaded=false;
 	multitex=NULL;
 	renderMode=GL_REPLACE;//Per Default ersetzt die Textur alles was da war
+	envColor[0]=envColor[1]=envColor[2]=envColor[3]=0;
 }
 
 SGLBaseTex::~SGLBaseTex()
@@ -141,7 +142,8 @@ bool SGLBaseTex::unloadTex()
 /** No descriptions */
 void SGLBaseTex::SetParams()
 {
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,renderMode);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,renderMode);
+	glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR,envColor);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);

@@ -48,6 +48,7 @@ public:
 	static bool checkForMultiText(unsigned short cnt);
 	bool weich,repeat,shouldBeLoaded;
 	bool valid,MipMap,loaded;
+	GLfloat envColor[4];
 };
 
 class SGLTextur:public SGLBaseTex
