@@ -1,7 +1,7 @@
 export CC=distcc gcc
 export CXX=distcc g++
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -fPIC -g3 -DDATA_DIR="\"./data\"" -DGL_GLEXT_PROTOTYPES -pthread
+export CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -fPIC -O2 -DDATA_DIR="\"./data\"" -DGL_GLEXT_PROTOTYPES -pthread
 export CFLAGS=$(CXXFLAGS)
 
 

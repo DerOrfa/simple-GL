@@ -1,10 +1,12 @@
+CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -O2 -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread
+CFLAGS=$(CXXFLAGS)
+
 CORE_DIR=
 HELPER_DIR=helper/
 PRIMITIVES_DIR=primitives/
 UTIL_DIR=util/
 TEXT_DIR=text/
 TEXT_BACKEND_GLF_DIR=$(TEXT_DIR)backend_glf/
-SAMPLE_CLASSES_DIR=sample_classes/
 
 CORE_OBJFILES = \
 $(CORE_DIR)sglmisc.o \
@@ -99,6 +101,22 @@ clean:
 
 depsclean:
 	-rm -f .*depend
+
+install: libs
+	mkdir -p $(DESTDIR)/usr/lib
+	mkdir -p $(DESTDIR)/usr/share/libsgl
+	mkdir -p $(DESTDIR)/usr/include/libsgl/text
+	mkdir -p $(DESTDIR)/usr/include/libsgl/primitives
+	mkdir -p $(DESTDIR)/usr/include/libsgl/helper
+	mkdir -p $(DESTDIR)/usr/include/libsgl/util
+	mkdir -p $(DESTDIR)/usr/include/libsgl/text/backend_glf
+	mkdir -p $(DESTDIR)/usr/share/libsgl/pics
+	mkdir -p $(DESTDIR)/usr/share/libsgl/fonts
+	install -m 644 libsgl.a  $(DESTDIR)/usr/lib
+	install -m 755 libsgl.so $(DESTDIR)/usr/lib
+	install -m 644 data/pics/*   $(DESTDIR)/usr/share/libsgl/pics/
+	install -m 644 data/fonts/*   $(DESTDIR)/usr/share/libsgl/fonts/
+	for i in `find . -name "*.h"`; do cp $$i $(DESTDIR)/usr/include/libsgl/$$i; done
 
 deps:	depsclean .core_depend .helper_depend .primitives_depend .util_depend .text_depend .text_backend_depend
 	@echo "===========Depends done=========="
