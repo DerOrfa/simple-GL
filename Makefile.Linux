@@ -1,7 +1,7 @@
 export EMATH_DIR=$(HOME)/emath/
 
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I$(EMATH_DIR) -g3 -DDATA_DIR="\"$(HOME)/data\"" -DGL_GLEXT_PROTOTYPES 
+export CXXFLAGS= -I$(EMATH_DIR) -g3 -O3 -DDATA_DIR="\"$(HOME)/data\"" -DGL_GLEXT_PROTOTYPES 
 export CFLAGS=$(CXXFLAGS)
 
 export LIBS = -L$(EMATH_DIR)
