@@ -51,22 +51,16 @@ void SGLSpace::resetView(short mode)
 	assert(Camera->Pos.size()==3 && Camera->LookAt.size()==3 && Camera->UpVect.size()==3);
 	switch(mode)
 	{
+	case -1:
+	//Normale 3-Dimensionale Ansicht entladen
+	Camera->unloadView();break;
 	case 0:
-	//Normale 3-Dimensionale Ansicht
+	//Normale 3-Dimensionale Ansicht laden
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(Camera->Angle,double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight),Camera->ClipFace,Camera->ClipHoriz);
-	glMatrixMode(GL_MODELVIEW);
-
-	//@todo wenn zu schnell hintereinander Events behandelt werden stimmt irgendwas mit der Camera nicht
-	gluLookAt(Camera->Pos.SGLV_X,Camera->Pos.SGLV_Y,Camera->Pos.SGLV_Z,
-		  Camera->LookAt.SGLV_X,Camera->LookAt.SGLV_Y,Camera->LookAt.SGLV_Z,
-		  Camera->UpVect.SGLV_X,Camera->UpVect.SGLV_Y,Camera->UpVect.SGLV_Z);
-	break;
+	Camera->loadView();break;
 	case 1:
 	//2-Dimensionale Display-Ansicht (HUD z.B.)
-	// @todo Nochmal SAUBER lï¿½en
+	// @todo Nochmal SAUBER lösen
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -125,6 +119,7 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	bgColor.b=float(B)/255;
 
 	MouseInfo.FollowMouse=true;
+	resizeMode=scaleView;
 	isMyCam=DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
@@ -152,6 +147,18 @@ void SGLSpace::OnResize(int width, int height)
 	StatusInfo.WindowWidth=width,StatusInfo.WindowHeight=height;
 	if(Camera)
 	{
+		if(resizeMode==resizeView)
+		{
+			pair<unsigned int,unsigned int> screen[4]=
+			{
+				pair<unsigned int,unsigned int>(width,0),
+				pair<unsigned int,unsigned int>(0,0),
+				pair<unsigned int,unsigned int>(0,height),
+				pair<unsigned int,unsigned int>(width,height)
+			};
+			Window2welt(screen,Camera->Ecken,4);
+			Camera->dontTouchEcken++;
+		}
 		Camera->ViewFormat=double(width)/double(height);
 		Camera->Compile();
 	}
@@ -161,6 +168,7 @@ void SGLSpace::OnResize(int width, int height)
 	}
 	Size.x=width;
 	Size.y=height;
+	
 	glViewport(0, 0, width, height);
  	reDraw();
 }
@@ -295,7 +303,8 @@ void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void SGLSpace::registerObj(SGLFlObj *Obj)
 {
-	if(Obj->Mat && Obj->Mat->Transparenz)TranspObjLst.AddOb(Obj);
+	if(Obj->Mat && Obj->Mat->Transparenz)
+		TranspObjLst.AddOb(Obj);
 	else ObjLst.AddOb(Obj);
 }
 void SGLSpace::registerObj(SGLObj *Obj){ObjLst.AddOb(Obj);}
@@ -438,7 +447,7 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	if(isMyCam)delete Camera;
 	isMyCam=false;
 	registerObj(Camera=cam);
-	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=StatusInfo.WindowWidth/StatusInfo.WindowHeight;
+	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight);
 	else {SGLprintWarning("Die Bilddimensionen sind ungültig");}
 	Camera->Compile();
 
@@ -453,3 +462,68 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 
 SGLObjList SGLSpace::ObjLst(false);
 SGLObjList SGLSpace::TranspObjLst(true);
+
+
+/*!
+    \fn SGLSpace::welt2Window(SGLVektor weltCoord)
+ */
+bool SGLSpace::Window2welt(pair<unsigned int,unsigned int> screen[],SGLVektor welt[],unsigned int Vcnt)
+{
+	GLdouble model[16];
+	GLdouble proj[16];
+	GLint view[4];
+	SGLVektor ret;
+	GLdouble depth,dummy1,dummy2;
+
+	Camera->loadView();
+	
+	glGetIntegerv(GL_VIEWPORT,view);
+	glGetDoublev(GL_MODELVIEW_MATRIX,model);
+	glGetDoublev(GL_PROJECTION_MATRIX,proj);
+	
+	GLboolean erg=gluProject(Camera->LookAt.SGLV_X,Camera->LookAt.SGLV_Y,Camera->LookAt.SGLV_Z,model,proj,view,&dummy1,&dummy2,&depth);
+	
+	for(int i=0;i<Vcnt;i++)
+	{
+		erg = erg && gluUnProject(screen[i].first,view[3]-int(screen[i].second),depth,model,proj,view,&welt[i].SGLV_X,&welt[i].SGLV_Y,&welt[i].SGLV_Z);
+	}
+	if(erg==GL_FALSE){SGLprintWarning("Fehler beim Umrechnen der Coordinaten");}
+	
+	Camera->unloadView();
+	return erg;
+}
+
+SGLVektor SGLSpace::Window2welt(unsigned int X,unsigned int Y)
+{
+	SGLVektor ret;
+	pair<unsigned int,unsigned int> screen(X,Y);
+	Window2welt(&screen,&ret,1);
+	return ret;
+}
+
+SGLVektor SGLSpace::welt2Window(SGLVektor weltCoord){return Window_welt_trans(weltCoord,false);}
+SGLVektor SGLSpace::Window2welt(SGLVektor windowCoord){return Window_welt_trans(windowCoord,true);}
+SGLVektor SGLSpace::Window_welt_trans(SGLVektor Coord,bool toWelt)
+{
+	GLdouble model[16];
+	GLdouble proj[16];
+	GLint view[4];
+	SGLVektor ret;
+
+	Camera->loadView();
+	
+	GLenum error;
+	glGetIntegerv(GL_VIEWPORT,view);
+	glGetDoublev(GL_MODELVIEW_MATRIX,model);
+	glGetDoublev(GL_PROJECTION_MATRIX,proj);
+	
+	GLboolean erg;
+	if(toWelt)erg = gluUnProject(Coord.SGLV_X,view[3] - int(Coord.SGLV_Y) ,Coord.SGLV_Z,model,proj,view,&ret.SGLV_X,&ret.SGLV_Y,&ret.SGLV_Z);
+	else gluProject(Coord.SGLV_X,Coord.SGLV_Y,Coord.SGLV_Z,model,proj,view,&ret.SGLV_X,&ret.SGLV_Y,&ret.SGLV_Z);
+		
+	if(erg==GL_FALSE){SGLprintError("Fehler beim Umrechnen der Coordinaten");}
+	
+	Camera->unloadView();
+	
+	return ret;
+}

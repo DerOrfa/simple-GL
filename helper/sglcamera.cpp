@@ -18,6 +18,7 @@
 
 #include "sglcamera.h"
 #include "../sglmisc.h"
+#include <GL/glu.h>
 
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
@@ -27,9 +28,10 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	ViewFormat=1;
 	move_cam_with_aim=true;
 	lockRoll=lockGierCam=lockKippCam=false;
-	lockGierAim=lockKippAim=false;
+	loaded=lockGierAim=lockKippAim=false;
 	lockMoveZoom=lockOptZoom=false;
 	ResetUpVect();
+	dontTouchEcken=0;
 }
 
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
@@ -160,6 +162,13 @@ void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 	Compile();
 }
 
+void SGLBaseCam::MoveCamTo(GLdouble x, GLdouble y, GLdouble z)
+{
+	Pos.SGLV_X=x;Pos.SGLV_Y=y;Pos.SGLV_Z=z;
+	ReCalcUpVect();
+	Compile();
+}
+
 /*!
     \fn SGLCamera::getCenter()
  */
@@ -181,22 +190,29 @@ void SGLBaseCam::getCross(SGLVektor Horiz[2],SGLVektor Vert[2])
 }
 
 /*!
-    \fn SGLBaseCam::getViewRect(SGLVektor Ecken[4])
+    \fn SGLBaseCam::recalcEcken(SGLVektor Ecken[4])
  */
-void SGLBaseCam::getViewRect(SGLVektor Ecken[4])
+void SGLBaseCam::recalcEcken()
 {
-	SGLVektor PosVektor=getLookVektor();
-	double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
-	double c = SIN(Angle)*PosVektor.Len()/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
-
-	Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
-	Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
-	Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
-	Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
-	Ecken[0]=(Ecken[0]*c)+LookAt;
-	Ecken[1]=(Ecken[1]*c)+LookAt;
-	Ecken[2]=(Ecken[2]*c)+LookAt;
-	Ecken[3]=(Ecken[3]*c)+LookAt;
+	if(dontTouchEcken>0)
+	{
+		recalcAngle((Ecken[1].SGLV_Y-Ecken[2].SGLV_Y)/2);
+		dontTouchEcken--;
+	}
+	{
+		SGLVektor PosVektor=getLookVektor();
+		double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
+		double c = SIN(Angle)*PosVektor.Len()/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte
+	
+		Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
+		Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
+		Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
+		Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
+		Ecken[0]=(Ecken[0]*c)+LookAt;
+		Ecken[1]=(Ecken[1]*c)+LookAt;
+		Ecken[2]=(Ecken[2]*c)+LookAt;
+		Ecken[3]=(Ecken[3]*c)+LookAt;
+	}
 }
 
 SGLVektor SGLBaseCam::getLookVektor()
@@ -221,9 +237,7 @@ void SGLCamera::generate()
 		glEnd();
 	}
 	
-	SGLVektor Ecken[4];
-	
-	getViewRect(Ecken);
+	recalcEcken();
 
 	int error;
 	glBegin(GL_LINE_LOOP);
@@ -239,4 +253,39 @@ void SGLCamera::generate()
 		Pos.DrawPureVertex();Ecken[3].DrawPureVertex();
 	glEnd();
 
+}
+
+void SGLBaseCam::loadView()
+{
+	if(loaded){SGLprintWarning("Die Camerasicht ist schon geladen");}
+	loaded=true;
+	GLenum oldmode=sglGeti(GL_MATRIX_MODE);
+	glMatrixMode(GL_PROJECTION);glPushMatrix();glLoadIdentity();//neue Projektionsmatrix laden
+	gluPerspective(Angle,ViewFormat,ClipFace,ClipHoriz);
+	
+	glMatrixMode(GL_MODELVIEW);glPushMatrix();//neue Modelviewmatrix laden
+	gluLookAt(Pos.SGLV_X,Pos.SGLV_Y,Pos.SGLV_Z,
+		  LookAt.SGLV_X,LookAt.SGLV_Y,LookAt.SGLV_Z,
+		  UpVect.SGLV_X,UpVect.SGLV_Y,UpVect.SGLV_Z);
+	glMatrixMode(oldmode);
+}
+
+void SGLBaseCam::unloadView()
+{
+	if(!loaded){SGLprintWarning("Die Camerasicht ist nicht geladen");}
+	GLenum oldmode=sglGeti(GL_MATRIX_MODE);
+	glPopMatrix();//alte Modelviewmatrix wiederherstellen
+	glMatrixMode(GL_PROJECTION);glPopMatrix();//alte Projektionsmatrix wiederherstellen
+	loaded=false;
+	glMatrixMode(oldmode);
+}
+
+
+/*!
+    \fn SGLBaseCam::recalcAngle()
+	Berechnet den Sichtwinkel aus der Höhe des Sichtfensters (in Weltkoordinaten) und dem Abstand der Cam zu LookAt neu.
+ */
+void SGLBaseCam::recalcAngle(GLdouble height)
+{
+	Angle=ATAN(height/getLookVektor().Len())*2; // atan(a/b)
 }

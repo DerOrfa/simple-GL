@@ -117,6 +117,7 @@ public:
 	void defaultCam(SGLBaseCam *cam);
 	bool isMyCam;
 	struct {unsigned int x,y;}Size;
+	enum {resizeView,scaleView}resizeMode;
 
 protected:
 	void callHelper(int stage=1);
@@ -124,7 +125,13 @@ protected:
 	void DrawExtObjs();
 	void show_status();
 	bool initVis(unsigned int XSize, unsigned int YSize);
+    SGLVektor welt2Window(SGLVektor weltCoord);
+    SGLVektor Window2welt(SGLVektor weltCoord);
+	bool Window2welt(pair<unsigned int,unsigned int> screen[],SGLVektor welt[],unsigned int Vcnt);
+	SGLVektor Window2welt(unsigned int X,unsigned int Y);
 	bool cloned;
+private:
+	SGLVektor Window_welt_trans(SGLVektor Coord,bool toWelt);
 };
 
 #endif
