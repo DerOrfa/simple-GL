@@ -54,7 +54,7 @@ SGLObjBase::~SGLObjBase()
 	}
 	glDeleteLists(ID,1);
 	if(!ID)
-	{SGLprintDebug("Nie generiertes Objekt 0x%x gelöscht",this);}//@todo prüfen, ob ID=0 immer heißt, daß obj nie gen wurde
+	{SGLprintDebug("Nie generiertes Objekt 0x%x (%s) gelöscht",this,this->guesType());}//@todo prüfen, ob ID=0 immer heißt, daß obj nie gen wurde
 }
 
 

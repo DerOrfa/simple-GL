@@ -411,4 +411,4 @@ bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 }
 
 SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
-void SGLBaseTex::updateSlot::operator()() const{mytex->update();}
+void SGLBaseTex::updateSlot::operator()() const{mytex->changed();}

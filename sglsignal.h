@@ -23,7 +23,10 @@ using namespace boost::signals;
 class SGLSlot:public trackable
 {
 public:
-    const SGLSlot & operator=( const SGLSlot & ){SGLprintDebug("Achtung, kopiere Slot");return *this;}
+    const SGLSlot & operator=( const SGLSlot & ){
+		SGLprintDebug("Achtung, kopiere Slot. Wenn der kopierte Slot einen Zeiger hält kann das seeeehr unangenehm werden.");
+		return *this;
+	}
 };
 typedef connection SGLConnection; //@todo dürfen connections kopiert werden??
 
