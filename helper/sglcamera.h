@@ -35,6 +35,23 @@ class SGLLensFlare;
 /**
   *@author Enrico Reimer
   */
+
+struct ViewTrans
+{
+	GLdouble model[16],proj[16];
+	GLint view[4];
+	bool outDated;
+	GLdouble depth_default;
+	void update(bool force=false);
+	void update(const SGLVektor &defaultDepth,bool force=false);
+	bool welt2window(const SGLVektor &src,SGLVektor &dst);
+	GLdouble getDepth(const SGLVektor &depthVekt);
+	bool screen2welt(const unsigned int x,const unsigned int y,SGLVektor &dst);
+	bool screen2welt(const unsigned int x,const unsigned int y,const SGLVektor &depthVekt,SGLVektor &dst);
+	bool screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst);
+	bool screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,SGLVektor welt[],unsigned int Vcnt);
+};
+
 class SGLBaseCam: public SGLHelper
 {
 public:
@@ -75,6 +92,26 @@ public:
 	void loadView();
 	void unloadView();
 	SGLVektor Ecken[4];
+
+	ViewTrans ViewMatr;
+	inline SGLVektor screen2welt(const unsigned int x,const unsigned int y)
+	{
+		SGLVektor ret;
+		ViewMatr.screen2welt(x,y,ret);
+		return ret;
+	}
+	inline SGLVektor screen2welt(const unsigned int x,const unsigned int y,const SGLVektor &depthVekt)
+	{
+		SGLVektor ret;
+		ViewMatr.screen2welt(x,y,depthVekt,ret);
+		return ret;
+	}
+	SGLVektor screen2welt(const unsigned int x,const unsigned int y,GLdouble depth)
+	{
+		SGLVektor ret;
+		ViewMatr.screen2welt(x,y,depth,ret);
+		return ret;
+	}
 };
 
 class SGLCamera: public SGLBaseCam

@@ -20,13 +20,75 @@
 #include "../sglmisc.h"
 #include <GL/glu.h>
 
+
+void ViewTrans::update(bool force)
+{
+	if(force || outDated)
+	{
+//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind auﬂer beim Aufruf aus resize falsch 
+		glGetDoublev(GL_MODELVIEW_MATRIX,model);
+		glGetDoublev(GL_PROJECTION_MATRIX,proj);
+	}
+	outDated=false;
+}
+void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
+{
+	update(force);
+	if(force || outDated)depth_default=getDepth(defaultDepth);
+}
+
+bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
+{
+	if(gluProject(
+		src.SGLV_X,
+		src.SGLV_Y,
+		src.SGLV_Z,
+		model,proj,view,
+		&dst.SGLV_X,
+		&dst.SGLV_Y,
+		&dst.SGLV_Z))return true;
+	else{SGLprintError("Fehler beim Umrechnen der Coordinaten");return false;}
+}
+
+GLdouble ViewTrans::getDepth(const SGLVektor &depthVekt)
+{
+	SGLVektor dummy;
+	welt2window(depthVekt,dummy);
+	return dummy.SGLV_Z;
+}
+
+bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,const SGLVektor &depthVekt,SGLVektor &dst)
+{
+	return screen2welt(x,y,getDepth(depthVekt),dst);
+}
+
+bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor &dst)
+{
+	return screen2welt(x,y,depth_default,dst);
+}
+
+bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
+{
+	if(gluUnProject(x,view[3] - y ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
+	else{SGLprintError("Fehler beim Umrechnen der Coordinaten");return false;}
+}
+
+bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,SGLVektor welt[],unsigned int Vcnt)
+{
+	GLdouble depth=getDepth(depthVekt);
+	for(int i=0;i<Vcnt;i++)
+		screen2welt(screen[i].first,screen[i].second,depth,welt[i]);
+}
+
+
+
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
 	ClipFace=1;ClipHoriz=1000;
 	Pos.SGLV_X=PosX;Pos.SGLV_Y=PosY;Pos.SGLV_Z=PosZ;
 	Angle=30;
 	ViewFormat=1;
-	move_cam_with_aim=true;
+	ViewMatr.outDated= move_cam_with_aim=true;
 	lockRoll=lockGierCam=lockKippCam=false;
 	loaded=lockGierAim=lockKippAim=false;
 	lockMoveZoom=lockOptZoom=false;
@@ -50,6 +112,7 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 	LookAt=LookAt+Pos;
 
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
@@ -66,6 +129,7 @@ void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 	}
 	Pos=Pos+LookAt;
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::Roll(GLdouble degree)
@@ -73,6 +137,7 @@ void SGLBaseCam::Roll(GLdouble degree)
 	if(lockRoll)return;
 	UpVect=UpVect.Rotate(EVektor<GLdouble>(Pos-LookAt),degree);
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::MoveZoom(GLdouble fact)
@@ -80,7 +145,9 @@ void SGLBaseCam::MoveZoom(GLdouble fact)
 	if(lockMoveZoom)return;
 	Pos=(EVektor<GLdouble>(Pos-LookAt)*fact)+LookAt;
 	Compile();
+	ViewMatr.outDated=true;
 }
+
 void SGLBaseCam::OptZoom(GLdouble fact)
 {
 	if(lockOptZoom)return;
@@ -88,13 +155,16 @@ void SGLBaseCam::OptZoom(GLdouble fact)
 	if(Angle>179)Angle=179;
 	if(Angle<1)Angle=1;
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 double SGLBaseCam::ViewLength()
 {
 	SGLVektor tVek(Pos-LookAt);
 	return tVek.Len();
+	ViewMatr.outDated=true;
 }
+
 void SGLBaseCam::ResetView()
 {
 	Pos=SGLVektor(0,0,ViewLength());
@@ -102,6 +172,7 @@ void SGLBaseCam::ResetView()
 	Angle=30;
 	ResetUpVect();
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 /*
@@ -119,6 +190,7 @@ void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull,double rotdeg)
 	if(rotdeg)UpVect=UpVect.Rotate(Pos,rotdeg);
 	UpVect.Normalize();
 	if(!PosIsOnNull)Pos=Pos+LookAt;
+	ViewMatr.outDated=true;
 }
 
 /*
@@ -142,6 +214,7 @@ void SGLBaseCam::MoveAimTo(SGLVektor to)
 		ReCalcUpVect();
 		Compile();
 	}
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
@@ -153,6 +226,7 @@ void SGLBaseCam::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 		ReCalcUpVect();	
 		Compile();
 	}
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
@@ -160,6 +234,7 @@ void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 	Pos   =Pos   +SGLVektor(xAmount,yAmount,zAmount);
 	ReCalcUpVect();
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 void SGLBaseCam::MoveCamTo(SGLVektor to)
@@ -167,6 +242,7 @@ void SGLBaseCam::MoveCamTo(SGLVektor to)
 	Pos=to;
 	ReCalcUpVect();
 	Compile();
+	ViewMatr.outDated=true;
 }
 
 /*!
@@ -230,12 +306,17 @@ void SGLBaseCam::recalcEcken()
 }
 
 SGLVektor SGLBaseCam::getLookVektor(){return SGLVektor(Pos-LookAt);}
-void SGLBaseCam::setLookVektor(SGLVektor Vekt){Pos=Vekt+LookAt;}
+void SGLBaseCam::setLookVektor(SGLVektor Vekt)
+{
+	Pos=Vekt+LookAt;
+	ViewMatr.outDated=true;
+}
 
 SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,PosY,PosZ)
 {
 	showCross=true;
 }
+
 void SGLCamera::generate()
 {
 	glColor3f(1,1,1); 
@@ -280,6 +361,7 @@ void SGLBaseCam::loadView()
 		  LookAt.SGLV_X,LookAt.SGLV_Y,LookAt.SGLV_Z,
 		  UpVect.SGLV_X,UpVect.SGLV_Y,UpVect.SGLV_Z);
 	glMatrixMode(oldmode);
+	ViewMatr.update(LookAt);
 }
 
 void SGLBaseCam::unloadView()

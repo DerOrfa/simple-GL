@@ -157,10 +157,13 @@ void SGLSpace::OnResize(int width, int height)
 				pair<unsigned int,unsigned int>(0,height),
 				pair<unsigned int,unsigned int>(width,height)
 			};
-			Window2welt(screen,Camera->Ecken,4);
+			Camera->ViewMatr.screen2welt(screen,Camera->LookAt,Camera->Ecken,4);
 		}
 		Camera->recalcEckenMode=resizeMode;
 		Camera->ViewFormat=double(width)/double(height);
+		Camera->ViewMatr.view[2]=width;
+		Camera->ViewMatr.view[3]=height;
+		Camera->ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand
 		Camera->Compile();
 	}
 	else
@@ -470,65 +473,3 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	Camera->link(Grids.Z);
 }
 
-/*!
-    \fn SGLSpace::welt2Window(SGLVektor weltCoord)
- */
-bool SGLSpace::Window2welt(pair<unsigned int,unsigned int> screen[],SGLVektor welt[],unsigned int Vcnt)
-{
-	GLdouble model[16];
-	GLdouble proj[16];
-	GLint view[4]={0,0,StatusInfo.WindowWidth,StatusInfo.WindowHeight};
-	SGLVektor ret;
-	GLdouble depth,dummy1,dummy2;
-
-	Camera->loadView();
-	
-//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind außer beim Aufruf aus resize falsch 
-	glGetDoublev(GL_MODELVIEW_MATRIX,model);
-	glGetDoublev(GL_PROJECTION_MATRIX,proj);
-	
-	GLboolean erg=gluProject(Camera->LookAt.SGLV_X,Camera->LookAt.SGLV_Y,Camera->LookAt.SGLV_Z,model,proj,view,&dummy1,&dummy2,&depth);
-	
-	for(int i=0;i<Vcnt;i++)
-		erg = erg && gluUnProject(screen[i].first,view[3]-int(screen[i].second),depth,model,proj,view,&welt[i].SGLV_X,&welt[i].SGLV_Y,&welt[i].SGLV_Z);
-	
-	if(erg==GL_FALSE){SGLprintWarning("Fehler beim Umrechnen der Coordinaten");}
-	
-	Camera->unloadView();
-	return erg;
-}
-
-SGLVektor SGLSpace::Window2welt(unsigned int X,unsigned int Y)
-{
-	SGLVektor ret;
-	pair<unsigned int,unsigned int> screen(X,Y);
-	Window2welt(&screen,&ret,1);
-	return ret;
-}
-
-SGLVektor SGLSpace::welt2Window(SGLVektor weltCoord){return Window_welt_trans(weltCoord,false);}
-SGLVektor SGLSpace::Window2welt(SGLVektor windowCoord){return Window_welt_trans(windowCoord,true);}
-SGLVektor SGLSpace::Window_welt_trans(SGLVektor Coord,bool toWelt)
-{
-	GLdouble model[16];
-	GLdouble proj[16];
-	GLint view[4]={0,0,StatusInfo.WindowWidth,StatusInfo.WindowHeight};
-	SGLVektor ret;
-
-	Camera->loadView();
-	
-	GLenum error;
-//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind außer beim Aufruf aus resize falsch 
-	glGetDoublev(GL_MODELVIEW_MATRIX,model);
-	glGetDoublev(GL_PROJECTION_MATRIX,proj);
-	
-	GLboolean erg;
-	if(toWelt)erg = gluUnProject(Coord.SGLV_X,view[3] - int(Coord.SGLV_Y) ,Coord.SGLV_Z,model,proj,view,&ret.SGLV_X,&ret.SGLV_Y,&ret.SGLV_Z);
-	else gluProject(Coord.SGLV_X,Coord.SGLV_Y,Coord.SGLV_Z,model,proj,view,&ret.SGLV_X,&ret.SGLV_Y,&ret.SGLV_Z);
-		
-	if(erg==GL_FALSE){SGLprintError("Fehler beim Umrechnen der Coordinaten");}
-	
-	Camera->unloadView();
-	
-	return ret;
-}
