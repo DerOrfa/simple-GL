@@ -238,7 +238,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 	}
 
 	FORALL_SIZE(i)size[i]=newSize[i];
-	delete newSize;
+	delete[] newSize;
 	return !err;
 	#undef FORALL_SIZE
 }

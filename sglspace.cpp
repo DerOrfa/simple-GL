@@ -119,7 +119,9 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	bgColor.g=float(G)/255;
 	bgColor.b=float(B)/255;
 
+	MouseInfo.OldX=MouseInfo.OldY=-1;
 	MouseInfo.FollowMouse=true;
+	StatusInfo.StatusString[0]=0;
 	resizeMode=SGLBaseCam::scaleView;
 	DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;

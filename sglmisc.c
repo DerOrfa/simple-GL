@@ -104,4 +104,5 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
 		return 0;
 	}
+	else return -1;
 }

@@ -235,7 +235,7 @@ void SGLObjList::Compile(bool force)
  */
 void SGLObjList::ListInfo()
 {
-	char *elemente=new char[1];elemente[0]=0;
+	char *elemente=(char*)malloc(sizeof(char));elemente[0]=0;
 	unsigned int size=0;
 	char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
 	unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
