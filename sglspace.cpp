@@ -448,7 +448,7 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	isMyCam=false;
 	registerObj(Camera=cam);
 	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight);
-	else {SGLprintWarning("Die Bilddimensionen sind ungültig");}
+	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungültig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}
 	Camera->Compile();
 
 	Grids.X->FaceAt=&Camera->Pos;
