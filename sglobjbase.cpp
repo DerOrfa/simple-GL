@@ -146,12 +146,12 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 /*!
     \fn SGLObjBase::link(SGLObjBase *obj)
  */
-boost::signals::connection SGLObjBase::link(SGLObjBase &obj)
+connection SGLObjBase::link(SGLObjBase &obj)
 {
 	return notifyChange.connect(obj.compileNextTime);
 }
 
-void SGLObjBase::unlink(boost::signals::connection conn)
+void SGLObjBase::unlink(connection conn)
 {
 	conn.disconnect();
 }

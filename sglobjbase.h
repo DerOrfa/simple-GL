@@ -29,13 +29,14 @@ template<class T> struct CompObj : public unary_function<T&, void>
 	vector<GLint> *Objs;
 };
 
+using namespace boost::signals;
 /**
   *@author Enrico Reimer
   */
 class SGLObjBase:public SGLMatrixObj
 {
 public:
-	class CompilerMerker:public boost::signals::trackable
+	class CompilerMerker:public trackable
 	{
 	public:
 		CompilerMerker(SGLObjBase *obj);
@@ -63,7 +64,7 @@ public:
 	SGLVektor getCenterInSpace();
 	SGLVektor getMyPos();
 	GLuint metaCompile(bool force_compile=false);
-	boost::signals::connection link(SGLObjBase &obj);
+	connection link(SGLObjBase &obj);
 	void unlink(boost::signals::connection conn);
 	SGLSignal<void ()> notifyChange;
 	GLint beginList(bool draw);
