@@ -131,6 +131,7 @@ public:
 	void addEventListener(Uint8 eventType,SDLEventListener evl);
 	void addEventListener(Uint8 eventType,SGLObjBase *target_obj,void (*target_func)(SGLObjBase *target,SDL_Event event));
 	void callEventListeners(Uint8 type,SDL_Event &event);
+	static bool globalColorAktive;
 
 private:
 	bool setup_video(int w,int h);
@@ -140,5 +141,6 @@ private:
 	void show_status();
 };
 
+bool SGLSpace::globalColorAktive=false;
 
 #endif

@@ -76,15 +76,18 @@ GLuint SGLFlObj::Compile()
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
-			if(IgnoreLight)// @Todo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
+			if(IgnoreLight)// @dodo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
 			{
 				if(Mat->tex)Mat->tex->loadTex();
-				else glColor4f(
+				else 
+				{
+					glColor4f(
 					Mat->Aussen.Farbe.Glow[0],
 					Mat->Aussen.Farbe.Glow[1],
 					Mat->Aussen.Farbe.Glow[2],
 					1-Mat->Transparenz);//Wenn Selbstleuchtend, und keine Textur
-
+					SGLMaterial::MatLoaded=true; //really dirty Hack :-) (sorgt dafür, daß er denkt er hätte ein Mat. -> DrawVertex heult nich rum)
+				}
 			}
 			else Mat->loadMat();
 		}
@@ -97,6 +100,7 @@ GLuint SGLFlObj::Compile()
 			if(IgnoreLight)// @todo Tex NUR hier laden - is sauberer
 			{
 				if(Mat->tex)Mat->tex->unloadTex();
+				SGLMaterial::MatLoaded=false; //yadh (yet another dirty Hack) :-)
 			}
 			else Mat->unloadMat();
 		}

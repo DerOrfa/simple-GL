@@ -81,7 +81,11 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 		for(int y=0;y<size;y++)
 			for(int z=0;z<size;z++)
 			{
-				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)pixels[z][y][x][1]=0;
+				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
+				{
+					pixels[z][y][x][1]=50;
+					pixels[z][y][x][0]=0;
+				}
 				else 
 				{
 					if((x/(size/4) + y/(size/4) + z/(size/4))%2)
@@ -149,7 +153,7 @@ bool SGLTextur::unloadTex()
 /** No descriptions */
 void SGLTextur::SetParams()
 {
-	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);

@@ -134,8 +134,7 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 void SGLVektor::DrawVertex()
 {
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
-	bool colorAvail=false;
-	if(SGLMaterial::MatLoaded)colorAvail=true;
+	bool texOK=false;
 	if(SGLTextur::TexLoaded)
 	{
 		short coord=texKoord.size();
@@ -151,15 +150,13 @@ void SGLVektor::DrawVertex()
 		default:{
 		SGLprintError("Ungültiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
 		}
-		colorAvail=true;//@todo naja nich immer
+		texOK=true;//@todo naja nich immer
 	}
-	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
+	if(!SGLMaterial::MatLoaded && !texOK)
 	{
-		glColor3dv(Color);
-		colorAvail=true;//@todo naja nich immer
+		if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);
+		else{SGLprintWarning("Keine Farbinformationen verfügbar beim Zeichnen des Vertex \"%s\"",buff);}
 	}
-	if(!colorAvail)
-		SGLprintWarning("Keine Farbinformationen verfügbar beim Zeichnen des Vertex \"%s\"",buff);
 	DrawPureVertex();
 }
 

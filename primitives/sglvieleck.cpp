@@ -442,16 +442,16 @@ SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex):SGLR
 		if(volumeTex->TexType!=GL_TEXTURE_3D)
 		{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
 		Mat->SetTex(volumeTex);
-		resetTexKoord();
+		resetTexKoord(0,0);
 	}
 }
 
-void SGL3DPlane::resetTexKoord()
+void SGL3DPlane::resetTexKoord(GLint xshift,GLint yshift)
 {
-	setTexKoord(0,EckVektoren.Vekt[0]->SGLV_X/5+.5,EckVektoren.Vekt[0]->SGLV_Y/5+.5,EckVektoren.Vekt[0]->SGLV_Z/5+.5);
-	setTexKoord(1,EckVektoren.Vekt[1]->SGLV_X/5+.5,EckVektoren.Vekt[1]->SGLV_Y/5+.5,EckVektoren.Vekt[1]->SGLV_Z/5+.5);
-	setTexKoord(2,EckVektoren.Vekt[2]->SGLV_X/5+.5,EckVektoren.Vekt[2]->SGLV_Y/5+.5,EckVektoren.Vekt[2]->SGLV_Z/5+.5);
-	setTexKoord(3,EckVektoren.Vekt[3]->SGLV_X/5+.5,EckVektoren.Vekt[3]->SGLV_Y/5+.5,EckVektoren.Vekt[3]->SGLV_Z/5+.5);
+	setTexKoord(0,EckVektoren.Vekt[0]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[0]->SGLV_Y/5+.5+xshift,EckVektoren.Vekt[0]->SGLV_Z/5+.5);
+	setTexKoord(1,EckVektoren.Vekt[1]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[1]->SGLV_Y/5+.5+xshift,EckVektoren.Vekt[1]->SGLV_Z/5+.5);
+	setTexKoord(2,EckVektoren.Vekt[2]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[2]->SGLV_Y/5+.5+xshift,EckVektoren.Vekt[2]->SGLV_Z/5+.5);
+	setTexKoord(3,EckVektoren.Vekt[3]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[3]->SGLV_Y/5+.5+xshift,EckVektoren.Vekt[3]->SGLV_Z/5+.5);
 }
 
 void SGL3DPlane::setHigh(SGLObjBase *plane,SDL_Event event)
