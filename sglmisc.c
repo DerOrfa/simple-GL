@@ -22,6 +22,7 @@
 short SGLshowInfos=1;
 short SGLshowWarnings=1;
 short SGLshowErrors=1;
+short SGLshowState=1;
 char *lastMsg=NULL;
 
 void _SGLprintError(const char text[], ...)
@@ -63,6 +64,19 @@ void _SGLprintInfo(const char text[], ...)
     }
 }
 
+void _SGLprintState(const char text[], ...)
+{
+  if(SGLshowState)
+    {
+      va_list argList;
+      va_start(argList,text);
+
+      vwriteOut(stdout,text, argList);
+
+      va_end(argList);
+    }
+}
+
 void vwriteOut(FILE *file,const char text[], va_list argList)
 {
 /*	if(lastMsg)
@@ -77,11 +91,16 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 	fprintf(file,"\n");
 }
 
-short sglChkExt(const char* name,const char *msg)
+short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
-		_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+		if(vital>1)
+			_SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+		else if(vital)
+			_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+		else 
+			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
 		return 0;
 	}
 }

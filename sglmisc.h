@@ -52,6 +52,7 @@
 #define SGLprintError	if(SGLshowErrors)fprintf(stderr,"simpleGL-Error %s Line %d: ",__FILE__,__LINE__);_SGLprintError
 #define SGLprintWarning	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
 #define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
+#define SGLprintState	if(SGLshowState)fprintf(stdout,"State: ");_SGLprintState
 
 #define SGLcheckGLError	\
 {																\
@@ -67,12 +68,13 @@ extern "C" {
 void _SGLprintError(const char text[], ...);
 void _SGLprintWarning(const char text[], ...);
 void _SGLprintInfo(const char text[], ...);
+void _SGLprintState(const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
 
-extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings;
+extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings,SGLshowState;
 
-short sglChkExt(const char* name,const char *msg);
+short sglChkExt(const char* name,const char *msg,unsigned short vital);
 
 inline GLdouble sglGetd(GLenum pname)
 {
