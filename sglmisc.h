@@ -90,7 +90,11 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital);
 inline GLdouble sglGetd(GLenum pname)
 {
 	GLdouble ret;
-	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		abort();
+	}
 	glGetDoublev( pname, &ret);
 	return ret;
 }
@@ -98,7 +102,11 @@ inline GLdouble sglGetd(GLenum pname)
 inline GLfloat sglGetf(GLenum pname)
 {
 	GLfloat ret;
-	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		abort();
+	}
 	glGetFloatv( pname, &ret);
 	return ret;
 }
@@ -106,7 +114,11 @@ inline GLfloat sglGetf(GLenum pname)
 inline GLint sglGeti(GLenum pname)
 {
 	GLint ret;
-	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");}
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		abort();
+	}
 	glGetIntegerv( pname, &ret);
 	return ret;
 }

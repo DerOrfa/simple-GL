@@ -152,13 +152,7 @@ void SGLVektor::DrawVertex()
 		{
 			SGLprintWarning("Die geladene Textur hat %d Dimensionen, die Texturkoordinaten des Vertex \"%s\" sind aber nur %d-Dimensional",SGLTextur::TexLoaded,buff,coord);
 		}
-/*		int i=sglGeti(GL_ACTIVE_TEXTURE_ARB);
-		if(i>=GL_MAX_TEXTURE_UNITS_ARB)
-		{
-		    SGLprintError("Der aktuelle Texturlayer %d ist ungueltig, nehme 0 an",i);
-		    i=0;
-		}*/
-		int i=GL_TEXTURE0_ARB;//@todo uuups glGet darf lt. Spez. nicht zwischen glBegin und glEnd stehen *schaem*
+		int i=GL_TEXTURE0_ARB+SGLTextur::multitex_layer ;//@todo dirty Hack
 		switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
 		{
 		case 1:

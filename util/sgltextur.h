@@ -40,6 +40,7 @@ public:
 	
 	static short TexLoaded;
 	static short def2dim(GLenum def);
+	static short multitex_layer;
 	GLint getTexInfo(GLenum pname);
 	GLint getTexElemBitSize();
 	GLint getTexByteSize();

@@ -87,6 +87,7 @@ SGLBaseTex::~SGLBaseTex()
 bool SGLBaseTex::loadTex()
 {
 	GLboolean ret;
+	glActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	short dim=def2dim(TexType);
 	if(glIsTexture(ID))
 	{
@@ -110,22 +111,21 @@ bool SGLBaseTex::loadTex()
 	}
 	else{SGLprintError("OpenGL kennt die %dD-Textur \"%d\" nicht",dim,ID);}
 	loadMatrix();
-/*	if(multitex)
+	if(multitex)
 	{
-		glActiveTextureARB(sglGeti(GL_ACTIVE_TEXTURE_ARB)+1); //@todo glGet is hier nich erlaubt 
+		multitex_layer++;
 		multitex->loadTex();
-	}*/ //@todo Multitex bis auf weiteres abgeschaltet
+	}
 	return ret;
 }
 
 bool SGLBaseTex::unloadTex()
 {
 	GLboolean ret;
-/*	if(multitex)
-	{
+	if(multitex)
 		multitex->unloadTex();
-		glActiveTextureARB(GL_TEXTURE0_ARB);
-	}*///@todo Multitex bis auf weiteres abgeschaltet
+	glActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
+	if(multitex_layer)multitex_layer--;
 	unloadMatrix();
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
@@ -243,6 +243,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 }
 
 short SGLBaseTex::TexLoaded=0;
+short SGLBaseTex::multitex_layer=0;
 
 short SGLBaseTex::def2dim(GLenum def)
 {
