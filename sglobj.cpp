@@ -20,6 +20,11 @@
 #include <stdio.h>
 #include <GL/glu.h>
 
+SGLObj::SGLObj(const SGLObj &src):SGLObjBase(src)
+{
+	priority=src.priority;
+}
+
 SGLObj::SGLObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObjBase(PosX,PosY,PosZ,SizeFact)
 {

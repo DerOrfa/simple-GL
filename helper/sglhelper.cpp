@@ -21,6 +21,11 @@
 #define DISABLE_CLIP_PLANE(x)
 
 
+SGLHelper::SGLHelper(const SGLHelper &src):SGLObj(src)
+{
+	IgnoreClip=src.IgnoreClip;
+	IgnoreLight=src.IgnoreLight;
+}
 SGLHelper::SGLHelper(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
 {
 	IgnoreClip=IgnoreLight=true;

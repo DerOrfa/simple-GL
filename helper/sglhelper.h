@@ -28,8 +28,7 @@ class SGLHelper : public SGLObj
 public: 
 	SGLHelper(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLHelper();
-//	GLuint Compile();
-//	bool IgnoreClip,IgnoreLight;
+	SGLHelper(const SGLHelper &src);
 };
 
 #endif

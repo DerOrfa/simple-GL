@@ -149,6 +149,10 @@ void SGLSpace::OnResize(int width, int height)
 		Camera->ViewFormat=double(width)/double(height);
 		Camera->Compile();
 	}
+	else
+	{
+		SGLprintError("Keine aktuelle Camera");
+	}
 	glViewport(0, 0, width, height);
  	reDraw();
 }
@@ -200,8 +204,8 @@ void SGLSpace::PrintOnScreen(char* String)
 		mainConsole->clear();
 		mainConsole->print(String);
 	}
-	else
-	{SGLprintWarning("Es gibt keine Hauptkonsole");}
+/*	else
+	{SGLprintWarning("Es gibt keine Hauptkonsole");}*///@todo das nervt
 }
 
 void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, GLdouble Cz,GLdouble D)
@@ -389,14 +393,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[1]=Grids.Y->Compile();
 	Grids.Beschr[2]=Grids.Z->Compile();
 
-	registerObj(Camera=new SGLCamera());
-	Grids.X->FaceAt=&Camera->Pos;
-	Grids.Y->FaceAt=&Camera->Pos;
-	Grids.Z->FaceAt=&Camera->Pos;
-
-	Camera->link(Grids.X);
-	Camera->link(Grids.Y);
-	Camera->link(Grids.Z);
+	defaultCam(new SGLCamera());
 
 	Grids.doGrid=1;
 
@@ -414,3 +411,18 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	while(error=glGetError())
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
+
+void SGLSpace::defaultCam(SGLBaseCam *cam)
+{
+	registerObj(Camera=cam);
+	Grids.X->FaceAt=&Camera->Pos;
+	Grids.Y->FaceAt=&Camera->Pos;
+	Grids.Z->FaceAt=&Camera->Pos;
+
+	Camera->link(Grids.X);
+	Camera->link(Grids.Y);
+	Camera->link(Grids.Z);
+}
+
+SGLObjList SGLSpace::ObjLst;
+SGLObjList SGLSpace::TranspObjLst;

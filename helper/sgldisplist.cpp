@@ -122,6 +122,7 @@ bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
 		else break;
 	for(i++;i<ObjCnt_Ptr;i++)
 		ObjPtr[i-1]=ObjPtr[i];
+	ObjPtr[i-1]=NULL;
 	ObjCnt_Ptr--;
 	obj->myList=NULL;
 	return true;
@@ -135,6 +136,7 @@ bool SGLObjList::removeOb_CW(GLuint ListID)
 		else break;
 	for(i++;i<ObjCnt_CW;i++)
 		Objects_CW[i-1]=Objects_CW[i];
+	Objects_CW[i-1]=0;
 	ObjCnt_CW--;
 	return true;
 }
@@ -147,17 +149,18 @@ bool SGLObjList::removeOb_CCW(GLuint ListID)
 		else break;
 	for(i++;i<ObjCnt_CCW;i++)
 		Objects_CCW[i-1]=Objects_CCW[i];
+	Objects_CCW[i-1]=0;
 	ObjCnt_CCW--;
 	return true;
 }
 
 void SGLObjList::Clear()
 {
-	for(int i=0;i<sizeof(Objects_CW)/sizeof(GLuint);i++)
-	{
-		Objects_CW[i]=0;
+	for(int i=0;i<ObjCnt_CW;i++)
+		Objects_CW[i] =0;
+	for(int i=0;i<ObjCnt_CCW;i++)
 		Objects_CCW[i]=0;
-	}// @todo wozu eig. ?
+	// @todo wozu eig. ?
 	ObjCnt_CW=ObjCnt_CCW=0;
 }
 

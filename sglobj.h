@@ -28,6 +28,7 @@ class SGLObj:public SGLObjBase
 {
 public:
 	SGLObj(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLObj(const SGLObj &src);
 	GLuint Compile();
 };
 
