@@ -24,7 +24,7 @@ compileNextTime(this)
 	myList = src.myList;
 	ResetTransformMatrix(src.MyTransformMatrix);
 	priority = src.priority;
-	should_compile = true;
+	should_compile = 1;
 	is_free=shared=false;
 }
 

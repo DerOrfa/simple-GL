@@ -101,7 +101,7 @@ bool SGLObjList::AddOb(shared_obj obj)
 	else 
 	{
 		obj->myList=this;
-		obj->compileNextTime();
+//		obj->compileNextTime();//@todo macht das überhaupt sinn - wenn das Ob neu is, wird es eh generiert
 		//Wenn das obj schon ner Liste angehört, gehen wir mal von aus, daß es schon kompiliert ist
 	}
 	check_sorting=check_recompile=true;
