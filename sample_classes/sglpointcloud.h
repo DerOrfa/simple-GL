@@ -1,4 +1,3 @@
-
 #include "../primitives/sglflobj.h"
 #include "../sglmetaobj.h"
 #include "../sglvektor.h"

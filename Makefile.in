@@ -101,7 +101,7 @@ SUBDIRS = util text primitives helper sample_classes
 
 lib_LTLIBRARIES = libsgl.la
 libsgl_la_SOURCES = sglmetaobj.cpp sglmetaobj.h sglmisc.c sglmisc.h sglobjbase.cpp sglobjbase.h sglobj.cpp sglobj.h sglspace.cpp sglspace.h sglvektor.cpp sglvektor.h
-libsgl_la_LIBADD = $(top_builddir)/libsgl/sample_classes/libsample_classes.la $(top_builddir)/libsgl/util/libutil.la $(top_builddir)/libsgl/text/libtext.la $(top_builddir)/libsgl/primitives/libprimitives.la $(top_builddir)/libsgl/helper/libhelper.la
+libsgl_la_LIBADD = $(top_builddir)/libsgl/util/libutil.la $(top_builddir)/libsgl/text/libtext.la $(top_builddir)/libsgl/primitives/libprimitives.la $(top_builddir)/libsgl/helper/libhelper.la
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -113,9 +113,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libsgl_la_LDFLAGS = 
-libsgl_la_DEPENDENCIES =  \
-$(top_builddir)/libsgl/sample_classes/libsample_classes.la \
-$(top_builddir)/libsgl/util/libutil.la \
+libsgl_la_DEPENDENCIES =  $(top_builddir)/libsgl/util/libutil.la \
 $(top_builddir)/libsgl/text/libtext.la \
 $(top_builddir)/libsgl/primitives/libprimitives.la \
 $(top_builddir)/libsgl/helper/libhelper.la

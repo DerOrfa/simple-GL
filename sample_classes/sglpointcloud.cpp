@@ -389,8 +389,6 @@ double SGLPointCloud::grow()
 		{
 			if(sawn)it++;
 			else it=cloud->punkte.erase(it);
-	/*		if(!sawn)it->SetColor(255,0,0);
-			else it->SetColor(0,0,0);*/
 		}
 		cloud->compileNextTime();
 	}

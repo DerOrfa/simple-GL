@@ -33,11 +33,12 @@
 #endif
 
 #include "text/backend_glf/sgltextbackend_glf.h"
+#include <assert.h>
 
 
 void SGLSpace::procEvent(SDL_Event e)
 {
-  switch( e.type )
+	switch( e.type )
     {
 	case SDL_KEYDOWN:OnKey(e.key.keysym ,true);break;
 	case SDL_MOUSEMOTION:OnMouseMove(e.motion.x,e.motion.y,e.motion.state);break;
@@ -79,6 +80,7 @@ void SGLSpace::resetView(short mode)
 {
 	glClearDepth(1);
 	glClearColor(bgColor.r,bgColor.g,bgColor.b,0);
+	assert(Camera->Pos.size()==3 && Camera->LookAt.size()==3 && Camera->UpVect.size()==3);
 	switch(mode)
 	{
 	case 0:
@@ -89,6 +91,7 @@ void SGLSpace::resetView(short mode)
 	gluPerspective(Camera->Angle,double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight),Camera->ClipFace,Camera->ClipHoriz);
 	glMatrixMode(GL_MODELVIEW);
 
+	//@todo wenn zu schnell hintereinander Events behandelt werden stimmt irgendwas mit der Camera nicht
 	gluLookAt(Camera->Pos.SGLV_X,Camera->Pos.SGLV_Y,Camera->Pos.SGLV_Z,
 		  Camera->LookAt.SGLV_X,Camera->LookAt.SGLV_Y,Camera->LookAt.SGLV_Z,
 		  Camera->UpVect.SGLV_X,Camera->UpVect.SGLV_Y,Camera->UpVect.SGLV_Z);
@@ -339,6 +342,9 @@ void SGLSpace::OnKey(SDL_keysym k, bool down)
 	case SDLK_DELETE:Camera->Roll(1);break;//Entf
 	case SDLK_ESCAPE:CallQuit();break;//ESC
 	default:
+		StatusInfo.StatusString[0]=0;
+		//@todo Wenn das Event mehrfach aufgerufen wird, ohne das show_status aufgerufen wurde, wird das ganze immer länger. Und läuft irgendwann über
+		//@todo Diese Lösung ist aber auch nicht so toll, denn damit geht alles was vorher hier stand verloren
 		sprintf(StatusInfo.StatusString,"%sF1-F3 => Koordinatensysteme umschalten\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%slinke Maus / Cursor => Kamera rotieren (um das Ziel)\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%srechte Maus => Ziel rotieren (um die Kamera)\n",StatusInfo.StatusString);
@@ -348,7 +354,6 @@ void SGLSpace::OnKey(SDL_keysym k, bool down)
 		sprintf(StatusInfo.StatusString,"%sIns|Del => Kamera rollen (auf Sichtachse rotieren)\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%sEnter => Kamera zurück auf Ausgangspos.\n",StatusInfo.StatusString);
 		sprintf(StatusInfo.StatusString,"%sESC => beenden\n",StatusInfo.StatusString);
-		reDraw();
 	break;
 	}
  	reDraw();
@@ -461,12 +466,12 @@ bool SGLSpace::Go(unsigned int Mode)
 						OnIdle();
 					}
 					else if(SDL_WaitEvent(&e))procEvent(e);//Kein Idle => wartet auf Event
-		
+					
 					while(SDL_PollEvent(&e))procEvent(e);//Events einsammeln
 					if(StatusInfo.update)
 						OnDraw();//bei Bedarf neu Zeichnen
 				}
-				else {SGLprintWarning("Tue grad tun");}
+				else {SGLprintWarning("Tue grad tun");break;}
 			}
 		}
 		else return false;
@@ -481,7 +486,7 @@ Danach müssen alle PolygonObjekte neu Compiliert werden.
 */
 void SGLSpace::TwoSided(bool TwoSideRendering)
 {
-//	ASSERT(StatusInfo.glServerReady);
+	assert(StatusInfo.glServerReady);
 	if(TwoSideRendering)glDisable(GL_CULL_FACE);
 	else glEnable(GL_CULL_FACE);
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE,TwoSideRendering);
