@@ -123,11 +123,10 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	bgColor.b=float(B)/255;
 
 	MouseInfo.FollowMouse=true;
-	DoIdle=StatusInfo.glServerReady=StatusInfo.running=false;
+	isMyCam=DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
 	cloned=false;
-	isMyCam=false;
 }
 
 SGLSpace::~SGLSpace()
@@ -420,9 +419,13 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 
 void SGLSpace::defaultCam(SGLBaseCam *cam)
 {
+	assert(cam);
 	if(isMyCam)delete Camera;
 	isMyCam=false;
 	registerObj(Camera=cam);
+	Camera->ViewFormat=StatusInfo.WindowWidth/StatusInfo.WindowHeight;
+	Camera->Compile();
+
 	Grids.X->FaceAt=&Camera->Pos;
 	Grids.Y->FaceAt=&Camera->Pos;
 	Grids.Z->FaceAt=&Camera->Pos;

@@ -114,6 +114,7 @@ public:
 	static bool globalColorAktive;
 	SGLConsole	*mainConsole;
 	void defaultCam(SGLBaseCam *cam);
+	bool isMyCam;
 
 protected:
 	void callHelper(int stage=1);
@@ -122,7 +123,6 @@ protected:
 	void show_status();
 	bool initVis(unsigned int XSize, unsigned int YSize);
 	bool cloned;
-	bool isMyCam;
 };
 
 #endif
