@@ -1,8 +1,30 @@
+
+#include <iostream>
+#include <fstream>
+#include <ctime>            // std::time
+
+#include <boost/random/linear_congruential.hpp>
+#include <boost/random/uniform_smallint.hpp>
+#include <boost/random/uniform_on_sphere.hpp>
+#include <boost/random/uniform_real.hpp>
+
+// Sun CC doesn't handle boost::iterator_adaptor yet
+#if !defined(__SUNPRO_CC) || (__SUNPRO_CC > 0x530)
+#include <boost/generator_iterator.hpp>
+#endif
+
+#ifdef BOOST_NO_STDC_NAMESPACE
+namespace std {
+  using ::time;
+}
+#endif
+
 #include "sglpointcloud.h"
 #include <time.h>
 #include <stdlib.h>
 #include "../sglobj.h"
 #include "../sglmisc.h"
+
 
 QHDreiEck::QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei):SGLDreiEck(eins,zwei,drei)
 {
@@ -82,43 +104,31 @@ SGLFlObj(NULL,PosX,PosY,PosZ,1)
 	this->tiefe=tiefe;
 
 	DrahtGitter(true);
-	punkte=NULL;
-	if(PktCnt)
-	{
-		make_rand_pts(PktCnt);
-//		qsort(punkte,PktCnt,sizeof(SGLVektor),sortZ);
-	}
-}
-
-int subSGLPointCloud::make_rand(int seed)
-{
-	int ret;
-	while((ret=rand())==_old_rnd)
-		srand(seed);
-	_old_rnd=ret;
-	return ret;
+	if(PktCnt)make_rand_pts(PktCnt);
 }
 
 //macht zufällige Liste
 void subSGLPointCloud::make_rand_pts(int cnt)
 {
-	int seed=time(0);
-	if(punkte)delete punkte;
+	if(punkte.size())punkte.clear();
 
-	punkte= new SGLVektor[cnt];
+	boost::minstd_rand generator(42u);
+	boost::uniform_on_sphere<boost::minstd_rand,GLdouble,SGLVektor> uni(generator,3);
+
 	for(int i=cnt;i;i--)
 	{
-		double x=make_rand(seed++)*(breite/(double)RAND_MAX);
-		double y=make_rand(seed++)*(hoehe/(double)RAND_MAX);
-		double z=make_rand(seed++)*(tiefe/(double)RAND_MAX);
-		punkte[i-1]=SGLVektor(x-breite/2,y-hoehe/2,z-tiefe/2);
+		SGLVektor erg=uni();
+		erg.SGLV_X*=breite;
+		erg.SGLV_Y*=hoehe;
+		erg.SGLV_Z*=tiefe;
+		punkte.push_back(erg*(double(i)/double(cnt)));
 	}
-	pktCnt=cnt;
 }
 
 void subSGLPointCloud::generate()
 {
-	for(int i=0;i<pktCnt;i++)punkte[i].DrawPkt(.1);
+	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
+		it->DrawPkt(.1);
 }
 
 /*!
@@ -126,17 +136,17 @@ void subSGLPointCloud::generate()
  */
 void subSGLPointCloud::getExtrema(SGLVektor *&maxX, SGLVektor *&minX,SGLVektor *&maxY,SGLVektor *&minY, SGLVektor *&maxZ, SGLVektor *&minZ)
 {
-	maxX=minX=maxY=minY=maxZ=minZ=&punkte[0];
-	for(int i=1;i<pktCnt;i++)
+	maxX=minX=maxY=minY=maxZ=minZ=&punkte.front();
+	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
 	{
-		if(punkte[i].SGLV_X<minX->SGLV_X)minX=&punkte[i];
-		if(punkte[i].SGLV_X>maxX->SGLV_X)maxX=&punkte[i];
+		if(it->SGLV_X<minX->SGLV_X)minX=&(*it);
+		if(it->SGLV_X>maxX->SGLV_X)maxX=&(*it);
 	
-		if(punkte[i].SGLV_Y<minY->SGLV_Y)minY=&punkte[i];
-		if(punkte[i].SGLV_Y>maxY->SGLV_Y)maxY=&punkte[i];
+		if(it->SGLV_Y<minY->SGLV_Y)minY=&(*it);
+		if(it->SGLV_Y>maxY->SGLV_Y)maxY=&(*it);
 	
-		if(punkte[i].SGLV_Z<minZ->SGLV_Z)minZ=&punkte[i];
-		if(punkte[i].SGLV_Z>maxZ->SGLV_Z)maxZ=&punkte[i];
+		if(it->SGLV_Z<minZ->SGLV_Z)minZ=&(*it);
+		if(it->SGLV_Z>maxZ->SGLV_Z)maxZ=&(*it);
 	}
 	
 }
@@ -160,26 +170,26 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 	if(maxV->QLen() < Z.QLen()){maxV=&Z;eins=minZ;zwei=maxZ;}
 	
 	double maxSize=0;
-	for(int i=0;i<pktCnt;i++)
+	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
 	{
-		if(&punkte[i] == eins || &punkte[i]==zwei)continue;
-		double fl=maxV->kreuzprod(punkte[i]- *eins).QLen();
+		if(&(*it) == eins || &(*it)==zwei)continue;
+		double fl=maxV->kreuzprod(*it- *eins).QLen();
 		if(fl>maxSize)
 		{
 			maxSize=fl;
-			drei=&punkte[i];
+			drei=&(*it);
 		}
 	}
 	
 	maxSize=0;
-	for(int i=0;i<pktCnt;i++)
+	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
 	{
-		if(&punkte[i] == eins || &punkte[i]==zwei || &punkte[i]==drei)continue;
-		double fl=maxV->spatprod(*drei- *eins, punkte[i]- *eins);
+		if(&(*it) == eins || &(*it)==zwei || &(*it)==drei)continue;
+		double fl=maxV->spatprod(*drei- *eins, (*it)- *eins);
 		if(fl>maxSize)
 		{
 			maxSize=fl;
-			vier=&punkte[i];
+			vier=&(*it);
 		}
 	}
 }
@@ -292,28 +302,53 @@ double SGLPointCloud::grow()
 	queue<kante> kanten;
 	//Punkt mit möglichst großer Entf zur Fläche suchen
 	double maxEntf=0;
-	for(int i=0;i<cloud->pktCnt;i++)
+	bool sawn;
+	list<SGLVektor>::iterator it=cloud->punkte.begin();
+	bool begin=true;
+	SGLVektor *pkt;
+	for(;;)
 	{
+		if(begin)begin=false;
+		else
+		{
+/*			if(sawn)it++;
+			else it=cloud->punkte.erase(it);*/
+			it++;
+		}
+		if(it!=cloud->punkte.end())pkt=&*it;
+		else break;
+		
 		//Punke die zum dreieck gehören sind unintressant
-		if(	dEck->EckVektoren.Vekt[0]==&cloud->punkte[i] ||
-			dEck->EckVektoren.Vekt[1]==&cloud->punkte[i] ||
-			dEck->EckVektoren.Vekt[2]==&cloud->punkte[i])
-		continue;
+		sawn=false;
+		if(	dEck->EckVektoren.Vekt[0]==pkt ||
+			dEck->EckVektoren.Vekt[1]==pkt ||
+			dEck->EckVektoren.Vekt[2]==pkt)
+			{
+				sawn=true;
+				continue;
+			}
 			
-		SGLVektor stuetzV(*dEck->EckVektoren.Vekt[0]);
-		SGLVektor aim(cloud->punkte[i]-stuetzV);
-		SGLVektor V1(*dEck->EckVektoren.Vekt[2]-stuetzV);
-		SGLVektor V2(*dEck->EckVektoren.Vekt[1]-stuetzV);
-		double entf=-V1.spatprod(V2,aim);
+		double entf=dEck->spat(*pkt);
 		
 		if(entf>maxEntf)
 		{
 			maxEntf=entf;
-			maxPkt=&cloud->punkte[i];
+			maxPkt=pkt;
+			sawn=true;
 		}
 		else if(entf<0)
 		//Punkt liegt auf Falscher Seite - könnte möglicherweise weg
-		{}
+		{
+			for(list<QHDreiEck>::iterator itDr=seiten.begin();itDr!=seiten.end();itDr++)
+			{
+				if(dEck==&(*itDr))continue;
+				if(itDr->canSee(*pkt))
+				{
+					sawn=true;
+					break;
+				}
+			}
+		}
 	}
 	
 	if(maxPkt)

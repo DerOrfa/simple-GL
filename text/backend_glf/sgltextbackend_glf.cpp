@@ -17,12 +17,13 @@ bool glf_inited=false;
 SGLTextBackend_glf::SGLTextBackend_glf(char fontname[])
 {
 	if(!glf_inited)SGLTextBackend_glf::backendInit();
+	myFontID=-1;
 	if(strlen(fontname))loadFont(fontname);
-	else 
 	#ifdef GLF_FONT_DIR
-		loadFont(GLF_FONT_DIR "/arial1.glf");
-	#elif
-		#warn GLF_FONT_DIR ist nicht def.
+	else loadFont(GLF_FONT_DIR "/arial1.glf");
+	#else
+		#warning GLF_FONT_DIR ist nicht def.
+	else loadFont("/opt/prog/simpleGL/libsgl/data/fonts/arial1.glf");
 	#endif
 }
 

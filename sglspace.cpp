@@ -441,37 +441,37 @@ void SGLSpace::OnIdle()
 
 bool SGLSpace::Go(unsigned int Mode)
 {
-  //Mode MUß zwischen 1 und 5 liegen
-  // @todo .... naja mal schauen
-  DoIdle=Mode-1;
-  if(StatusInfo.glServerReady)
-    {
-      if(!StatusInfo.running)
+	//Mode MUß zwischen 1 und 5 liegen
+	// @todo .... naja mal schauen
+	DoIdle=Mode-1;
+	if(StatusInfo.glServerReady)
 	{
-	  CompileIntObs();
-	  StatusInfo.running=Mode;
-	  while(StatusInfo.running)
-	    {
-	      if(!StatusInfo.Processing)
+		if(!StatusInfo.running)
 		{
-		  SDL_Event e;
-		  if(DoIdle)
-		    {
-		      if(DoIdle<4)SDL_Delay(30);//Idle mit Bremse
-		      OnIdle();
-		    }
-		  else if(SDL_WaitEvent(&e))procEvent(e);//Kein Idle => wartet auf Event
-
-		  while(SDL_PollEvent(&e))procEvent(e);//Events einsammeln
-		  if(StatusInfo.update)
-			  OnDraw();//bei Bedarf neu Zeichnen
+			CompileIntObs();
+			StatusInfo.running=Mode;
+			while(StatusInfo.running)
+			{
+				if(!StatusInfo.Processing)
+				{
+					SDL_Event e;
+					if(DoIdle)
+					{
+						if(DoIdle<4)SDL_Delay(30);//Idle mit Bremse
+						OnIdle();
+					}
+					else if(SDL_WaitEvent(&e))procEvent(e);//Kein Idle => wartet auf Event
+		
+					while(SDL_PollEvent(&e))procEvent(e);//Events einsammeln
+					if(StatusInfo.update)
+						OnDraw();//bei Bedarf neu Zeichnen
+				}
+				else {SGLprintWarning("Tue grad tun");}
+			}
 		}
-		  else {SGLprintWarning("Tue grad tun");}
-	    }
+		else return false;
 	}
-      else return false;
-    }
-  return true;
+	return true;
 }
 
 /*
