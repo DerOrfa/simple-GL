@@ -127,7 +127,8 @@ void SGLCamera::generate()
 	HorizVekt=HorizVekt+LookAt;
 	MinusHorizVekt=MinusHorizVekt+LookAt;
 
-	glColor3f(1,1,1);
+//	glColor3f(1,1,1);
+	int error;
 	glBegin(GL_LINE_LOOP);
 		Diag1Vekt.DrawVertex();
 		Diag2Vekt.DrawVertex();

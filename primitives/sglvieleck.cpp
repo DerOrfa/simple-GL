@@ -216,6 +216,7 @@ SGLDreiEck::~SGLDreiEck(){}
 SGLRechtEck::SGLRechtEck(GLdouble breite,GLdouble hoehe):
 SGLVierEck(SGLVektor(-breite/2,-hoehe/2),SGLVektor(breite/2,-hoehe/2),SGLVektor(breite/2,hoehe/2),SGLVektor(-breite/2,hoehe/2))
 {}
+SGLRechtEck::~SGLRechtEck(void){}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -243,18 +244,18 @@ SGLVektor SGLPolygon::getCenter()
  */
 void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
 {
-	if(eckNr>=EckVektoren.Cnt || EckVektoren.Vekt[eckNr]==NULL)
-	{
-		SGLprintError("Der Vektor %d existiert nicht",eckNr);
-		return;
-	}
-	else if(eckNr==-1)
+	if(eckNr==-1)
 	{
 		Center.texKoord.resize(2);
 		Center.texKoord[0]=x;
 		Center.texKoord[1]=y;
 	}
-	else
+	else if(eckNr>=EckVektoren.Cnt || EckVektoren.Vekt[eckNr]==NULL)
+	{
+		SGLprintError("Der Vektor %d existiert nicht",eckNr);
+		return;
+	}
+	else 
 	{
 		EckVektoren.Vekt[eckNr]->texKoord.resize(2);
 		EckVektoren.Vekt[eckNr]->texKoord[0]=x;

@@ -56,7 +56,7 @@ $(TEXT_BACKEND_GLF_DIR)glf.o \
 $(TEXT_BACKEND_GLF_DIR)sgltextbackend_glf.o
 
 
-all:	core sample
+all:	core test
 
 core:	$(CORE_OBJFILES)
 	@echo "===========Core done========"
@@ -86,20 +86,15 @@ libsgl.so:	libsgl.a
 	@echo "===========Linking libsgl.so========"
 	$(LD) -shared -o libsgl.so $(CORE_OBJFILES) $(HELPER_OBJFILES) $(PRIMITIVES_OBJFILES) $(UTIL_OBJFILES) $(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES) $(EMATH_DIR)/misc.o
 
-libs:	libsgl.so libsgl.a
+libs:	libsgl.a
 
-sample: libsgl.a sample1.o sample2.o sample3.o sample4.o sample5.o
-	$(CXX) $(CXXFLAGS) sample1.o -o sample1 $(LINK_LIBS) -L. -lsgl
-	$(CXX) $(CXXFLAGS) sample2.o -o sample2 $(LINK_LIBS) -L. -lsgl
-	$(CXX) $(CXXFLAGS) sample3.o -o sample3 $(LINK_LIBS) -L. -lsgl
-	$(CXX) $(CXXFLAGS) sample4.o -o sample4 $(LINK_LIBS) -L. -lsgl
-	$(CXX) $(CXXFLAGS) sample5.o -o sample5 $(LINK_LIBS) -L. -lsgl
-
+test: libsgl.a test.o
+	$(CXX) $(CXXFLAGS) test.o -o test $(LINK_LIBS) -L. -lsgl
 
 clean:
 	-rm -f $(CORE_OBJFILES) $(HELPER_OBJFILES) $(PRIMITIVES_OBJFILES) $(UTIL_OBJFILES) $(TEXT_OBJFILES) $(TEXT_BACKEND_GLF_OBJFILES) $(SAMPLE_CLASSES_OBJFILES)
 	-rm -f libsgl.a
-	-rm -f sample? sample?.o
+	-rm -f test test.o
 
 depsclean:
 	-rm -f .*depend
@@ -108,24 +103,24 @@ deps:	depsclean .core_depend .helper_depend .primitives_depend .util_depend .tex
 
 
 .core_depend :
-	$(CXX) -MM $(CORE_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(CORE_DIR)*.c* > $@
 
 .helper_depend :
-	$(CXX) -MM $(HELPER_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(HELPER_DIR)*.c* > $@
 
 .primitives_depend :
-	$(CXX) -MM $(PRIMITIVES_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(PRIMITIVES_DIR)*.c* > $@
 
 .util_depend :
-	$(CXX) -MM $(UTIL_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(UTIL_DIR)*.c* > $@
 
 .text_depend :
-	$(CXX) -MM $(TEXT_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(TEXT_DIR)*.c* > $@
 
 .text_backend_depend :
-	$(CXX) -MM $(TEXT_BACKEND_GLF_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(TEXT_BACKEND_GLF_DIR)*.c* > $@
 
 .sample_classes_depend :
-	$(CXX) -MM $(SAMPLE_CLASSES_DIR)*.c* > $@
+	$(CXX) $(CXXFLAGS) -MM $(SAMPLE_CLASSES_DIR)*.c* > $@
 
 include .core_depend .helper_depend .primitives_depend .util_depend .text_depend .text_backend_depend .sample_classes_depend

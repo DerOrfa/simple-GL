@@ -3,7 +3,10 @@
 #include <stdlib.h>
 #include "../sglobj.h"
 #include <map>
+#include <queue>
 #include "../sglmisc.h"
+
+struct kante{SGLVektor *start,*end;};
 
 QHDreiEck::QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei):SGLDreiEck(eins,zwei,drei)
 {
@@ -91,12 +94,12 @@ void subSGLPointCloud::make_rand_pts(int cnt)
 	if(punkte)delete punkte;
 
 	punkte= new SGLVektor[cnt];
-	for(int i=cnt;i>0;i--)
+	for(int i=cnt;i;i--)
 	{
 		double x=make_rand(seed++)*(breite/(double)RAND_MAX);
 		double y=make_rand(seed++)*(hoehe/(double)RAND_MAX);
 		double z=make_rand(seed++)*(tiefe/(double)RAND_MAX);
-		punkte[i]=SGLVektor(x-breite/2,y-hoehe/2,z-tiefe/2);
+		punkte[i-1]=SGLVektor(x-breite/2,y-hoehe/2,z-tiefe/2);
 	}
 	pktCnt=cnt;
 }
@@ -285,11 +288,10 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 int SGLPointCloud::grow(unsigned int seite)
 {
 	QHDreiEck *dEck=&seiten[seite];
-	struct kante{SGLVektor *start,*end;};
 		
 	double maxEntf=0;
 	SGLVektor *maxPkt=NULL;
-	queue<*QHDreiEck> offen;
+	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
 	for(int i=0;i<cloud->pktCnt;i++)
 	{
@@ -315,10 +317,10 @@ int SGLPointCloud::grow(unsigned int seite)
 	{
 		for(offen.push(dEck);!offen.empty();offen.pop())
 		{
-			dEck=stack.front();
+			dEck=offen.front();
 			for(int i=0;i<3;i++)
 			{
-				if(dEck->Nachbar[i]->canSee(maxPkt))
+				if(dEck->Nachbar[i]->canSee(*maxPkt))
 					offen.push(dEck->Nachbar[i]);
 				else
 				{

@@ -127,13 +127,16 @@ SGLVektor SGLVektor::operator =(EVektor<GLdouble> &VektPtr)
 void SGLVektor::DrawVertex(SGLVektor* Normale)
 {
 	if(Normale)Normale->SetNormale();
-	else if(glIsEnabled(GL_LIGHTING))SetNormale();
+//	else if(glIsEnabled(GL_LIGHTING))SetNormale();
 	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
 	{
 		glColor3dv(Color);
-		int error;
-		while(error=glGetError())
-		{SGLprintError("%s\n [GLerror]",gluErrorString(GLenum(error)));}
+		int error; 
+//@todo kann SUN kein glError in glBegin ?
+/*		while(error=glGetError())
+		{
+			SGLprintError("[GLerror] %s\n",gluErrorString(GLenum(error)));
+		} */
 	}
 	else
 	{

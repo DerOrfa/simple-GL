@@ -38,7 +38,6 @@ GLuint SGLObj::Compile()
 		for(i=0;i<5;i++)
 			if(EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i))))
 				glDisable(GLenum(GL_CLIP_PLANE0+i));
-	}
 	metaGenerate();
 
 
@@ -47,10 +46,11 @@ GLuint SGLObj::Compile()
 	for(i=0;i<5;i++)if(EnableClip[i])
 		glEnable(GLenum(GL_CLIP_PLANE0+i));
 
+	}
 	glEndList();
 
 	while(error=glGetError())
-	{SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());}
+	{SGLprintError("[GLerror] %s beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());}
 	return ID;
 }
 
