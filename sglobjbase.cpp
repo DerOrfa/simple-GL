@@ -75,6 +75,7 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
  */
 void SGLObjBase::metaGenerate()
 {
+	GLenum error;
 	loadMatrix();
 	if(FaceAt)
 	{

@@ -72,6 +72,7 @@ GLuint SGLFlObj::Compile()
 			glDisable(GL_CULL_FACE);
 		}
 
+
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
@@ -92,10 +93,6 @@ GLuint SGLFlObj::Compile()
 			else Mat->loadMat();
 		}
 
-	while(error=glGetError())
-	{
-		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
-	}
 		metaGenerate();
 
 		if(Mat)

@@ -18,6 +18,7 @@
 #include "sglvieleck.h"
 #include "../sglmisc.h"
 #include <assert.h>
+#include <GL/glu.h>
 
 /*!
     \fn SGLPolygon::SGLPolygon()

@@ -142,6 +142,7 @@ Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis
 */
 void SGLVektor::DrawVertex()
 {
+	GLenum error;
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
 	bool texOK=false;
 	if(SGLTextur::TexLoaded)
