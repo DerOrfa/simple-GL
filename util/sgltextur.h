@@ -18,7 +18,8 @@
 #ifndef SGLTEXTUR_H
 #define SGLTEXTUR_H
 
-//#include "sglimagefile.h"
+#include "memconsumer.h"
+
 #include "../sglmatrixobj.h"
 
 #define SGL_MTEX_MODE_TINT NON_GL_ENUM_BLOCK_BEGIN+1
@@ -28,7 +29,7 @@
 /**
   *@author Enrico Reimer
   */
-class SGLBaseTex:public SGLMatrixObj
+class SGLBaseTex:public SGLMatrixObj, public MemConsumer
 {
 public:
 	SGLBaseTex();

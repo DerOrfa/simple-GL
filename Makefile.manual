@@ -45,7 +45,8 @@ UTIL_OBJFILES = \
 $(UTIL_DIR)readtex.o  \
 $(UTIL_DIR)sglmaterial.o  \
 $(UTIL_DIR)sgltextur.o \
-$(UTIL_DIR)sglimagefile.o 
+$(UTIL_DIR)sglimagefile.o \
+$(UTIL_DIR)memconsumer.o
 
 TEXT_OBJFILES = \
 $(TEXT_DIR)sgltext.o \
