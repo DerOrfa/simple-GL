@@ -19,6 +19,7 @@
 #include "sglmisc.h"
 #include <stdio.h>
 #include <GL/glu.h>
+#include "sglmetaobj.h"
 
 SGLObj::SGLObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObjBase(PosX,PosY,PosZ,SizeFact)
@@ -26,16 +27,18 @@ SGLObjBase(PosX,PosY,PosZ,SizeFact)
 	priority=std;
 }
 
-GLuint SGLObj::Compile()
+GLuint SGLObj::Compile(bool draw)
 {
 	GLuint error=0,i;
 	bool EnableClip[5];
 
+	SGLMetaObj *meta=dynamic_cast<SGLMetaObj*>(this);
+	if(meta)meta->compileSubObjects();
 	while(error=glGetError())
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
-	beginList(true);
+	beginList(draw);
 	{
 		if(IgnoreLight)
 			glDisable(GL_LIGHTING);
@@ -90,7 +93,7 @@ SGLStrecke::~SGLStrecke()
 	{
 //		delete punkt1;
 //		delete punkt2;
-//@todo mit start pointers lösen
+//@todo mit smart pointers lösen
 	}
 }
 

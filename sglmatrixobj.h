@@ -32,6 +32,7 @@ public:
     SGLMatrixObj(GLenum type);
 	void Scale(GLdouble xfact,GLdouble yfact, GLdouble zfact);
 	void Scale(GLdouble fact);
+	void ScaleTo(GLdouble fact);
 	void Move(SGLVektor to);
 	void Move(GLdouble x,GLdouble y, GLdouble z);
 	void MoveTo(SGLVektor to);

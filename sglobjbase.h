@@ -36,7 +36,7 @@ public:
 	SGLObjBase(const SGLObjBase &src);
 	SGLObjBase(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	virtual ~SGLObjBase();
-	virtual GLuint Compile()=0;
+	virtual GLuint Compile(bool draw=true)=0;
 	virtual void generate()=0;
 
 	static SGLVektor Normale(SGLVektor Vekt1,SGLVektor Vekt2);

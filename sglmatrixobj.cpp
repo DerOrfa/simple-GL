@@ -62,8 +62,12 @@ void SGLMatrixObj::ResetTransformMatrix(const GLdouble *newMatrix)
 	}
 }
 
-void SGLMatrixObj::Scale(GLdouble fact)
-{Scale(fact,fact,fact);}
+void SGLMatrixObj::Scale(GLdouble fact){Scale(fact,fact,fact);}
+void SGLMatrixObj::ScaleTo(GLdouble fact)
+{
+	ResetTransformMatrix(NULL);
+	Scale(fact);
+}
 
 
 /*!

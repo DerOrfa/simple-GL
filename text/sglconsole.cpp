@@ -19,8 +19,7 @@ SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
 	background->Mat->SetColor(.3,.3,.3);
 	background->IgnoreLight=true;
 	IgnoreClip=true;
-
-	compileSubObjects();
+//	compileSubObjects();Sollte eig. automatisch gehen
 }
 
 SGLConsole::~SGLConsole()
@@ -44,8 +43,8 @@ void SGLConsole::compileSubObjects()
 {
 	Objs.clear();
 	TrObjs.clear();
-	Objs.push_back(text->Compile());
-	TrObjs.push_back(background->Compile());
+	Objs.push_back(text->Compile(false));
+	TrObjs.push_back(background->Compile(false));
 }
 
 /*!

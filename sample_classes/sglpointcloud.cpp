@@ -238,7 +238,7 @@ SGLMetaObj(0,0,0,1)
 	Mat2.SetColor(0,255,0,GL_FRONT);
 	Mat3.SetColor(0,0,255,GL_FRONT);
 	mode==2 ? init2():init();
-	compileSubObjects();
+//	compileSubObjects();Sollte eig. automatisch gehen
 }
 
 SGLPointCloud::~SGLPointCloud()
@@ -250,7 +250,7 @@ void SGLPointCloud::compileSubObjects()
 {
 	Objs.clear();
 	TrObjs.clear();
-	Objs.push_back(cloud->Compile());
+	Objs.push_back(cloud->Compile(false));
 
 	cout << distance(seiten.begin(), seiten.end())<<" Dreiecke" << endl;
 	for_each(seiten.begin(), seiten.end(), CompObj<SGLFlObj>(&Objs));
@@ -603,7 +603,6 @@ void SGLPointCloud::do_grow(SGLObjBase *target,SDL_Event event)
 				it->twoSideRender=true;
 			}
 		}
-		T->compileSubObjects();
 		T->compileNextTime();
 	}
 }

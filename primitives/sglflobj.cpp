@@ -29,7 +29,7 @@ SGLObj(PosX,PosY,PosZ,SizeFact)
 	twoSideRender=false;
 }
 
-GLuint SGLFlObj::Compile()
+GLuint SGLFlObj::Compile(bool draw)
 {
 	GLboolean	doCullFaces=false,doBlend=false;
 	GLint		CullFace;
@@ -53,7 +53,7 @@ GLuint SGLFlObj::Compile()
 	//auch in der Liste landet)
 	//Behandle GL_FILL jetzt als Normfall, und alle anderen setzen ihren Modus UND nehmen ihn auch
 	//wieder raus
-	beginList(true);
+	beginList(draw);
 		for(i=0;i<5;i++)
 			if(EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i))))
 				glDisable(GLenum(GL_CLIP_PLANE0+i));

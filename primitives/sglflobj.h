@@ -35,7 +35,7 @@ public:
 		GLdouble SizeFact=1
 		);
 	
-	GLuint Compile();
+	GLuint Compile(bool draw=true);
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);
 	void resetMaterial(MaterialPtr NewMaterial=MaterialPtr());
