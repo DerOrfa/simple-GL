@@ -70,7 +70,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 }
 
 	
-SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
+SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE),update(this)
 {
 	ID=0;
 	ResetTransformMatrix();
@@ -409,3 +409,6 @@ bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 	else return false;
 	//@todo kann durch sglChkExt ersetzt werden
 }
+
+SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
+void SGLBaseTex::updateSlot::operator()() const{mytex->update();}

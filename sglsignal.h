@@ -13,15 +13,36 @@
 #define SGLSIGNAL_H
 
 #include <boost/signal.hpp>
+#include "sglmisc.h"
 
 /**
 @author Enrico Reimer,,,
 */
+// MOC_SKIP_BEGIN
+using namespace boost::signals;
+class SGLSlot:public trackable
+{
+public:
+    const SGLSlot & operator=( const SGLSlot & ){SGLprintDebug("Achtung, kopiere Slot");return *this;}
+};
+typedef connection SGLConnection; //@todo dürfen connections kopiert werden??
+
 template<typename Signature> 
 class SGLSignal : public boost::signal<Signature>
 {
+	class forwarder : public SGLSlot{
+		public:
+			forwarder(const SGLSignal<Signature> &Sig):mySig(Sig){};
+			const SGLSignal<Signature> &mySig;
+			void operator()() const{mySig();};
+	}fwd;
 public:
-    const SGLSignal & operator=( const SGLSignal & ){SGLprintDebug("Signale werden nicht kopiert");}
+	SGLSignal():fwd(*this){};
+    const SGLSignal & operator=( const SGLSignal & ){SGLprintDebug("Signale werden nicht kopiert");return *this;}
+	template<typename T> SGLConnection forward(SGLSignal<T> &src){//@todo geht forwarden einer anderen Signatur ?!
+		return src.connect(fwd);
+	}
 };
+// MOC_SKIP_END
 
 #endif

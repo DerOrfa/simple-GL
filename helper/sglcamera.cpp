@@ -59,7 +59,7 @@ bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
 	if(outDated)
 	{
-		SGLprintWarning("Implizites Laden der Viewmatrix aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist");
+		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist",this);
 		update();
 	}
 	if(gluProject(src.SGLV_X,src.SGLV_Y,src.SGLV_Z,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))
@@ -110,19 +110,11 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor 
 	return screen2welt(x,y,depth_default,dst);
 }
 
-/**
- * 
- * @param x 
- * @param y 
- * @param depth 
- * @param dst 
- * @return 
- */
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
 {
 	if(outDated)
 	{
-		SGLprintWarning("Implizites Laden der Viewmatrix aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist");
+		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist",this);
 		update();
 	}
 	if(gluUnProject(x,view[3] - int(y) ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
@@ -131,13 +123,6 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble d
 	return false;}
 }
 
-/**
- * 
- * @param PosX 
- * @param PosY 
- * @param PosZ 
- * @return 
- */
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
 	for(int i=0;i<4;i++)
@@ -154,11 +139,6 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	recalcEckenMode=scaleView;
 }
 	
-/**
- * 
- * @param Xdeg 
- * @param Ydeg 
- */
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 {
 	if(lockGierAim && lockKippAim)return;
@@ -178,22 +158,11 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 	ViewMatr.outDated=true;
 }
 
-/**
- * 
- * @param Xdeg 
- * @param Ydeg 
- */
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 {
 	RotateCamAround(Xdeg,Ydeg,LookAt);
 }
 
-/**
- * 
- * @param Xdeg 
- * @param Ydeg 
- * @param around 
- */
 void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
 {
 	if(lockGierCam && lockKippCam)return;
@@ -211,10 +180,6 @@ void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
 	ViewMatr.outDated=true;
 }
 
-/**
- * 
- * @param degree 
- */
 void SGLBaseCam::Roll(GLdouble degree)
 {
 	if(lockRoll)return;

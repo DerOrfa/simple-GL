@@ -53,8 +53,8 @@ SGLObjBase::~SGLObjBase()
 		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
 	}
 	glDeleteLists(ID,1);
-/*	if(!ID)
-	{SGLprintInfo("Nie generiertes Objekt 0x%x gelöscht",this);}*/
+	if(!ID)
+	{SGLprintDebug("Nie generiertes Objekt 0x%x gelöscht",this);}//@todo prüfen, ob ID=0 immer heißt, daß obj nie gen wurde
 }
 
 
@@ -146,7 +146,7 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 /*!
     \fn SGLObjBase::link(SGLObjBase *obj)
  */
-connection SGLObjBase::link(SGLObjBase &obj)
+SGLConnection SGLObjBase::link(SGLObjBase &obj)
 {
 	return notifyChange.connect(obj.compileNextTime);
 }

@@ -39,11 +39,6 @@
 
 bool SGLSpace::globalColorAktive=false;
 
-void SGLSpace::reDraw()
-{
-  StatusInfo.update=true;
-}
-
 void SGLSpace::resetView(short mode)
 {
 	glClearDepth(1);
@@ -109,12 +104,18 @@ void SGLSpace::DrawExtObjs()
 
 void SGLSpace::show_status()
 {
-	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps);
+//	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps); //@todo Animationen mal anders lösen
 	PrintOnScreen(StatusInfo.StatusString);StatusInfo.StatusString[0]=0;
 	if(mainConsole && !mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
 
-SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B)
+SGLSpace::SGLSpace(const SGLSpace &src):reDraw(NULL)
+{
+	*this = src;
+	reDraw.myspace=this;//*hehe* dirty
+}
+
+SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this)
 {
 	Grids.BeschrMat=MaterialPtr(new  SGLMaterial);
 	TranspObjLst.renderTransparent=true;
@@ -126,7 +127,7 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	MouseInfo.FollowMouse=true;
 	StatusInfo.StatusString[0]=0;
 	resizeMode=SGLBaseCam::scaleView;
-	DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
+	StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
 	cloned=false;
@@ -172,7 +173,7 @@ void SGLSpace::OnResize(int width, int height)
 	Size.y=height;
 	
 	glViewport(0, 0, width, height);
- 	reDraw();
+ 	StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
 }
 
 
@@ -277,12 +278,6 @@ void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVe
 	sprintf(StatusInfo.StatusString,"%sXRotateFact: %.3f, XRollFact: %.3f\nYRotateFact: %.3f,YRollFact: %.3f\n",StatusInfo.StatusString,XRotateFact,XRollFact,YRotateFact,YRollFact);
 }
 
-void SGLSpace::OnIdle()
-{
-	Camera->RotateCam(1,1);
-	reDraw();
-}
-
 /*
 Schaltet den Default für zweiseitiges Rendering um.
 Danach mssen alle PolygonObjekte neu Compiliert werden.
@@ -303,7 +298,7 @@ void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 //	ASSERT(StatusInfo.glServerReady);
 	const GLfloat lMod[4]={R,G,B,1};
 	if(StatusInfo.glServerReady)glLightModelfv(GL_LIGHT_MODEL_AMBIENT,lMod);
-	if(StatusInfo.running==1)reDraw();
+	if(StatusInfo.running==1)StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
 }
 
 
@@ -348,7 +343,8 @@ bool SGLSpace::reCompileIntObs(bool redraw)
 {
 	if(!StatusInfo.glServerReady)return false;
 	else CompileIntObs();
-	if(redraw)reDraw();
+	if(redraw)StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
+
 	return true;
 }
 
@@ -507,4 +503,36 @@ void SGLSpace::setGridsSize(GLuint size)
 	Grids.X->compileNextTime();
 	Grids.Y->compileNextTime();
 	Grids.Z->compileNextTime();
+}
+
+
+/*!
+    \fn SGLSpace::registerDynamicTex(const SGLBaseTex &tex)
+ */
+void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
+{
+	tex.changed.connect(reDraw);
+}
+
+SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
+void SGLSpace::redrawSlot::operator()() 
+{
+	if(!myspace->StatusInfo.Processing)
+	{
+		myspace->StatusInfo.Processing=true;
+		myspace->resetView(0);
+		myspace->callHelper(1);
+		myspace->DrawExtObjs();
+		myspace->callHelper(2);
+
+		myspace->resetView(-1);
+		myspace->resetView(1);
+		myspace->show_status();
+	
+		myspace->printErrors();
+		glFinish();
+
+		myspace->StatusInfo.Processing=false;
+	}
+	else {SGLprintError("Tue grad tun");}
 }

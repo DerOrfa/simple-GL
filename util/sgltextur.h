@@ -21,6 +21,8 @@
 #include "memconsumer.h"
 
 #include "../sglmatrixobj.h"
+#include "../sglsignal.h"
+
 
 #define SGL_MTEX_MODE_TINT NON_GL_ENUM_BLOCK_BEGIN+1
 #define SGL_MTEX_MODE_OVERLAY NON_GL_ENUM_BLOCK_BEGIN+2
@@ -32,6 +34,14 @@
 class SGLBaseTex:public SGLMatrixObj, public MemConsumer
 {
 public:
+	class updateSlot:public SGLSlot
+	{
+	public:
+		updateSlot(SGLBaseTex *mytex);
+		SGLBaseTex *mytex;
+		void operator()() const;
+	}update;
+	SGLSignal<void()> changed;
 	SGLBaseTex();
 	virtual ~SGLBaseTex();
 	boost::shared_ptr<SGLBaseTex> multitex;

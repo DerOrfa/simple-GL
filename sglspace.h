@@ -39,6 +39,7 @@
 
 #include "primitives/sglflobj.h"
 #include <map>
+#include "sglsignal.h"
 
 
 /**Basisklasse für alle SGL- Raumklassen
@@ -48,9 +49,6 @@
 class SGLSpace
 {
 public:
-	int DoIdle;
-	void OnIdle();
-	
 	struct
 	{
 		double OldX,OldY;
@@ -81,6 +79,13 @@ public:
 		GLfloat r,g,b;
 	}bgColor;
 
+	class redrawSlot:public SGLSlot
+	{
+	public:
+		redrawSlot(SGLSpace *myspace);
+		SGLSpace *myspace;
+		void operator()();
+	}reDraw;
 
 	SGLClipPlane	*ClipPlanes[5];
 	boost::shared_ptr<SGLBaseCam> Camera;
@@ -89,11 +94,11 @@ public:
 	SGLObjList ObjLst;
 	SGLObjList TranspObjLst;
 
+	SGLSpace(const SGLSpace &src);
 	SGLSpace(unsigned int XSize=800,unsigned  int YSize=600,unsigned int R=0,unsigned int G=0,unsigned int B=0);
 	virtual ~SGLSpace();
 	virtual void OnResize(int width, int height);
 	virtual void setFlags(bool reCompile=true);
-	virtual void reDraw();
 
 	void PrintOnScreen(char* String);
 	void SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By=0, GLdouble Cz=0,GLdouble D=0);
@@ -110,6 +115,7 @@ public:
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
 	void registerObj(shared_obj Obj);
 	void unregisterObj(shared_obj Obj);
+    void registerDynamicTex(SGLBaseTex &tex);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
