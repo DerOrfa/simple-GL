@@ -201,7 +201,7 @@ void SGLSpace::setFlags(bool reCompile)
 	//Die Texturen aktivieren, und deaktivieren ihre entspr. Modi selbst.
 	glDisable(GL_TEXTURE_1D);
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_TEXTURE_3D);
+	glDisable(GL_TEXTURE_3D_EXT);
 
 	if(reCompile)
 	  {

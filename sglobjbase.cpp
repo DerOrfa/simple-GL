@@ -81,7 +81,9 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 void SGLObjBase::metaGenerate()
 {
 	GLenum error;
+//	SGLcheckGLError;
 	loadMatrix();
+//	SGLcheckGLError;
 	if(FaceAt)
 	{
 		GLdouble XZ_wink,XY_wink;
@@ -94,7 +96,9 @@ void SGLObjBase::metaGenerate()
 		glRotated(90,0,1,0);
 		glRotated(-XY_wink,1,0,0);
 	}
+//	SGLcheckGLError;
 	generate();
+//	SGLcheckGLError;
 	unloadMatrix();
 	notifyChange();
 }

@@ -363,7 +363,7 @@ void SGLLensFlare::setup_texture(char *filename, GLuint texobj, GLenum minFilter
 	SGLprintInfo("%s loaded: %dx%dx%d",filename, width, height, components);
 
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 1, width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, buf);
-	SGLcheckGLError;
+//	SGLcheckGLError;
 	free(buf);
 }
 
