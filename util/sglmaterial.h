@@ -56,6 +56,7 @@ public:
 	void MergeColor(int r, int g, int b, bool doGlanz=false);
     void resetMat(faerbung &f);
     void setMatParams(GLenum FACE,faerbung &f);
+	static bool MatLoaded;
 	private: // Private methods
 	void SetMat(GLfloat col[3],GLfloat Transp,GLenum Face=GL_FRONT,GLenum ColorID=GL_SHININESS);
 };

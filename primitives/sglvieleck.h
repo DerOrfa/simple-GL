@@ -69,9 +69,8 @@ public:
 	SGLVierEck(SGLVektor *Ecken[4]);
 	SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor Ecke4);
 	SGLVierEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3,SGLVektor *Ecke4);
-	~SGLVierEck();
-    void resetTexKoord();
-    void setupCenter();
+	void resetTexKoord();
+	void setupCenter();
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -26,7 +26,7 @@ SGLFlObj::SGLFlObj(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble Po
 	glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
 	VisMode=GLenum(MasterPolyMode[0]);
 	Mat=0;
-	ResetMaterial(Material);
+	resetMaterial(Material);
 	priority=flstd;
 	twoSideRender=false;
 }
@@ -88,7 +88,7 @@ GLuint SGLFlObj::Compile()
 			if(IgnoreLight)glColor3fv(Mat->Aussen.Farbe.Glow);
 			else Mat->unloadMat();
 		}
-		
+
 		if(VisMode!=GL_FILL)
 		{
 			glPolygonMode(GL_FRONT,GL_FILL);
@@ -115,11 +115,11 @@ GLuint SGLFlObj::Compile()
 void SGLFlObj::DrahtGitter(bool DO)
 {
 	if(DO)VisMode=GL_LINE;
-	else 
+	else
 		VisMode=GL_FILL;
 }
 
-void SGLFlObj::ResetMaterial(SGLMaterial *NewMaterial)
+void SGLFlObj::resetMaterial(SGLMaterial *NewMaterial)
 {
 	if(Mat)
 	{
@@ -128,8 +128,9 @@ void SGLFlObj::ResetMaterial(SGLMaterial *NewMaterial)
 	}
 	if(MatIsMine=!NewMaterial)Mat= new SGLMaterial;
 	else Mat=NewMaterial;
-	if(Mat && Mat->tex && Mat->tex->valid)
-		resetTexKoord();
+/*	if(Mat && Mat->tex && Mat->tex->valid)
+		resetTexKoord();*/
+	//nicht mehr nötig, da ALLE Texturkoordinaten haben
 }
 
 /*!

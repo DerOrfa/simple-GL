@@ -73,9 +73,9 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
 	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
 	TexType=GL_TEXTURE_3D;
-	
+
 	GLfloat pixels[32][32][32][3];
-	
+
 	for(int x=0;x<32;x++)
 		for(int y=0;y<32;y++)
 			for(int z=0;z<32;z++)
@@ -87,7 +87,7 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 
 	glGenTextures(1, &ID);
 	glBindTexture(GL_TEXTURE_3D, ID);
-	
+
 	glTexImage3D(GL_TEXTURE_3D,0,3,32,32,32,0,GL_RGB,GL_FLOAT,pixels);
 
 	GLuint gluerr = glGetError();
@@ -105,13 +105,16 @@ bool SGLTextur::loadTex()
 	GLboolean ret;
 	if(glIsTexture(ID))
 	{
+		short dim=TexType-GL_TEXTURE_1D+1;
 		if(glIsEnabled(TexType))
 		{
-			SGLprintWarning("%dD-Texturen sind schon aktiviert",TexType-GL_TEXTURE_1D+1,ID);
+			SGLprintWarning("%dD-Texturen sind schon aktiviert",dim,ID);
 			glDisable(TexType);
 		}
 		glEnable(TexType);
 		glBindTexture(TexType,ID);
+		SGLTextur::TexLoaded=dim;
+
 		if(!glAreTexturesResident(1,&ID,&ret))
 		{
 			SGLprintWarning("Die Textur \"%d\" ist nicht im Grafikspeicher",ID);
@@ -125,10 +128,11 @@ bool SGLTextur::unloadTex()
 {
 	GLboolean ret;
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
-		
+
 	if(glIsEnabled(TexType))glDisable(TexType);
 	else{SGLprintWarning("Hä, %dD-Texturen waren gar nicht aktiv ?",TexType-GL_TEXTURE_1D+1);}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
+	SGLTextur::TexLoaded=0;
 	return ret;
 }
 
@@ -145,3 +149,5 @@ void SGLTextur::SetParams()
 
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 }
+
+short SGLTextur::TexLoaded=0;

@@ -34,7 +34,7 @@ QHDreiEck::QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei):SGLDreiEck
 	DrahtGitter(true);
 }
 
-list<QHDreiEck>::iterator 
+list<QHDreiEck>::iterator
 QHDreiEck::newDreiEck(list<SGLVektor*> &punkte,list<QHDreiEck> *List,SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei)
 {
 	list<QHDreiEck>::iterator ret=newDreiEck(List,eins,zwei,drei);
@@ -51,13 +51,13 @@ void QHDreiEck::checkInPoints(list<SGLVektor*> &punkte)
 			EckVektoren.Vekt[1]==pkt ||
 			EckVektoren.Vekt[2]==pkt)
 		continue;
-		
+
 		if(canSee(*pkt))
 			myPunkte.push_back(pkt);
 	}
 }
 
-list<QHDreiEck>::iterator 
+list<QHDreiEck>::iterator
 QHDreiEck::newDreiEck(list<QHDreiEck> *List,SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei)
 {
 	list<QHDreiEck>::iterator it=List->insert(List->end(),QHDreiEck(eins,zwei,drei));
@@ -165,14 +165,14 @@ void subSGLPointCloud::getExtrema(SGLVektor *&maxX, SGLVektor *&minX,SGLVektor *
 	{
 		if(it->SGLV_X<minX->SGLV_X)minX=&(*it);
 		if(it->SGLV_X>maxX->SGLV_X)maxX=&(*it);
-	
+
 		if(it->SGLV_Y<minY->SGLV_Y)minY=&(*it);
 		if(it->SGLV_Y>maxY->SGLV_Y)maxY=&(*it);
-	
+
 		if(it->SGLV_Z<minZ->SGLV_Z)minZ=&(*it);
 		if(it->SGLV_Z>maxZ->SGLV_Z)maxZ=&(*it);
 	}
-	
+
 }
 
 void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor *&drei,SGLVektor *&vier)
@@ -180,19 +180,19 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 	SGLVektor *maxX,*minX;
 	SGLVektor *maxY,*minY;
 	SGLVektor *maxZ,*minZ;
-	
+
 	getExtrema(maxX, minX,maxY,minY, maxZ, minZ);
-	
+
 	SGLVektor X(*maxX - *minX);
 	SGLVektor Y(*maxY - *minY);
 	SGLVektor Z(*maxZ - *minZ);
-	
+
 	SGLVektor *maxV;
-	
+
 	if(X.QLen() > Y.QLen()){maxV=&X;eins=minX;zwei=maxX;}
 	else{maxV=&Y;eins=minY;zwei=maxY;}
 	if(maxV->QLen() < Z.QLen()){maxV=&Z;eins=minZ;zwei=maxZ;}
-	
+
 	double maxSize=0;
 	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
 	{
@@ -204,7 +204,7 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 			drei=&(*it);
 		}
 	}
-	
+
 	maxSize=0;
 	for(list<SGLVektor>::iterator it=punkte.begin();it!=punkte.end();it++)
 	{
@@ -251,7 +251,7 @@ void SGLPointCloud::compileSubObjects()
 	Objs.clear();
 	TrObjs.clear();
 	Objs.push_back(cloud->Compile());
-	
+
 	cout << distance(seiten.begin(), seiten.end())<<" Dreiecke" << endl;
 	for_each(seiten.begin(), seiten.end(), compObj<SGLFlObj>(&Objs));
 }
@@ -270,7 +270,7 @@ void SGLPointCloud::init()
 	SGLVektor *pt1,*pt2,*pt3,*pt4;
 	//vier möglichst weit voneinander entfernte Punkte finden
 	cloud->getTetraeder(pt1,pt2,pt3,pt4);
-	
+
 	seiten.clear();
 	//Wenn Seite aus p1,p2 und p3 den vierten Punkt sehen kann
 	if(QHDreiEck(pt1,pt2,pt3).canSee(*pt4))
@@ -278,12 +278,12 @@ void SGLPointCloud::init()
 	else
 		QHDreiEck::newDreiEck(&seiten,pt1,pt2,pt3);
 
-	
+
 	if(QHDreiEck(pt1,pt2,pt4).canSee(*pt3))//zweite Seite
 		QHDreiEck::newDreiEck(&seiten,pt1,pt4,pt2);
 	else
 		QHDreiEck::newDreiEck(&seiten,pt1,pt2,pt4);
-	
+
 	list<QHDreiEck>::iterator it=seiten.begin();
 	it->addNachbar(&seiten.back()); //erste und zweite Seite "bekannt machen"
 
@@ -294,16 +294,16 @@ void SGLPointCloud::init()
 
 	it->addNachbar(&seiten.back());//erste und dritte Seite "bekannt machen"
 	(++it)->addNachbar(&seiten.back());//zweite und dritte Seite "bekannt machen"
-	
+
 	if(QHDreiEck(pt2,pt3,pt4).canSee(*pt1))//vierte Seite
 		QHDreiEck::newDreiEck(&seiten,pt2,pt4,pt3);
 	else
 		QHDreiEck::newDreiEck(&seiten,pt2,pt3,pt4);
-	
+
 	(it=seiten.begin())->addNachbar(&seiten.back());//erste und vierte Seite "bekannt machen"
 	(++it)->addNachbar(&seiten.back());//zweite und vierte Seite "bekannt machen"
 	(++it)->addNachbar(&seiten.back());//dritte und vierte Seite "bekannt machen"
-	
+
 	growBase=seiten.begin();
 	compileNextTime();
 }
@@ -326,14 +326,14 @@ double SGLPointCloud::grow()
 {
 	if(step)for(list<QHDreiEck>::iterator it=seiten.begin();it!=seiten.end();it++)
 	{
-		it->ResetMaterial(&Mat1);
+		it->resetMaterial(&Mat1);
 		it->DrahtGitter(false);
 		it->twoSideRender=true;
 	}
-	
+
 	QHDreiEck *dEck=&(*growBase);
 	SGLprintInfo("%d ter grow-Aufruf",++growCnt);
-		
+
 	SGLVektor *maxPkt=NULL;
 	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
@@ -392,14 +392,14 @@ double SGLPointCloud::grow()
 		}
 		cloud->compileNextTime();
 	}
-	
+
 	if(maxPkt)
 	{
 		DreiEck2Kante(dEck,maxPkt,dEck->EckVektoren.Vekt[0],&kanten);
-		
+
 		QHDreiEck *lastDr=NULL;
 		QHDreiEck *firstDr=NULL;
-		
+
 		SGLprintInfo("%d Kanten gefunden",kanten.size());
 		for(;!kanten.empty();kanten.pop())
 		{
@@ -433,21 +433,21 @@ double SGLPointCloud::grow2()
 {
 	if(step)for(list<QHDreiEck>::iterator it=seiten.begin();it!=seiten.end();it++)
 	{
-		it->ResetMaterial(&Mat1);
+		it->resetMaterial(&Mat1);
 		it->DrahtGitter(false);
 		it->twoSideRender=true;
 	}
-	
+
 	QHDreiEck *dEck=&(*growBase);
 	SGLprintInfo("%d ter grow-Aufruf",++growCnt);
-		
+
 	SGLVektor *maxPkt=NULL;
 	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
 	//Punkt mit möglichst großer Entf zur Fläche suchen
 	double maxEntf=0;
-	
-	
+
+
 	for(list<SGLVektor*>::iterator it=dEck->myPunkte.begin();
 		it!=dEck->myPunkte.end();
 		it++)
@@ -461,15 +461,15 @@ double SGLPointCloud::grow2()
 			maxPkt=pkt;
 		}
 	}
-	
+
 	if(maxPkt)
 	{
 		list<SGLVektor*> newPktList;
 		DreiEck2Kante(newPktList,dEck,maxPkt,dEck->EckVektoren.Vekt[0],&kanten);
-		
+
 		QHDreiEck *lastDr=NULL;
 		QHDreiEck *firstDr=NULL;
-		
+
 		SGLprintInfo("%d Kanten gefunden",kanten.size());
 		for(;!kanten.empty();kanten.pop())
 		{
@@ -557,7 +557,7 @@ void SGLPointCloud::DreiEck2Kante(list<SGLVektor*> &punkte,QHDreiEck *dEck,SGLVe
 	SGLprintInfo("Lösche Dreieck %d, es hatte %d Punkte zu beachten",dEck->ID,dEck->myPunkte.size());
 	punkte.insert(punkte.end(), dEck->myPunkte.begin(), dEck->myPunkte.end());
 	SGLprintInfo("Es gibt jetzt %d \"Waisen\"",punkte.size());
-	
+
 	seiten.erase(dEck->I);
 }
 
@@ -575,7 +575,7 @@ void SGLPointCloud::do_grow(SGLObjBase *target,SDL_Event event)
 			cout << T->seiten.size() << " Dreiecke, " << T->cloud->punkte.size() << " Punkte" << endl;
 			double gef= (T->mode == 2) ? T->grow2():T->grow();
 			if(gef && T->step)cout << "Punkt mit dem \"Abstand\" " << gef << " gefunden"<< endl;
-			else 
+			else
 			{
 				if(T->step)cout << "nix gefunden"<< endl;
 				T->growBase++;
@@ -587,18 +587,18 @@ void SGLPointCloud::do_grow(SGLObjBase *target,SDL_Event event)
 				else cout << "gehe zu " << distance(T->seiten.begin(),T->growBase) << "tem Dreieck" << endl;
 			}
 		}while(!T->step && !T->rdy);
-			
+
 		if(!T->rdy)
 		{
-			T->growBase->ResetMaterial(&T->Mat2);
+			T->growBase->resetMaterial(&T->Mat2);
 			for(int i=0;i<3;i++)
-				T->growBase->Nachbar[i]->ResetMaterial(&T->Mat3);
+				T->growBase->Nachbar[i]->resetMaterial(&T->Mat3);
 		}
 		else if(!T->step)
 		{
 			for(list<QHDreiEck>::iterator it=T->seiten.begin();it!=T->seiten.end();it++)
 			{
-				it->ResetMaterial(&T->Mat1);
+				it->resetMaterial(&T->Mat1);
 				it->DrahtGitter(false);
 				it->twoSideRender=true;
 			}

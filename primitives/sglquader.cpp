@@ -54,7 +54,7 @@ void SGLQuader::ColorCube()
 	EckPunkte[0][1].SetColor(255,0,255);
 	EckPunkte[0][2].SetColor(255,255,255);
 	EckPunkte[0][3].SetColor(0,255,255);
-	ResetMaterial();
+	resetMaterial();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

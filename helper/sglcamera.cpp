@@ -127,21 +127,21 @@ void SGLCamera::generate()
 	HorizVekt=HorizVekt+LookAt;
 	MinusHorizVekt=MinusHorizVekt+LookAt;
 
-//	glColor3f(1,1,1);
+//@todo	glColor3f(1,1,1); Warum is das eig aus ??
 	int error;
 	glBegin(GL_LINE_LOOP);
-		Diag1Vekt.DrawVertex();
-		Diag2Vekt.DrawVertex();
-		Diag3Vekt.DrawVertex();
-		Diag4Vekt.DrawVertex();
+		Diag1Vekt.DrawPureVertex();
+		Diag2Vekt.DrawPureVertex();
+		Diag3Vekt.DrawPureVertex();
+		Diag4Vekt.DrawPureVertex();
 	glEnd();
 	glBegin(GL_LINES);
-		MinusVertVekt.DrawVertex();VertVekt.DrawVertex();
-		MinusHorizVekt.DrawVertex();HorizVekt.DrawVertex();
-		Pos.DrawVertex();Diag1Vekt.DrawVertex();
-		Pos.DrawVertex();Diag2Vekt.DrawVertex();
-		Pos.DrawVertex();Diag3Vekt.DrawVertex();
-		Pos.DrawVertex();Diag4Vekt.DrawVertex();
+		MinusVertVekt.DrawPureVertex();VertVekt.DrawPureVertex();
+		MinusHorizVekt.DrawPureVertex();HorizVekt.DrawPureVertex();
+		Pos.DrawPureVertex();Diag1Vekt.DrawPureVertex();
+		Pos.DrawPureVertex();Diag2Vekt.DrawPureVertex();
+		Pos.DrawPureVertex();Diag3Vekt.DrawPureVertex();
+		Pos.DrawPureVertex();Diag4Vekt.DrawPureVertex();
 	glEnd();
 
 }

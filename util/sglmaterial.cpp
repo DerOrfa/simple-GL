@@ -60,10 +60,12 @@ void SGLMaterial::loadMat()
 		setMatParams(GL_BACK,Innen);
 	}
 	if(tex)tex->loadTex();
+	SGLMaterial::MatLoaded=true;
 }
 
 void SGLMaterial::unloadMat()
 {
+	SGLMaterial::MatLoaded=false;
 	if(tex)tex->unloadTex();
 }
 
@@ -139,7 +141,10 @@ bool SGLMaterial::SetTex(SGLTextur *TexPtr)
 		return false;
 	}
 }
+
+
 bool SGLMaterial::SetTex(const char *imageFile)
+//Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {
 	if(SetTex(new SGLTextur(imageFile)))
 	{
@@ -214,3 +219,5 @@ void SGLMaterial::setMatParams(GLenum FACE,faerbung &f)
 	SetMat(f.Farbe.Glow,Transparenz,FACE,GL_EMISSION);
 	glMaterialf(FACE,GL_SHININESS,f.GlanzFaktor);
 }
+
+bool SGLMaterial::MatLoaded=false;

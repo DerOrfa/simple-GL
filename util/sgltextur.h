@@ -37,6 +37,7 @@ public:
 	bool Load3DImage(char *imageFile, bool MipMap=true);
 	bool loadTex();
 	bool unloadTex();
+	static short TexLoaded;
 	virtual void SetParams();
 	void DisableTex();
 };

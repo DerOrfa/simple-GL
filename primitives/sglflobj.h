@@ -35,7 +35,7 @@ public:
 	GLenum VisMode;
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);
-	void ResetMaterial(SGLMaterial *NewMaterial=0);
+	void resetMaterial(SGLMaterial *NewMaterial=0);
     virtual void resetTexKoord();
 	SGLMaterial *Mat;
 	bool MatIsMine;

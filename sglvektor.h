@@ -57,7 +57,8 @@ public:
 
 	void	DrawVertex(SGLVektor* Normale);
 	void	DrawVertex();
-	
+	inline	void	DrawPureVertex();
+
 	inline void	SetNormale();
 	void	SetColor(GLdouble R=-1,GLdouble G=-1,GLdouble B=-1);
 	void	SetColor(unsigned char R,unsigned char G,unsigned char B);

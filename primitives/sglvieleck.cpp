@@ -88,6 +88,7 @@ void SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
 	MyVekt=true;EckVektoren.Cnt=VektCnt;
 	for(int i=0;i<VektCnt;i++)
 		EckVektoren.Vekt[i]=new SGLVektor(Ecken[i]);
+	resetTexKoord();
 }
 
 /*!
@@ -98,6 +99,7 @@ void SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
 	MyVekt=true;EckVektoren.Cnt=VektCnt;
 	for(int i=0;i<VektCnt;i++)
 		EckVektoren.Vekt[i]=new SGLVektor(*Ecken[i]);
+	resetTexKoord();
 }
 
 /*!
@@ -108,6 +110,7 @@ void SGLPolygon::SetEckVekt(SGLVektor *Ecken[],short int VektCnt)
 	MyVekt=false;EckVektoren.Cnt=VektCnt;
 	for(int i=0;i<VektCnt;i++)
 		EckVektoren.Vekt[i]=Ecken[i];
+	resetTexKoord();
 }
 
 /*!
@@ -150,24 +153,21 @@ SGLVierEck::SGLVierEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3,SGLVek
 	tEck[3]=Ecke4;
 	SetEckVekt(tEck,4);
 	setupCenter();
+	resetTexKoord();
 }
 /*!
     \fn SGLVierEck::SGLVierEck(SGLVektor Ecken[4])
  */
-SGLVierEck::SGLVierEck(SGLVektor Ecken[4]):SGLPolygon(Ecken,4){setupCenter();}
+SGLVierEck::SGLVierEck(SGLVektor Ecken[4]):SGLPolygon(Ecken,4){setupCenter();resetTexKoord();}
 /*!
     \fn SGLVierEck::SGLVierEck(SGLVektor *Ecken[4])
  */
-SGLVierEck::SGLVierEck(SGLVektor *Ecken[4]):SGLPolygon(Ecken,4){setupCenter();}
+SGLVierEck::SGLVierEck(SGLVektor *Ecken[4]):SGLPolygon(Ecken,4){setupCenter();resetTexKoord();}
 
 /*!
     \fn SGLVierEck::SGLVierEck()
  */
-SGLVierEck::SGLVierEck(){}
-/*!
-    \fn SGLVierEck::~SGLVierEck()
- */
-SGLVierEck::~SGLVierEck(){}
+SGLVierEck::SGLVierEck(){resetTexKoord();}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*!
@@ -249,7 +249,7 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
 		SGLprintError("Der Vektor %d existiert nicht",eckNr);
 		return;
 	}
-	else 
+	else
 	{
 		EckVektoren.Vekt[eckNr]->texKoord.resize(2);
 		EckVektoren.Vekt[eckNr]->texKoord[0]=x;
@@ -361,7 +361,7 @@ void SGLPolygon::generateWithNormales()
 		EckVektoren.Vekt[0]->DrawVertex(Norm);
 		for(int i=1;i<EckVektoren.Cnt-1;i++)EckVektoren.Vekt[i]->DrawVertex(Norm+i);
 		EckVektoren.Vekt[EckVektoren.Cnt-1]->DrawVertex(Norm+EckVektoren.Cnt-1);
-		
+
 		if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex(Norm);
 	glEnd();
 }

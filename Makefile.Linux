@@ -1,8 +1,8 @@
 export EMATH_DIR=$(HOME)/emath/
 
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I$(EMATH_DIR) -g3 $(shell sdl-config --cflags) -DGLF_FONT_DIR="\"$(shell pwd)/data/fonts\"" -DGL_GLEXT_PROTOTYPES
-export CFLAGS=-g3
+export CXXFLAGS= -I$(EMATH_DIR) -Os $(shell sdl-config --cflags) -DGLF_FONT_DIR="\"$(shell pwd)/data/fonts\"" -DGL_GLEXT_PROTOTYPES
+export CFLAGS=$(CXXFLAGS)
 
 export LIBS = -L$(EMATH_DIR)
 export LINK_LIBS = $(LIBS) -lm -lGL -lGLU -lEMath -lILUT -lILU $(shell sdl-config --libs)
