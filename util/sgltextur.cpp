@@ -165,15 +165,22 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei &width,GLsizei &heigh
 		}
 		else break;
 	}
-	GLuint gluerr = glGetError();
-	if(gluerr)
+	GLuint err = glGetError();
+	if(err)
 	{
-		SGLprintError("%s beim Prüfen der Texturdaten [GLerror]",gluErrorString(gluerr));
+		SGLprintError("%s beim Prüfen der Texturdaten [GLerror]",gluErrorString(err));
 		w=h=d=0;
+	}
+	else if(w<width || h<height || d<depth)
+	{
+		w/=2;h/=2;d/=2;
+		SGLprintError("Der Texturspeicher der Grafikkarte ist zu klein. Er lässt nur %dx%dx%d zu.",w,h,d);
+		err=true;
 	}
 	width = w;
 	if(&height != &width)height= h;
 	if(&depth != &height && &depth != &width)depth=d;
+	return !err;
 }
 
 short SGLBaseTex::TexLoaded=0;

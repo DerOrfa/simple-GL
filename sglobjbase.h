@@ -12,7 +12,6 @@
 
 #include "sglmatrixobj.h"
 #include <list>
-#include <SDL/SDL.h>
 
 class SGLObjList;
 
@@ -70,6 +69,7 @@ protected:
 #include "helper/sgldisplist.h"
 
 #ifdef SDL_EVENT
+#include <SDL/SDL.h>
 struct SDLEventListener
 {
 	SGLObjBase *target;
