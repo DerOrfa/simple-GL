@@ -26,22 +26,26 @@ SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 	this->breite=breite;
 	this->hoehe=hoehe;
 	this->tiefe=tiefe;
-	SGLVierEck *p=new SGLVierEck[6];
+//	SGLVierEck *p=new SGLVierEck[6];
 	
 	for(int n=0;n<2;n++)for(int i=0;i<4;i++)
 		TOUCH_VEKTPTR(EckPunkte[n][i]);//MUSS vor der Verwendung von EckPunkte kommen, sonst kann es passieren, daß sie ungültig sind
 	
-	p[0].Link(EckPunkte[0][0],EckPunkte[0][1],EckPunkte[0][2],EckPunkte[0][3]);//Front
-	p[1].Link(EckPunkte[1][3],EckPunkte[1][2],EckPunkte[1][1],EckPunkte[1][0]);//Hinten
-	p[2].Link(EckPunkte[0][0],EckPunkte[0][3],EckPunkte[1][3],EckPunkte[1][0]);//links
-	p[3].Link(EckPunkte[0][1],EckPunkte[1][1],EckPunkte[1][2],EckPunkte[0][2]);//rechts
-	p[4].Link(EckPunkte[0][3],EckPunkte[0][2],EckPunkte[1][2],EckPunkte[1][3]);//deckel
-	p[5].Link(EckPunkte[1][0],EckPunkte[1][1],EckPunkte[0][1],EckPunkte[0][0]);//boden
-	
+	cout << "Quader: trage Vierecke als seiten ein" << endl;
 	for(int i=0;i<6;i++)
-		Fl.Fl[i]= boost::shared_ptr<SGLVierEck>(&p[i]);	
+	{
+		Fl.Fl[i]= boost::shared_ptr<SGLVierEck>(new SGLVierEck);	
+	}
 
 	Fl.Cnt=6;
+
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[0])->Link(EckPunkte[0][0],EckPunkte[0][1],EckPunkte[0][2],EckPunkte[0][3]);//Front
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[1])->Link(EckPunkte[1][3],EckPunkte[1][2],EckPunkte[1][1],EckPunkte[1][0]);//Hinten
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[2])->Link(EckPunkte[0][0],EckPunkte[0][3],EckPunkte[1][3],EckPunkte[1][0]);//links
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[3])->Link(EckPunkte[0][1],EckPunkte[1][1],EckPunkte[1][2],EckPunkte[0][2]);//rechts
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[4])->Link(EckPunkte[0][3],EckPunkte[0][2],EckPunkte[1][2],EckPunkte[1][3]);//deckel
+	boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[5])->Link(EckPunkte[1][0],EckPunkte[1][1],EckPunkte[0][1],EckPunkte[0][0]);//boden
+
 	recalcEdges(false);
 	resetTexKoord();
 }

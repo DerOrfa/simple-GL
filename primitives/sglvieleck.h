@@ -29,7 +29,6 @@ class SGLPolygon : public SGLFlObj
 public:
 	SGLPolygon();
 	SGLPolygon(SGLVektor Ecken[],short int VektCnt);
-//	SGLPolygon(VektorPtr Ecken[],short int VektCnt);
 
 	void generate();
 
@@ -68,6 +67,7 @@ public:
 		SGLVektor Ecke2=SGLVektor(-.5,.5,0),
 		SGLVektor Ecke3=SGLVektor(-.5,-.5,0),
 		SGLVektor Ecke4=SGLVektor(.5,-.5,0));
+	~SGLVierEck();
 	void Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3,VektorPtr Ecke4);
 	void resetTexKoord();
 	void setupCenter();

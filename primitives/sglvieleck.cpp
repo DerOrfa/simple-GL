@@ -28,30 +28,10 @@ SGLPolygon::SGLPolygon()
 	twoSideRender=true;
 }
 
-// /*!
-//     \fn SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
-//  */
-// SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr):SGLFlObj(PolygonPtr)
-// {
-// 	MyVekt=PolygonPtr.MyVekt;
-// 	EckVektoren.Cnt=PolygonPtr.EckVektoren.Cnt;
-// 	for(int i=0;i<PolygonPtr.EckVektoren.Cnt;i++)
-// 	{
-// 		if(MyVekt)
-// 			EckVektoren.Vekt[i]=new SGLVektor(*PolygonPtr.EckVektoren.Vekt[i]);
-// 		else
-// 			EckVektoren.Vekt[i]=PolygonPtr.EckVektoren.Vekt[i];
-// 	}
-// 	useCenter=PolygonPtr.useCenter;
-// 	twoSideRender=PolygonPtr.twoSideRender;
-// 	Mat=PolygonPtr.Mat;//@todo Material sollte auch kopiert werden
-// }
-
 /*!
     \fn SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
  */
 SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt){CopyEckVekt(Ecken,VektCnt);}
-//SGLPolygon::SGLPolygon(VektorPtr Ecken[],short int VektCnt){LinkEckVekt(Ecken,VektCnt);}
 
 /*!
     \fn SGLPolygon::generate()
@@ -104,6 +84,7 @@ void SGLPolygon::LinkEckVekt(VektorPtr Ecken[],short int VektCnt)
  */
 SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor Ecke4):SGLPolygon()
 {
+	cout << "erzeuge Viereck " << this << endl;
 	SGLVektor tEck[4];
 	tEck[0]=Ecke1;
 	tEck[1]=Ecke2;
@@ -111,6 +92,11 @@ SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor
 	tEck[3]=Ecke4;
 	CopyEckVekt(tEck,4);
 	setupCenter();
+}
+
+SGLVierEck::~SGLVierEck()
+{
+	cout << "lösche Viereck " << this << endl;
 }
 
 void SGLVierEck::Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3,VektorPtr Ecke4)

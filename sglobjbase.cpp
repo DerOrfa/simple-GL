@@ -55,7 +55,8 @@ SGLObjBase::~SGLObjBase()
 
 	if(myList)myList->removeOb(this);
 	glDeleteLists(ID,1);
-	if(!ID){SGLprintInfo("Nie generiertes Objekt gelöscht");}
+/*	if(!ID)
+	{SGLprintInfo("Nie generiertes Objekt 0x%x gelöscht",this);}*/
 }
 
 
