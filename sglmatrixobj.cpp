@@ -16,6 +16,7 @@
 SGLMatrixObj::SGLMatrixObj(GLenum type)
 {
 	MatrMode= type;
+	identity=false;
 }
 
 
@@ -77,6 +78,7 @@ void SGLMatrixObj::loadMatrix()
 {
 	glMatrixMode(MatrMode);
 	glPushMatrix();
+	if(identity)glLoadIdentity();
 	glMultMatrixd(MyTransformMatrix);
 	GLuint error=0;
 }
