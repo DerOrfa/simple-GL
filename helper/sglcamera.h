@@ -123,6 +123,12 @@ public:
 	virtual void generate();
 };
 
+class SGLvisibleCamera: public SGLBaseCam
+{
+public:
+	virtual void generate();
+};
+
 #include "sgllensflare.h"
 
 #endif

@@ -325,42 +325,6 @@ void SGLBaseCam::setLookVektor(SGLVektor Vekt)
 	ViewMatr.outDated=true;
 }
 
-SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,PosY,PosZ)
-{
-	showCross=true;
-}
-
-void SGLCamera::generate()
-{
-	glColor3f(1,1,1); 
-	if(showCross)
-	{
-		SGLVektor Vert[2],Horiz[2];
-		getCross(Horiz,Vert);
-		glBegin(GL_LINES);
-			Vert[1].DrawPureVertex();Vert[0].DrawPureVertex();
-			Horiz[1].DrawPureVertex();Horiz[0].DrawPureVertex();
-		glEnd();
-	}
-	
-	recalcEcken();
-
-	int error;
-	glBegin(GL_LINE_LOOP);
-		Ecken[0]->DrawPureVertex();
-		Ecken[1]->DrawPureVertex();
-		Ecken[2]->DrawPureVertex();
-		Ecken[3]->DrawPureVertex();
-	glEnd();
-	glBegin(GL_LINES);
-		Pos.DrawPureVertex();Ecken[0]->DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[1]->DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[2]->DrawPureVertex();
-		Pos.DrawPureVertex();Ecken[3]->DrawPureVertex();
-	glEnd();
-
-}
-
 void SGLBaseCam::loadView()
 {
 	if(loaded){SGLprintWarning("Die Camerasicht ist schon geladen");}
@@ -434,4 +398,53 @@ void SGLBaseCam::confirmViewMat()
 		ViewMatr.update();
 		if(do_unload)unloadView();
 	}
+}
+
+//////////////////////////////////////////////////////////////////
+
+SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,PosY,PosZ)
+{showCross=true;}
+
+void SGLCamera::generate()
+{
+	if(showCross)
+	{
+		glColor3f(1,1,1); 
+		SGLVektor Vert[2],Horiz[2];
+		getCross(Horiz,Vert);
+		glBegin(GL_LINES);
+			Vert[1].DrawPureVertex();Vert[0].DrawPureVertex();
+			Horiz[1].DrawPureVertex();Horiz[0].DrawPureVertex();
+		glEnd();
+	}
+	recalcEcken();
+}
+
+void SGLvisibleCamera::generate()
+{
+	glColor3f(1,1,1); 
+	if(showCross)
+	{
+		SGLVektor Vert[2],Horiz[2];
+		getCross(Horiz,Vert);
+		glBegin(GL_LINES);
+			Vert[1].DrawPureVertex();Vert[0].DrawPureVertex();
+			Horiz[1].DrawPureVertex();Horiz[0].DrawPureVertex();
+		glEnd();
+	}
+	
+	recalcEcken();
+
+	glBegin(GL_LINE_LOOP);
+		Ecken[0]->DrawPureVertex();
+		Ecken[1]->DrawPureVertex();
+		Ecken[2]->DrawPureVertex();
+		Ecken[3]->DrawPureVertex();
+	glEnd();
+	glBegin(GL_LINES);
+		Pos.DrawPureVertex();Ecken[0]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[1]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[2]->DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[3]->DrawPureVertex();
+	glEnd();
 }
