@@ -1,0 +1,18 @@
+EMATH_DIR=$(HOME)/emath/
+
+export MAKEFILE = Makefile.manual
+export CXXFLAGS= -I$(EMATH_DIR) -g3
+
+export OBJFILES = sglmisc.o sglobj.o sglspace.o sglvektor.o
+export MODULES = helper/libsglhelper.a primitives/libsglprimitives.a util/libsglutil.a GLf/libsglfont.a 
+export LIBS = -L/usr/freeware/lib32/ -L. -Lhelper -Lprimitives -Lutil -LGLf
+export LINK_LIBS = $(LIBS) -lsglcore -lGL -lsglhelper -lsglprimitives -lsglutil -lSDL -lsglfont
+
+all:	
+	${MAKE} all  -f Makefile.manual
+
+clean:
+	${MAKE} clean  -f Makefile.manual
+
+main:	
+	${MAKE} main -f Makefile.manual

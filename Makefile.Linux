@@ -1,0 +1,10 @@
+export EMATH_DIR=$(HOME)/emath/
+
+export MAKEFILE = Makefile.manual
+export CXXFLAGS= -I$(EMATH_DIR) -Os $(shell sdl-config --cflags)
+
+export LIBS = -L$(EMATH_DIR)
+export LINK_LIBS = $(LIBS) -lm -lGL -lGLU -lEMath -lILUT -lILU $(shell sdl-config --libs)
+
+%:
+	${MAKE} $@ -f Makefile.manual
