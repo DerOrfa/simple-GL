@@ -1,11 +1,12 @@
 export EMATH_DIR=$(HOME)/emath/
 
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I$(EMATH_DIR) -g3 $(shell sdl-config --cflags) -DDATA_DIR="\"$(shell pwd)/data\"" -DGL_GLEXT_PROTOTYPES
+export CXXFLAGS= -I$(EMATH_DIR) -O2 $(shell sdl-config --cflags) -DDATA_DIR="\"$(shell pwd)/data\"" -DGL_GLEXT_PROTOTYPES
 export CFLAGS=$(CXXFLAGS)
 
 export LIBS = -L$(EMATH_DIR)
-export LINK_LIBS = $(LIBS) -lm -lGL -lGLU -lEMath -lILUT -lILU $(shell sdl-config --libs)
+#-lIL -lILUT -lILU 
+export LINK_LIBS = $(LIBS) -lm -lGL -lGLU -lEMath $(shell sdl-config --libs)
 
 %:
 	${MAKE} $@ -f Makefile.manual

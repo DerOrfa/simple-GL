@@ -21,7 +21,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sglmisc.h"
-#include <IL/ilut.h>
+#ifdef USE_DEVIL
+	#include <IL/ilut.h>
+#endif
 
 #ifdef WIN32
 	#include <windows.h>
@@ -368,9 +370,11 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 {
 	if(setup_video(XSize,YSize))
 	{
+	#ifdef USE_DEVIL
 	  ilInit();
 	  iluInit();
 	  ilutRenderer(ILUT_OPENGL);
+	#endif
 	  return true;
 	}
 	else

@@ -17,7 +17,9 @@
 
 #include "sgltextur.h"
 #include "../sglmisc.h"
-#include <IL/ilut.h>
+#ifdef USE_DEVIL
+	#include <IL/ilut.h>
+#endif
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
@@ -37,6 +39,7 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 
 bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 {
+#ifdef USE_DEVIL
 	this->MipMap=MipMap;
 	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
 	TexType=GL_TEXTURE_2D;
@@ -62,6 +65,9 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 	SGLcheckGLError;
 
 	return valid=true;
+#else
+	SGLprintError("Für 2D-Texturen wird DevIL benötigt");
+#endif
 }
 
 	
@@ -213,7 +219,7 @@ GLint SGLBaseTex::getTexElemBitSize()
 	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
 	if(unload)unloadTex();
 	return r+b+b+alpha+lum+intens,index;
-	#undef GET_CHAN_SIZE(CH,RET)
+	#undef GET_CHAN_SIZE
 }
 
 
@@ -237,6 +243,6 @@ GLint SGLBaseTex::getTexByteSize()
 	{
 		return NZ(w)*NZ(d)*NZ(h)*fakt;
 	}
-	#undef NZ(val)
+	#undef NZ
 	return 0;
 }

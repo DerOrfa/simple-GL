@@ -69,7 +69,6 @@ void _SGLprintWarning(const char text[], ...);
 void _SGLprintInfo(const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
-void writeOut(FILE *out,const char text[], ...);
 
 extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings;
 

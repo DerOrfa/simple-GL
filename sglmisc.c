@@ -22,6 +22,7 @@
 short SGLshowInfos=1;
 short SGLshowWarnings=1;
 short SGLshowErrors=1;
+char *lastMsg=NULL;
 
 void _SGLprintError(const char text[], ...)
 {
@@ -64,16 +65,14 @@ void _SGLprintInfo(const char text[], ...)
 
 void vwriteOut(FILE *file,const char text[], va_list argList)
 {
+/*	if(lastMsg)
+	{
+		if(strcmp(lastMsg,text)==0)return;
+		free(lastMsg);
+	}
+	lastMsg=malloc((strlen(text)+1)*sizeof(char));
+	strcpy(lastMsg,text);*/ //@todo Das geht so nich (es wird voher noch printf gemacht)
+	
 	vfprintf(file,text,argList);
 	fprintf(file,"\n");
-}
-
-void writeOut(FILE *file,const char text[], ...)
-{
-	va_list argList;
-	va_start(argList,text);
-
-	vwriteOut(file,text, argList);
-
-	va_end(argList);
 }
