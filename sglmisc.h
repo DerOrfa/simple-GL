@@ -26,6 +26,22 @@
 
 #include <GL/gl.h>
 
+#ifndef GLAPI
+# ifdef _WIN32
+#  define GLAPI __stdcall
+# else
+#  define GLAPI
+# endif
+# define __DEFINED_GLAPI
+#endif
+
+#include <GL/glext.h>
+
+#ifdef __DEFINED_GLAPI
+# undef GLAPI
+# undef __DEFINED_GLAPI
+#endif
+
 #ifdef WIN32
 #include <process.h>
 #else

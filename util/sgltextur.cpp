@@ -16,14 +16,13 @@
  ***************************************************************************/
 
 #include "sgltextur.h"
-#include <GL/glu.h>
 #include "../sglmisc.h"
+
 #include <IL/ilut.h>
-#include <GL/glext.h>
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
-	ID=-1;
+	ID=0;
 	if(imageFile)Load2DImage(imageFile);
 }
 SGLTextur::~SGLTextur()
@@ -43,7 +42,7 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 {
 	this->MipMap=MipMap;
-	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
+	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
 	TexType=GL_TEXTURE_2D;
 
 	if(MipMap)
@@ -72,23 +71,28 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
 	this->MipMap=false;
-	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
-	TexType=GL_TEXTURE_3D_EXT;
-#define	size 128
+	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	TexType=GL_TEXTURE_3D;
+#define	size 64
 
 	GLubyte pixels[size][size][size];
-
+ 
 	for(int x=0;x<size;x++)
 		for(int y=0;y<size;y++)
 			for(int z=0;z<size;z++)
-				if((x/(size/4) + y/(size/4) + z/(size/4))%2)
+			{
+				if(x==0 || x==size-1 || y==0 || y==size-1 || z==0 || z==size-1)
+					pixels[z][y][x]=128;
+				else if((x/(size/4) + y/(size/4) + z/(size/4))%2)
 					pixels[z][y][x]=255;
-				else pixels[z][y][x]=0;
+				else 
+					pixels[z][y][x]=0;
+			}
 
 	glGenTextures(1, &ID);
 	glBindTexture(TexType, ID);
 
-	glTexImage3DEXT(TexType,0,3,size,size,size,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pixels);
+	glTexImage3D(TexType,0,3,size,size,size,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pixels);
 
 	GLuint gluerr = glGetError();
 	if(gluerr)
@@ -97,6 +101,7 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 		return GL_FALSE;
 	}
 	return valid=true;
+#undef size
 }
 
 bool SGLTextur::loadTex()
@@ -139,11 +144,15 @@ bool SGLTextur::unloadTex()
 /** No descriptions */
 void SGLTextur::SetParams()
 {
-	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
 
-	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,MipMap ? GL_LINEAR_MIPMAP_LINEAR:GL_LINEAR);
-	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	GLint filter;
+	if(weich)filter=MipMap ? GL_LINEAR_MIPMAP_LINEAR:GL_LINEAR;
+	else filter=MipMap ? GL_NEAREST_MIPMAP_NEAREST:GL_NEAREST;
+	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,filter);
+	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,filter);
 
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 }

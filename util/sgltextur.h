@@ -40,6 +40,7 @@ public:
 	static short TexLoaded;
 	virtual void SetParams();
 	void DisableTex();
+    bool weich,repeat;
 };
 
 #endif

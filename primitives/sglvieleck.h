@@ -19,6 +19,7 @@
 #define SGLVIELECK_H
 
 #include "sglflobj.h"
+#include "../helper/sglcamera.h"
 
 /**
   *@author Enrico Reimer
@@ -36,6 +37,8 @@ public:
 
 	void CopyEckVekt(SGLVektor Ecken[],short int VektCnt);
 	void CopyEckVekt(SGLVektor *Ecken[],short int VektCnt);
+	void LinkEckVekt(SGLVektor Ecken[],short int VektCnt);
+	void LinkEckVekt(SGLVektor *Ecken[],short int VektCnt);
 	void SetEckVekt(SGLVektor *Ecken[],short int VektCnt);
 
 	bool MyVekt;
@@ -118,7 +121,7 @@ class SGL3DPlane : public SGLRechtEck
 public:
 	SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex);
 	static void setHigh(SGLObjBase *plane,SDL_Event event);
-	void resetTexKoord(GLfloat depth);
+	void resetTexKoord();
 	GLfloat depth;
 };
 

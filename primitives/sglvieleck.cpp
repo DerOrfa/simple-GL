@@ -17,6 +17,7 @@
 
 #include "sglvieleck.h"
 #include "../sglmisc.h"
+#include <assert.h>
 
 /*!
     \fn SGLPolygon::SGLPolygon()
@@ -99,6 +100,28 @@ void SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
 	MyVekt=true;EckVektoren.Cnt=VektCnt;
 	for(int i=0;i<VektCnt;i++)
 		EckVektoren.Vekt[i]=new SGLVektor(*Ecken[i]);
+	resetTexKoord();
+}
+
+/*!
+    \fn SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
+ */
+void SGLPolygon::LinkEckVekt(SGLVektor Ecken[],short int VektCnt)
+{
+	MyVekt=false;EckVektoren.Cnt=VektCnt;
+	for(int i=0;i<VektCnt;i++)
+		EckVektoren.Vekt[i]=&Ecken[i];
+	resetTexKoord();
+}
+
+/*!
+    \fn SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
+ */
+void SGLPolygon::LinkEckVekt(SGLVektor *Ecken[],short int VektCnt)
+{
+	MyVekt=true;EckVektoren.Cnt=VektCnt;
+	for(int i=0;i<VektCnt;i++)
+		EckVektoren.Vekt[i]=Ecken[i];
 	resetTexKoord();
 }
 
@@ -412,27 +435,29 @@ bool SGLPolygon::canSee(SGLVektor aim)
  */
 SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex):SGLRechtEck(breite,hoehe)
 {
-	if(!volumeTex->TexType!=GL_TEXTURE_3D)
-	{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
-	this->Mat->SetTex(volumeTex);
-
 	depth=0;
-	resetTexKoord(0);
+	useCenter=false;
+	if(volumeTex)
+	{
+		if(volumeTex->TexType!=GL_TEXTURE_3D)
+		{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
+		Mat->SetTex(volumeTex);
+		resetTexKoord();
+	}
 }
 
-void SGL3DPlane::resetTexKoord(GLfloat depth)
+void SGL3DPlane::resetTexKoord()
 {
-	setTexKoord(0,0,0,depth);
-	setTexKoord(1,0,1,depth);
-	setTexKoord(2,1,1,depth);
-	setTexKoord(3,1,0,depth);
-	setTexKoord(-1,.5,.5,depth);
+	setTexKoord(0,EckVektoren.Vekt[0]->SGLV_X/5+.5,EckVektoren.Vekt[0]->SGLV_Y/5+.5,EckVektoren.Vekt[0]->SGLV_Z/5+.5);
+	setTexKoord(1,EckVektoren.Vekt[1]->SGLV_X/5+.5,EckVektoren.Vekt[1]->SGLV_Y/5+.5,EckVektoren.Vekt[1]->SGLV_Z/5+.5);
+	setTexKoord(2,EckVektoren.Vekt[2]->SGLV_X/5+.5,EckVektoren.Vekt[2]->SGLV_Y/5+.5,EckVektoren.Vekt[2]->SGLV_Z/5+.5);
+	setTexKoord(3,EckVektoren.Vekt[3]->SGLV_X/5+.5,EckVektoren.Vekt[3]->SGLV_Y/5+.5,EckVektoren.Vekt[3]->SGLV_Z/5+.5);
 }
 
 void SGL3DPlane::setHigh(SGLObjBase *plane,SDL_Event event)
 {
 	if(event.key.keysym.sym==SDLK_SPACE)((SGL3DPlane*)plane)->depth+=.1;
-	((SGL3DPlane*)plane)->resetTexKoord(((SGL3DPlane*)plane)->depth);
-	((SGL3DPlane*)plane)->compileNextTime();
+/*	((SGL3DPlane*)plane)->resetTexKoord(((SGL3DPlane*)plane)->depth);
+	((SGL3DPlane*)plane)->compileNextTime();*/
 	cout << ((SGL3DPlane*)plane)->depth << endl;
 }

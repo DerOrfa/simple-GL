@@ -149,7 +149,7 @@ void SGLVektor::DrawVertex()
 			case 2:glTexCoord2f(texKoord[0], texKoord[1]);break;
 			case 3:glTexCoord3f(texKoord[0], texKoord[1],texKoord[2]);break;
 			default:{
-			SGLprintError("Ungültiger Texturtyp beim Zeichnen des Vertex \"%s\"",buff);}break;
+			SGLprintError("Ungültiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
 			}
 		}
 	}

@@ -19,7 +19,7 @@
 #include "sglcamera.h"
 #include "../sglmisc.h"
 
-SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
+SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
 	ClipFace=1;ClipHoriz=500;
 	Pos.SGLV_X=PosX;Pos.SGLV_Y=PosY;Pos.SGLV_Z=PosZ;
@@ -27,10 +27,8 @@ SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	ViewFormat=1;
 	ResetUpVect();
 }
-SGLCamera::~SGLCamera()
-{}
 
-void SGLCamera::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
+void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 {
 	LookAt=LookAt-Pos;
 
@@ -45,7 +43,7 @@ void SGLCamera::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 	notifyChange();
 }
 
-void SGLCamera::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
+void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 {
 	Pos=Pos-LookAt;
 
@@ -59,20 +57,20 @@ void SGLCamera::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 	notifyChange();
 }
 
-void SGLCamera::Roll(GLdouble degree)
+void SGLBaseCam::Roll(GLdouble degree)
 {
 	UpVect=UpVect.Rotate(EVektor<GLdouble>(Pos-LookAt),degree);
 	Compile();
 	notifyChange();
 }
 
-void SGLCamera::MoveZoom(GLdouble fact)
+void SGLBaseCam::MoveZoom(GLdouble fact)
 {
 	Pos=(EVektor<GLdouble>(Pos-LookAt)*fact)+LookAt;
 	Compile();
 	notifyChange();
 }
-void SGLCamera::OptZoom(GLdouble fact)
+void SGLBaseCam::OptZoom(GLdouble fact)
 {
 	Angle/=fact;
 	if(Angle>179)Angle=179;
@@ -80,12 +78,12 @@ void SGLCamera::OptZoom(GLdouble fact)
 	Compile();
 }
 
-double SGLCamera::ViewLength()
+double SGLBaseCam::ViewLength()
 {
 	SGLVektor tVek(Pos-LookAt);
 	return tVek.Len();
 }
-void SGLCamera::ResetView()
+void SGLBaseCam::ResetView()
 {
 	Pos=SGLVektor(0,0,ViewLength());
 	LookAt.SGLV_X=0;LookAt.SGLV_Y=0;LookAt.SGLV_Z=0;
@@ -95,58 +93,7 @@ void SGLCamera::ResetView()
 	notifyChange();
 }
 
-void SGLCamera::generate()
-{
-	SGLVektor PosVektor(SGLVektor(Pos-LookAt));
-
-	double gamma = 90-Angle;
-	double a=(SIN(Angle)/SIN(gamma))*PosVektor.Len();
-	double DiagWinkel=ATAN(ViewFormat);
-
-	SGLVektor Diag2Vekt=UpVect.Rotate(PosVektor,DiagWinkel);
-
-	SGLVektor Diag3Vekt=UpVect.Rotate(PosVektor,180-DiagWinkel);
-	SGLVektor Diag4Vekt=UpVect.Rotate(PosVektor,180+DiagWinkel);
-	SGLVektor Diag1Vekt=UpVect.Rotate(PosVektor,360-DiagWinkel);
-
-	SGLVektor VertVekt=UpVect.Rotate(PosVektor,-90);
-	SGLVektor HorizVekt=UpVect;
-
-	SGLVektor MinusVertVekt=(SGLVektor()-VertVekt);
-	SGLVektor MinusHorizVekt=(SGLVektor()-HorizVekt);
-
-
-	Diag1Vekt=(Diag1Vekt*a)+LookAt;
-	Diag2Vekt=(Diag2Vekt*a)+LookAt;
-	Diag3Vekt=(Diag3Vekt*a)+LookAt;
-	Diag4Vekt=(Diag4Vekt*a)+LookAt;
-
-	VertVekt=VertVekt+LookAt;
-	MinusVertVekt=MinusVertVekt+LookAt;
-
-	HorizVekt=HorizVekt+LookAt;
-	MinusHorizVekt=MinusHorizVekt+LookAt;
-
-//@todo	glColor3f(1,1,1); Warum is das eig aus ??
-	int error;
-	glBegin(GL_LINE_LOOP);
-		Diag1Vekt.DrawPureVertex();
-		Diag2Vekt.DrawPureVertex();
-		Diag3Vekt.DrawPureVertex();
-		Diag4Vekt.DrawPureVertex();
-	glEnd();
-	glBegin(GL_LINES);
-		MinusVertVekt.DrawPureVertex();VertVekt.DrawPureVertex();
-		MinusHorizVekt.DrawPureVertex();HorizVekt.DrawPureVertex();
-		Pos.DrawPureVertex();Diag1Vekt.DrawPureVertex();
-		Pos.DrawPureVertex();Diag2Vekt.DrawPureVertex();
-		Pos.DrawPureVertex();Diag3Vekt.DrawPureVertex();
-		Pos.DrawPureVertex();Diag4Vekt.DrawPureVertex();
-	glEnd();
-
-}
-
-void SGLCamera::ReCalcUpVect(bool PosIsOnNull)
+void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull)
 {
 	if(!PosIsOnNull)Pos=Pos-LookAt;
 	SGLVektor HelpVekt(Pos.kreuzprod(UpVect));
@@ -155,19 +102,19 @@ void SGLCamera::ReCalcUpVect(bool PosIsOnNull)
 	if(!PosIsOnNull)Pos=Pos+LookAt;
 }
 
-void SGLCamera::ResetUpVect()
+void SGLBaseCam::ResetUpVect()
 {
 	UpVect=SGLVektor(0,1);
 	ReCalcUpVect();
 }
 
-void SGLCamera::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
+void SGLBaseCam::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
 	LookAt=LookAt-SGLVektor(xAmount,yAmount,zAmount);
 	ReCalcUpVect();
 }
 
-void SGLCamera::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
+void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
 	Pos   =Pos   -SGLVektor(xAmount,yAmount,zAmount);
 	ReCalcUpVect();
@@ -176,8 +123,82 @@ void SGLCamera::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 /*!
     \fn SGLCamera::getCenter()
  */
-SGLVektor SGLCamera::getCenter()
+SGLVektor SGLBaseCam::getCenter()
 {
 	return Pos;
 }
+void SGLBaseCam::getCross(SGLVektor Horiz[2],SGLVektor Vert[2])
+{
+	SGLVektor PosVektor=getLookVektor();
+	Vert[0]=UpVect.Rotate(PosVektor,-90);
+	Horiz[0]=UpVect;
 
+	Vert[1]=(SGLVektor()-Vert[0])+LookAt;
+	Horiz[1]=(SGLVektor()-Horiz[0])+LookAt;
+
+	Vert[0]=Vert[0]+LookAt;
+	Horiz[0]=Horiz[0]+LookAt;
+}
+
+/*!
+    \fn SGLBaseCam::getViewRect(SGLVektor Ecken[4])
+ */
+void SGLBaseCam::getViewRect(SGLVektor Ecken[4])
+{
+	SGLVektor PosVektor=getLookVektor();
+
+	double gamma = 90-Angle;
+	double a=(SIN(Angle)/SIN(gamma))*PosVektor.Len();
+	double DiagWinkel=ATAN(ViewFormat);
+
+	Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
+	Ecken[1]=UpVect.Rotate(PosVektor,DiagWinkel);
+	Ecken[2]=UpVect.Rotate(PosVektor,180-DiagWinkel);
+	Ecken[3]=UpVect.Rotate(PosVektor,180+DiagWinkel);
+	Ecken[0]=(Ecken[0]*a)+LookAt;
+	Ecken[1]=(Ecken[1]*a)+LookAt;
+	Ecken[2]=(Ecken[2]*a)+LookAt;
+	Ecken[3]=(Ecken[3]*a)+LookAt;
+}
+
+SGLVektor SGLBaseCam::getLookVektor()
+{
+	return SGLVektor(Pos-LookAt);
+}
+
+SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,PosY,PosZ)
+{
+	showCross=true;
+}
+void SGLCamera::generate()
+{
+	if(showCross)
+	{
+		SGLVektor Vert[2],Horiz[2];
+		getCross(Horiz,Vert);
+		glBegin(GL_LINES);
+			Vert[1].DrawPureVertex();Vert[0].DrawPureVertex();
+			Horiz[1].DrawPureVertex();Horiz[0].DrawPureVertex();
+		glEnd();
+	}
+	
+	SGLVektor Ecken[4];
+	
+	getViewRect(Ecken);
+
+	glColor3f(1,1,1); 
+	int error;
+	glBegin(GL_LINE_LOOP);
+		Ecken[0].DrawPureVertex();
+		Ecken[1].DrawPureVertex();
+		Ecken[2].DrawPureVertex();
+		Ecken[3].DrawPureVertex();
+	glEnd();
+	glBegin(GL_LINES);
+		Pos.DrawPureVertex();Ecken[0].DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[1].DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[2].DrawPureVertex();
+		Pos.DrawPureVertex();Ecken[3].DrawPureVertex();
+	glEnd();
+
+}

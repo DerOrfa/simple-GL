@@ -89,7 +89,7 @@ public:
 	bool FullScreen(bool FullScreen=true);
 
 	SGLClipPlane	*ClipPlanes[5];
-	SGLCamera		*Camera;
+	SGLBaseCam		*Camera;
 	SGLLight		*StdLight;
     SGLConsole		*mainConsole;
 
@@ -107,8 +107,8 @@ public:
 	void PrintOnScreen(char* String);
 	void SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By=0, GLdouble Cz=0,GLdouble D=0);
 
-	void MoveCam(GLdouble RelX,GLdouble RelY,SGLCamera *Cam);
-	void MoveAim(GLdouble RelX,GLdouble RelY,SGLCamera *Cam);
+	void MoveCam(GLdouble RelX,GLdouble RelY,SGLBaseCam *Cam);
+	void MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam *Cam);
 
 	void TwoSided(bool TwoSideRendering=true);
 

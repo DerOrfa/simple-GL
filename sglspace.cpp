@@ -420,7 +420,7 @@ void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, 
 	TwoSided();
 }
 
-void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLCamera *Cam)
+void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 {
 	double XRot=(RelX-MouseInfo.OldX);
 	double YRot=(RelY-MouseInfo.OldY);
@@ -430,7 +430,7 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLCamera *Cam)
 	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f° in X-Richtung und um: %.3f° in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
 }
 
-void SGLSpace::MoveCam(GLdouble RelX,GLdouble RelY,SGLCamera *Cam)
+void SGLSpace::MoveCam(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 {
 	double XRollFact=SIN(RelY*90),XRotateFact=COS(XRollFact*90);
 	double YRollFact=SIN(RelX*90),YRotateFact=COS(YRollFact*90);

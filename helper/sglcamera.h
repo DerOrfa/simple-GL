@@ -35,15 +35,10 @@ class SGLLensFlare;
 /**
   *@author Enrico Reimer
   */
-class SGLCamera: public SGLHelper
+class SGLBaseCam: public SGLHelper
 {
 public:
-	SGLCamera(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=15);
-	~SGLCamera();
-
-//  void RotateX(GLdouble amount);
-//  void RotateY(GLdouble amount);
-
+	SGLBaseCam(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=10);
 	void RotateAim(GLdouble Xdeg, GLdouble Ydeg);
 	void RotateCam(GLdouble Xdeg, GLdouble Ydeg);
 
@@ -60,12 +55,21 @@ public:
 	GLdouble Angle,ClipFace,ClipHoriz;
 	double ViewFormat;
 
-	virtual void generate();
-
 	void ReCalcUpVect(bool PosIsOnNull=false);
 	void ResetUpVect();
 
     SGLVektor getCenter();
+    void getViewRect(SGLVektor Ecken[4]);
+	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
+	SGLVektor getLookVektor();
+    bool showCross;
+};
+
+class SGLCamera: public SGLBaseCam
+{
+public:
+	SGLCamera(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=15);
+	virtual void generate();
 };
 
 #include "sgllensflare.h"
