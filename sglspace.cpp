@@ -88,9 +88,9 @@ void SGLSpace::callHelper(int stage)
 	if(Grids.doGrid & 1)
 	  {
 		glEnable(GL_BLEND);
-		if(Grids.X->should_compile)Grids.X->Compile();
-		if(Grids.Y->should_compile)Grids.Y->Compile();
-		if(Grids.Z->should_compile)Grids.Z->Compile();
+		if(Grids.X->should_compile)Grids.X->Compile(true,true);
+		if(Grids.Y->should_compile)Grids.Y->Compile(true,true);
+		if(Grids.Z->should_compile)Grids.Z->Compile(true,true);
 		glCallLists(3,GL_UNSIGNED_INT,Grids.Beschr);
 		glDisable(GL_BLEND);
 	  }
@@ -334,9 +334,9 @@ void SGLSpace::CompileIntObs()
 {
 	if(StatusInfo.glServerReady)
 	{
-		if(Grids.Grid1)Grids.Grid1->Compile();
-		if(Grids.Grid2)Grids.Grid2->Compile();
-		if(Grids.Grid3)Grids.Grid3->Compile();
+		if(Grids.Grid1)Grids.Grid1->Compile(true,true);
+		if(Grids.Grid2)Grids.Grid2->Compile(true,true);
+		if(Grids.Grid3)Grids.Grid3->Compile(true,true);
 	}
 }
 bool SGLSpace::reCompileIntObs(bool redraw)

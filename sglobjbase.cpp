@@ -154,8 +154,10 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
  */
 void SGLObjBase::compileNextTime()
 {
-	if(myList)myList->check_recompile=true;
-	else if(!is_free){SGLprintWarning("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daﬂ es neu generiert werden muﬂ", guesType());}
+	if(myList)
+		myList->check_recompile=true;
+	else if(!is_free)
+		{SGLprintDebug("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daﬂ es neu generiert werden muﬂ", guesType());}
 	if(!should_compile)should_compile=1;
 }
 

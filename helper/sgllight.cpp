@@ -33,7 +33,10 @@ SGLLight::SGLLight(int LID,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble Si
 				break;
 			}
 	}
+	bool old_free=is_free;
+	is_free=true;
 	SetColor(1,1,1);
+	is_free=old_free;
 	Farbe.Umgebung[3]=Farbe.Difus[3]=Farbe.Glanz[3]=1;
 	Spot.Richtung=SGLVektor(0,0,-1);
 	Spot.Ausleuchtung=1;

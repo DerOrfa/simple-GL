@@ -51,6 +51,13 @@
 
 #define SGLprintError	if(SGLshowErrors)fprintf(stderr,"simpleGL-Error %s Line %d: ",__FILE__,__LINE__);_SGLprintError
 #define SGLprintWarning	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
+
+#ifndef __OPTIMIZE__ 
+#define SGLprintDebug	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
+#else
+#define SGLprintDebug
+#endif
+
 #define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
 #define SGLprintState	if(SGLshowState)fprintf(stdout,"State: ");_SGLprintState
 

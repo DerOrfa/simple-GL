@@ -95,6 +95,7 @@ bool SGLObjList::AddOb(shared_obj obj)
 	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
 		
 	Objects.push_back(obj);
+	obj->is_free=false;
 	//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
 	if(obj->myList)obj->shared=true;
 	else 
