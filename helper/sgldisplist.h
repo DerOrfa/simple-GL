@@ -22,37 +22,42 @@
 
 #include "../sglobjbase.h"
 
+#include <list>
+
+
 /**
   *@author Enrico Reimer
   */
 class SGLObjList
 {
 public:
+	struct SortFunc : public binary_function<shared_obj &, shared_obj &, bool> {
+		bool operator()(shared_obj &x, shared_obj &y) { return y->priority < x->priority; }
+	};
 	SGLObjList(bool transp=false);
 	SGLObjList(const SGLObjList &src);
 	SGLObjList& operator=(const SGLObjList &src);
 	bool	removeOb(GLuint ListID);
-	bool	removeOb(SGLObjBase *obj);
+	bool	removeOb(shared_obj obj);
 	bool	AddOb(GLuint ListID,GLenum Face);
-    bool	AddOb(SGLObjBase* obj);
+	bool 	AddOb(shared_obj obj);
 	void	Clear();
-	SGLObjBase	**ObjPtr;
+	list<shared_obj>	Objects;
 	GLuint		*Objects_CW;
 	GLuint		*Objects_CCW;
-	unsigned int	ObjCnt_CW,ObjCnt_CCW,ObjCnt_Ptr;
-	unsigned int	ObjSize_CW,ObjSize_CCW,ObjSize_Ptr;
+	unsigned int	ObjCnt_CW,ObjCnt_CCW;
+	unsigned int	ObjSize_CW,ObjSize_CCW;
 	void	CallAllLists();
 	void	Compile(bool force=false);
 	bool	check_recompile,check_sorting;
 	bool	renderTransparent,render_non_native;
-    void	ListInfo();
+	void	ListInfo();
 
 private:
 	bool	removeOb_CW(GLuint ListID);
 	bool	removeOb_CCW(GLuint ListID);
-	bool	removeOb_Ptr(SGLObjBase *obj);
-	template<class T> bool grow(T *&liste,unsigned int &size,unsigned int newsize);
-	static int compareObj(const void *elem1,const void *elem2);
+	template<class T>
+	bool	grow(T *&liste,unsigned int &size,unsigned int newsize);
 };
 
 #endif

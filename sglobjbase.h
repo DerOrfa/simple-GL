@@ -68,6 +68,8 @@ protected:
 	list<SGLObjBase*> changeReciver,changeSender;
 };
 
+typedef boost::shared_ptr<SGLObjBase> shared_obj;
+
 #include "helper/sgldisplist.h"
 
 #endif

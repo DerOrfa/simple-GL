@@ -16,13 +16,11 @@
 
 SGLObjList::SGLObjList(bool transp)
 {
-	ObjPtr=NULL;
 	Objects_CW=Objects_CCW=NULL;
-	ObjCnt_CW=ObjCnt_CCW=ObjCnt_Ptr=0;
-	ObjSize_CW=ObjSize_CCW=ObjSize_Ptr=0;
+	ObjCnt_CW=ObjCnt_CCW=0;
+	ObjSize_CW=ObjSize_CCW=0;
 	grow(Objects_CW,ObjSize_CW,5);
 	grow(Objects_CCW,ObjSize_CCW,5);
-	grow(ObjPtr,ObjSize_Ptr,5);
 	Clear();
 	renderTransparent=transp;
 	render_non_native=true;
@@ -35,28 +33,25 @@ SGLObjList::SGLObjList(const SGLObjList &src)
 
 SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 {
-	ObjPtr=NULL;
 	Objects_CW=Objects_CCW=NULL;
-	ObjSize_CW=ObjSize_CCW=ObjSize_Ptr=0;
+	ObjSize_CW=ObjSize_CCW=0;
 	grow(Objects_CW,ObjSize_CW,src.ObjSize_CW);
 	grow(Objects_CCW,ObjSize_CCW,src.ObjSize_CCW);
-	grow(ObjPtr,ObjSize_Ptr,src.ObjSize_Ptr);
 	renderTransparent=src.renderTransparent;
 	render_non_native=src.render_non_native;
 	
 	ObjCnt_CW=src.ObjCnt_CW;
 	ObjCnt_CCW=src.ObjCnt_CCW;
-	ObjCnt_Ptr=src.ObjCnt_Ptr;
 	memcpy(Objects_CW,src.Objects_CW,ObjCnt_CW*sizeof(GLuint));
 	memcpy(Objects_CCW,src.Objects_CCW,ObjCnt_CCW*sizeof(GLuint));
-	memcpy(ObjPtr,src.ObjPtr,ObjCnt_Ptr*sizeof(SGLObjBase*));
+	Objects=src.Objects;
 	check_recompile=src.check_recompile;
 	check_sorting=src.check_sorting;
 }
 
 void SGLObjList::CallAllLists()
 {
-	if(ObjCnt_Ptr<=0)return;
+	if(Objects.empty())return;
 
 	if(renderTransparent)
 		glEnable(GL_BLEND);//Ab hier transparent
@@ -85,27 +80,22 @@ void SGLObjList::CallAllLists()
 /*!
     \fn SGLObjList::AddOb(SGLObjBase* obj)
  */
-bool SGLObjList::AddOb(SGLObjBase* obj)
+bool SGLObjList::AddOb(shared_obj obj)
 {
 	if(removeOb(obj))
 	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
-	if(ObjCnt_Ptr>=ObjSize_Ptr)
-		grow(ObjPtr,ObjSize_Ptr,ObjCnt_Ptr*2);
-	if(ObjPtr)
+		
+	Objects.push_back(obj);
+	//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
+	if(obj->myList)obj->shared=true;
+	else 
 	{
-		ObjPtr[ObjCnt_Ptr++]=obj;
-		//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
-		if(obj->myList)obj->shared=true;
-		else 
-		{
-			obj->myList=this;
-			obj->compileNextTime();
-			//Wenn das obj schon ner Liste angehört, gehen wir mal von aus, daß es schon kompiliert ist
-		}
-		check_sorting=check_recompile=true;
-		return true;
+		obj->myList=this;
+		obj->compileNextTime();
+		//Wenn das obj schon ner Liste angehört, gehen wir mal von aus, daß es schon kompiliert ist
 	}
-	else return false;
+	check_sorting=check_recompile=true;
+	return true;
 }
 
 bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
@@ -139,33 +129,20 @@ bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
 bool SGLObjList::removeOb(GLuint ListID)
 {return (removeOb_CW(ListID) || removeOb_CCW(ListID));}
 
-bool SGLObjList::removeOb(SGLObjBase *obj)
+bool SGLObjList::removeOb(shared_obj obj)
 {
-	if(!removeOb_Ptr(obj))
-		return false;
+	if(Objects.empty())return false;
+	list<shared_obj>::iterator i=find(Objects.begin(), Objects.end(), obj);
+	if(i!=Objects.end())Objects.erase(i);
+	else return false; //Objekt wurde NICHT gefunden
+	
+	if(obj->myList==this)obj->myList=NULL;
 	switch(obj->FrontFace)
 	{
 	case GL_CW:return removeOb_CW(obj->ID);
 	case GL_CCW:return removeOb_CCW(obj->ID);
 	}
 	return false;
-}
-
-bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
-{
-	int i=0;
-	if(!ObjCnt_Ptr)return false;
-	while(ObjPtr[i]!=obj)
-		if(ObjPtr[i])
-			i++;
-		else 
-			return false; //Objekt wurde NICHT gefunden
-	for(i++;i<ObjCnt_Ptr;i++)
-		ObjPtr[i-1]=ObjPtr[i];
-	ObjPtr[i-1]=NULL;
-	ObjCnt_Ptr--;
-	if(obj->myList==this)obj->myList=NULL;
-	return true;
 }
 
 bool SGLObjList::removeOb_CW(GLuint ListID)
@@ -229,22 +206,20 @@ template<class T> bool SGLObjList::grow(T *&liste,unsigned int &oldsize,unsigned
  */
 void SGLObjList::Compile(bool force)
 {
-	if(ObjCnt_Ptr<=0)return;
+	
+	if(Objects.empty())return;
 	Clear();
 	if(check_sorting)
 	{
-		qsort(ObjPtr,ObjCnt_Ptr,sizeof(SGLObjBase*),compareObj);
+		Objects.sort(SortFunc());
 		check_sorting=false;
-//		ListInfo();
+		ListInfo();
 	}
-	for(unsigned int i=0;i<ObjCnt_Ptr;i++)
-		if(render_non_native || ObjPtr[i]->myList==this)
-			AddOb(ObjPtr[i]->metaCompile(force),ObjPtr[i]->FrontFace);
+	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+		if(render_non_native || (*i)->myList==this)
+			AddOb((*i)->metaCompile(force),(*i)->FrontFace);
 	check_recompile=false;
 }
-int SGLObjList::compareObj(const void *elem1,const void *elem2)
-{return (*(SGLObjBase**)elem2)->priority-(*(SGLObjBase**)elem1)->priority;}
-
 
 /*!
     \fn SGLObjList::ListInfo()
@@ -256,16 +231,18 @@ void SGLObjList::ListInfo()
 	char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
 	unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
 
-	for(unsigned int i=0;i<ObjCnt_Ptr;i++)
+	unsigned int cnt=0;
+	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{
+		shared_obj ob=*i;
 		int oldlen=strlen(elemente);
-		int newnlen=oldlen+FormatStr_Len+strlen(i)+strlen(ObjPtr[i]->guesType())+strlen(ObjPtr[i]->priority)+strlen(ObjPtr[i]->ID);
+		int newnlen=oldlen+FormatStr_Len+strlen(cnt)+strlen(ob->guesType())+strlen(ob->priority)+strlen(ob->ID);
 		if(newnlen>size)
 		{
 			elemente=(char*)realloc(elemente,(newnlen+1)*sizeof(char));
 			size=newnlen;
 		}
-		sprintf(elemente+oldlen,FormatStr,i,ObjPtr[i]->guesType(),ObjPtr[i]->priority,ObjPtr[i]->ID);
+		sprintf(elemente+oldlen,FormatStr,cnt,ob->guesType(),ob->priority,ob->ID);
 	}
 	SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
 }
