@@ -307,7 +307,14 @@ void SGLSpace::registerObj(SGLFlObj *Obj)
 		TranspObjLst.AddOb(Obj);
 	else ObjLst.AddOb(Obj);
 }
+void SGLSpace::unregisterObj(SGLFlObj *Obj)
+{
+	if(Obj->Mat && Obj->Mat->Transparenz)
+		TranspObjLst.removeOb(Obj);
+	else ObjLst.removeOb(Obj);
+}
 void SGLSpace::registerObj(SGLObj *Obj){ObjLst.AddOb(Obj);}
+void SGLSpace::unregisterObj(SGLObj *Obj){ObjLst.removeOb(Obj);}
 
 void SGLSpace::CompileIntObs()
 {

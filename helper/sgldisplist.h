@@ -45,6 +45,7 @@ public:
 	void	Compile(bool force=false);
 	bool	check_recompile,check_sorting;
 	bool	renderTransparent;
+    void ListInfo();
 
 private:
 	bool	removeOb_CW(GLuint ListID);
@@ -53,7 +54,6 @@ private:
 	template<class T> bool grow(T* &liste,unsigned int &cnt,unsigned int newsize);
 	template<class T> unsigned int getListSize(T *liste);
 	static int compareObj(const void *elem1,const void *elem2);
-    void ListInfo();
 };
 
 #endif

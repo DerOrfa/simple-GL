@@ -46,10 +46,10 @@ public:
 
 	void MoveZoom(GLdouble fact);
 	void OptZoom(GLdouble fact);
-	void MoveAimTo(GLdouble x, GLdouble y, GLdouble z);
+	void MoveAimTo(SGLVektor to);
+	void MoveCamTo(SGLVektor to);
 	void MoveAim(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
 	void MoveCam(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
-	void MoveCamTo(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
 	double ViewLength();
 	void ResetView();
 

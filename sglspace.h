@@ -107,6 +107,8 @@ public:
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
 	void registerObj(SGLFlObj *Obj);
 	void registerObj(SGLObj *Obj);
+	void unregisterObj(SGLFlObj *Obj);
+	void unregisterObj(SGLObj *Obj);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();

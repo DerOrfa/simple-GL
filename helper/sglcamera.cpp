@@ -131,9 +131,9 @@ void SGLBaseCam::ResetUpVect(double rotdeg)
 	ReCalcUpVect(false,rotdeg);
 }
 
-void SGLBaseCam::MoveAimTo(GLdouble x, GLdouble y, GLdouble z)
+void SGLBaseCam::MoveAimTo(SGLVektor to)
 {
-	SGLVektor newAim=SGLVektor(x,y,z);
+	SGLVektor newAim=to;
 	SGLVektor amount=newAim-LookAt;
 	LookAt=newAim;
 	if(move_cam_with_aim)MoveCam(amount.SGLV_X, amount.SGLV_Y, amount.SGLV_Z);
@@ -162,9 +162,9 @@ void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 	Compile();
 }
 
-void SGLBaseCam::MoveCamTo(GLdouble x, GLdouble y, GLdouble z)
+void SGLBaseCam::MoveCamTo(SGLVektor to)
 {
-	Pos.SGLV_X=x;Pos.SGLV_Y=y;Pos.SGLV_Z=z;
+	Pos=to;
 	ReCalcUpVect();
 	Compile();
 }

@@ -62,6 +62,8 @@ void SGLObjList::CallAllLists()
  */
 bool SGLObjList::AddOb(SGLObjBase* obj)
 {
+	if(removeOb(obj))
+	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
 	if(ObjCnt_Ptr>=getListSize(ObjPtr))
 		grow(ObjPtr,ObjCnt_Ptr,ObjCnt_Ptr*2);
 	if(Objects_CW)
@@ -118,9 +120,10 @@ bool SGLObjList::removeOb(SGLObjBase *obj)
 bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
 {
 	int i=0;
+	if(!ObjCnt_Ptr)return false;
 	while(ObjPtr[i]!=obj)
 		if(ObjPtr[i])i++;
-		else break;
+		else return false; //Objekt wurde NICHT gefunden
 	for(i++;i<ObjCnt_Ptr;i++)
 		ObjPtr[i-1]=ObjPtr[i];
 	ObjPtr[i-1]=NULL;
@@ -132,9 +135,10 @@ bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
 bool SGLObjList::removeOb_CW(GLuint ListID)
 {
 	int i=0;
+	if(!ObjCnt_CW)return false;
 	while(Objects_CW[i]!=ListID)
 		if(Objects_CW[i])i++;
-		else break;
+		else return false;
 	for(i++;i<ObjCnt_CW;i++)
 		Objects_CW[i-1]=Objects_CW[i];
 	Objects_CW[i-1]=0;
@@ -145,9 +149,10 @@ bool SGLObjList::removeOb_CW(GLuint ListID)
 bool SGLObjList::removeOb_CCW(GLuint ListID)
 {
 	int i=0;
+	if(!ObjCnt_CW)return false;
 	while(Objects_CCW[i]!=ListID)
 		if(Objects_CCW[i])i++;
-		else break;
+		else return false;
 	for(i++;i<ObjCnt_CCW;i++)
 		Objects_CCW[i-1]=Objects_CCW[i];
 	Objects_CCW[i-1]=0;
