@@ -25,6 +25,7 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	Pos.SGLV_X=PosX;Pos.SGLV_Y=PosY;Pos.SGLV_Z=PosZ;
 	Angle=30;
 	ViewFormat=1;
+	move_cam_with_aim=true;
 	ResetUpVect();
 }
 
@@ -106,13 +107,16 @@ void SGLBaseCam::ResetUpVect()
 void SGLBaseCam::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
 	LookAt=LookAt-SGLVektor(xAmount,yAmount,zAmount);
-	ReCalcUpVect();
+	if(move_cam_with_aim)MoveCam(xAmount, yAmount, zAmount);
+	else ReCalcUpVect();
+	Compile();
 }
 
 void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
 	Pos   =Pos   -SGLVektor(xAmount,yAmount,zAmount);
 	ReCalcUpVect();
+	Compile();
 }
 
 /*!

@@ -62,7 +62,7 @@ public:
     void getViewRect(SGLVektor Ecken[4]);
 	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
 	SGLVektor getLookVektor();
-    bool showCross;
+    bool showCross,move_cam_with_aim;
 };
 
 class SGLCamera: public SGLBaseCam
