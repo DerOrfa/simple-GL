@@ -19,6 +19,7 @@
 #include <GL/glu.h>
 #include "../sglmisc.h"
 #include <IL/ilut.h>
+#include <GL/glext.h>
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
