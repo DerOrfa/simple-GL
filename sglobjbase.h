@@ -68,12 +68,4 @@ protected:
 
 #include "helper/sgldisplist.h"
 
-#ifdef SDL_EVENT
-#include <SDL/SDL.h>
-struct SDLEventListener
-{
-	SGLObjBase *target;
-	void (*target_func)(SGLObjBase *target,SDL_Event event);
-};
-#endif
 #endif
