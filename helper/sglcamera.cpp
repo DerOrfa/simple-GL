@@ -21,6 +21,10 @@
 #include <GL/glu.h>
 
 
+/**
+ * 
+ * @param force 
+ */
 void ViewTrans::update(bool force)
 {
 	if(force || outDated)
@@ -31,6 +35,11 @@ void ViewTrans::update(bool force)
 	}
 	outDated=false;
 }
+/**
+ * 
+ * @param defaultDepth 
+ * @param force 
+ */
 void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
 {
 	if(force || outDated)
@@ -40,6 +49,12 @@ void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
 	}
 }
 
+/**
+ * 
+ * @param src 
+ * @param dst 
+ * @return 
+ */
 bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
 	if(outDated)
@@ -58,6 +73,11 @@ bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 	}
 }
 
+/**
+ * 
+ * @param depthVekt 
+ * @return 
+ */
 GLdouble ViewTrans::getDepth(const SGLVektor &depthVekt)
 {
 	SGLVektor dummy;
@@ -65,16 +85,39 @@ GLdouble ViewTrans::getDepth(const SGLVektor &depthVekt)
 	return dummy.SGLV_Z;
 }
 
+/**
+ * 
+ * @param x 
+ * @param y 
+ * @param depthVekt 
+ * @param dst 
+ * @return 
+ */
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,const SGLVektor &depthVekt,SGLVektor &dst)
 {
 	return screen2welt(x,y,getDepth(depthVekt),dst);
 }
 
+/**
+ * 
+ * @param x 
+ * @param y 
+ * @param dst 
+ * @return 
+ */
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor &dst)
 {
 	return screen2welt(x,y,depth_default,dst);
 }
 
+/**
+ * 
+ * @param x 
+ * @param y 
+ * @param depth 
+ * @param dst 
+ * @return 
+ */
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
 {
 	if(outDated)
@@ -88,6 +131,13 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble d
 	return false;}
 }
 
+/**
+ * 
+ * @param PosX 
+ * @param PosY 
+ * @param PosZ 
+ * @return 
+ */
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 {
 	for(int i=0;i<4;i++)
@@ -104,6 +154,11 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	recalcEckenMode=scaleView;
 }
 	
+/**
+ * 
+ * @param Xdeg 
+ * @param Ydeg 
+ */
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 {
 	if(lockGierAim && lockKippAim)return;
@@ -123,11 +178,22 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 	ViewMatr.outDated=true;
 }
 
+/**
+ * 
+ * @param Xdeg 
+ * @param Ydeg 
+ */
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 {
 	RotateCamAround(Xdeg,Ydeg,LookAt);
 }
 
+/**
+ * 
+ * @param Xdeg 
+ * @param Ydeg 
+ * @param around 
+ */
 void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
 {
 	if(lockGierCam && lockKippCam)return;
@@ -145,6 +211,10 @@ void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
 	ViewMatr.outDated=true;
 }
 
+/**
+ * 
+ * @param degree 
+ */
 void SGLBaseCam::Roll(GLdouble degree)
 {
 	if(lockRoll)return;

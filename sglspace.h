@@ -98,10 +98,10 @@ public:
 	void PrintOnScreen(char* String);
 	void SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By=0, GLdouble Cz=0,GLdouble D=0);
 
-	void RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam *Cam);
-	void RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam,SGLVektor &around);
-	void RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam *Cam);
-	void MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam *Cam);
+	void RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam);
+	void RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVektor &around);
+	void RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam);
+	void MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam);
 
 	void TwoSided(bool TwoSideRendering=true);
 

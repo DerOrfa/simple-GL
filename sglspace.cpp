@@ -234,31 +234,31 @@ void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, 
 	TwoSided();
 }
 
-void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
+void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX);
 	double Yval=(RelY-MouseInfo.OldY);
-	Cam->RotateAim(Xval*20,-Yval*20);
+	Cam.RotateAim(Xval*20,-Yval*20);
 	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,Xval,Yval);
 }
 
-void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
+void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX);
 	double Yval=(RelY-MouseInfo.OldY);
-	SGLVektor V1=(Camera->UpVect.Rotate(Camera->getLookVektor(),-90))*Xval;
-	SGLVektor V2=Camera->UpVect*Yval;
+	SGLVektor V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
+	SGLVektor V2=Cam.UpVect*Yval;
 	SGLVektor V = (V1+V2)*-10;
-	Cam->MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
+	Cam.MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
 
-void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
+void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
-	RotateCamAround(RelX,RelY,Cam,Cam->LookAt);
+	RotateCamAround(RelX,RelY,Cam,Cam.LookAt);
 }
 
-void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam,SGLVektor &around)
+void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVektor &around)
 {
 	double XRollFact=SIN(RelY*90),XRotateFact=COS(XRollFact*90);
 	double YRollFact=SIN(RelX*90),YRotateFact=COS(YRollFact*90);
@@ -461,8 +461,7 @@ void SGLSpace::defaultCam(boost::shared_ptr<SGLBaseCam> cam)
 {
 	assert(cam);
 	unregisterObj(Camera);
-	Camera.swap(cam);
-	registerObj(Camera);
+	registerObj(Camera=cam);
 	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)
 		Camera->setView(StatusInfo.WindowWidth,StatusInfo.WindowHeight);
 	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungültig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}
