@@ -510,7 +510,7 @@ void SGLSpace::setGridsSize(GLuint size)
  */
 void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 {
-	tex.changed.connect(numeric_limits<group_type>::max(), reDraw);
+	tex.changed.connect(reDraw);
 }
 
 void SGLSpace::draw()
