@@ -230,15 +230,16 @@ void SGLVektor::DrawVektorAt(SGLVektor At)
 
 void SGLVektor::DrawPkt(double size)
 {
-
 	glBegin(GL_LINES);
-		SGLVektor( this->SGLV_X - size/2,SGLV_Y,SGLV_Z).DrawVertex();
-		SGLVektor( this->SGLV_X + size/2,SGLV_Y,SGLV_Z).DrawVertex();
+		if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
+			glColor3dv(Color);
+		glVertex3d(SGLV_X-size/2,SGLV_Y,SGLV_Z);
+		glVertex3d(SGLV_X+size/2,SGLV_Y,SGLV_Z);
 
-		SGLVektor(this->SGLV_X,SGLV_Y-size/2,SGLV_Z).DrawVertex();
-		SGLVektor(this->SGLV_X,SGLV_Y+size/2,SGLV_Z).DrawVertex();
+		glVertex3d(SGLV_X,SGLV_Y-size/2,SGLV_Z);
+		glVertex3d(SGLV_X,SGLV_Y+size/2,SGLV_Z);
 
-		SGLVektor(this->SGLV_X,SGLV_Y,SGLV_Z-size/2).DrawVertex();
-		SGLVektor(this->SGLV_X,SGLV_Y,SGLV_Z+size/2).DrawVertex();
+		glVertex3d(SGLV_X,SGLV_Y,SGLV_Z-size/2);
+		glVertex3d(SGLV_X,SGLV_Y,SGLV_Z+size/2);
 	glEnd();
 }

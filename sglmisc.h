@@ -38,6 +38,7 @@
 #define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
 
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
