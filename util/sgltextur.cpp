@@ -244,7 +244,6 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 	#undef FORALL_SIZE
 }
 
-
 short SGLBaseTex::TexLoaded=0;
 
 short SGLBaseTex::def2dim(GLenum def)
