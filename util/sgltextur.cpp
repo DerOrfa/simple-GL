@@ -431,24 +431,29 @@ void SGLBaseTex::replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr
  */
 void SGLBaseTex::addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
 {
-	assert(
 	addMTex(tex,boost::shared_ptr<SGLBaseTex>(),call_changed);
 }
 void SGLBaseTex::addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
 {
-	boost::shared_ptr<SGLBaseTex> tmp=multitex;
+	boost::shared_ptr<SGLBaseTex> org(multitex);
 	multitex=tex;
-	if(tmp)multitex->multitex=tmp;
+	if(org)
+	{
+		while(tex->multitex)
+			tex=tex->multitex;
+		tex->multitex=org;
+	}
 	if(call_changed)changed();
 }
 void SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
 {
 	boost::shared_ptr<SGLBaseTex> mtex=multitex;
-	while(mtex)
-	{
-		if(mtex==before)
-		{
-			before->addMTexBegin(before,
-		if(call_changed)changed();
-	}
+
+	while(mtex->multitex)
+		if(mtex->multitex==before)break;
+		else mtex=mtex->multitex;
+	
+	if(mtex)mtex->addMTexBegin(tex,false);//Wenn es ein multitex gab ist mtex entwder am ende, oder tex soll vor mtex->multitex eingef werden
+	else addMTexBegin(tex,false);//Wenn es kein multitex gab (mtex von vornherein NULL war)
+	if(call_changed)changed();
 }
