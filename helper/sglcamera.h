@@ -112,6 +112,7 @@ public:
 		ViewMatr.screen2welt(x,y,depth,ret);
 		return ret;
 	}
+    void setView(unsigned int width,unsigned int height);
 };
 
 class SGLCamera: public SGLBaseCam

@@ -33,21 +33,24 @@ void ViewTrans::update(bool force)
 }
 void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
 {
-	update(force);
-	if(force || outDated)depth_default=getDepth(defaultDepth);
+	if(force || outDated)
+	{
+		update(force);
+		depth_default=getDepth(defaultDepth);
+	}
 }
 
 bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
-	if(gluProject(
-		src.SGLV_X,
-		src.SGLV_Y,
-		src.SGLV_Z,
-		model,proj,view,
-		&dst.SGLV_X,
-		&dst.SGLV_Y,
-		&dst.SGLV_Z))return true;
-	else{SGLprintError("Fehler beim Umrechnen der Coordinaten");return false;}
+	if(gluProject(src.SGLV_X,src.SGLV_Y,src.SGLV_Z,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))
+	{
+		dst.SGLV_Y=view[3]-dst.SGLV_Y;
+		return true;
+	}
+	else{
+	SGLprintError("Fehler beim Umrechnen der Coordinaten");
+	return false;
+	}
 }
 
 GLdouble ViewTrans::getDepth(const SGLVektor &depthVekt)
@@ -69,8 +72,10 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor 
 
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
 {
-	if(gluUnProject(x,view[3] - y ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
-	else{SGLprintError("Fehler beim Umrechnen der Coordinaten");return false;}
+	if(gluUnProject(x,view[3] - int(y) ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
+	else{
+	SGLprintError("Fehler beim Umrechnen der Coordinaten");
+	return false;}
 }
 
 bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,SGLVektor welt[],unsigned int Vcnt)
@@ -391,4 +396,18 @@ void SGLBaseCam::recalcPos(GLdouble height)
 	double oldlen=LookVekt.Len();
 	double newlen=height/TAN(Angle/2);//b=a/tan(alpha)
 	setLookVektor(LookVekt*(newlen /oldlen));// newlen : oldlen = newvek : oldvek => newvek = (newlen : oldlen)*oldvek
+}
+
+
+/*!
+    \fn SGLBaseCam::setView(unsigned int width,unsigned int height)
+ */
+void SGLBaseCam::setView(unsigned int width,unsigned int height)
+{
+	ViewFormat=double(width)/double(height);
+	ViewMatr.view[0]=0;
+	ViewMatr.view[1]=0;
+	ViewMatr.view[2]=width;
+	ViewMatr.view[3]=height;
+	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand
 }

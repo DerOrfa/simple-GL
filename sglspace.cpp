@@ -160,10 +160,7 @@ void SGLSpace::OnResize(int width, int height)
 			Camera->ViewMatr.screen2welt(screen,Camera->LookAt,Camera->Ecken,4);
 		}
 		Camera->recalcEckenMode=resizeMode;
-		Camera->ViewFormat=double(width)/double(height);
-		Camera->ViewMatr.view[2]=width;
-		Camera->ViewMatr.view[3]=height;
-		Camera->ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand
+		Camera->setView(width,height);
 		Camera->Compile();
 	}
 	else
@@ -460,7 +457,8 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 		delete Camera;
 	isMyCam=false;
 	registerObj(Camera=cam);
-	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=double(StatusInfo.WindowWidth)/double(StatusInfo.WindowHeight);
+	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)
+		Camera->setView(StatusInfo.WindowWidth,StatusInfo.WindowHeight);
 	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungültig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}
 	Camera->Compile();
 
