@@ -86,7 +86,6 @@ void SGLMatrixObj::loadMatrix()
 void SGLMatrixObj::unloadMatrix()
 {
 	glMatrixMode(MatrMode);
-	GLuint error=0;
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -111,9 +110,9 @@ void SGLMatrixObj::saveMatrix(GLenum mode,GLdouble dst[16])
 		CASE_SET(GL_PROJECTION);break;
 		CASE_SET(GL_TEXTURE);break;
 		CASE_SET(GL_COLOR);break;
-		default:SGLprintError("Unbekannter MatrixMode");break;
+		default:SGLprintError("Unbekannter MatrixMode");type=0;break;
 	}
-	glGetDoublev(type,dst);
+	if(type)glGetDoublev(type,dst);
 #undef CASE_SET
 }
 

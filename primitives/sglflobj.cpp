@@ -32,7 +32,7 @@ SGLObj(PosX,PosY,PosZ,SizeFact)
 GLuint SGLFlObj::Compile(bool draw,bool free)
 {
 	is_free=free;
-	GLboolean	doCullFaces=false,doBlend=false;
+	GLboolean	restoreCullFaces=false;// ,doBlend=false ;
 	GLint		CullFace;
 	int i;
 	bool EnableClip[5];
@@ -44,7 +44,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	}
 
 	GLuint error=0;
-	while(error=glGetError())
+	while((error=glGetError()))
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
@@ -65,14 +65,13 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			glPolygonMode(GL_FRONT_AND_BACK,VisMode);
 		}
 
-		if(	doCullFaces=glIsEnabled(GL_CULL_FACE) &&
+		if(	glIsEnabled(GL_CULL_FACE) &&
 			(VisMode!=GL_FILL || twoSideRender)
 		)
 		{
 			glGetIntegerv(GL_CULL_FACE_MODE,&CullFace);
-			glDisable(GL_CULL_FACE);
+			glDisable(GL_CULL_FACE);restoreCullFaces=true;
 		}
-
 
 		if(Mat)
 		{
@@ -94,7 +93,6 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			else Mat->loadMat();
 		}
 		metaGenerate();
-
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
@@ -111,7 +109,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			glPolygonMode(GL_FRONT,GL_FILL);
 			glPolygonMode(GL_BACK,GL_FILL);
 		}
-		if(doCullFaces)
+		if(restoreCullFaces)
 		{
 			glEnable(GL_CULL_FACE);
 			glCullFace(GLenum(CullFace));
@@ -119,11 +117,10 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 		if(IgnoreLight)glEnable(GL_LIGHTING);
 		for(i=0;i<5;i++)if(EnableClip[i])
 			glDisable(GLenum(GL_CLIP_PLANE0+i));
-
 		glColor4f(1,1,1,1);
 	endList();
 
-	while(error=glGetError())
+	while((error=glGetError()))
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}

@@ -93,6 +93,7 @@ SGLVektor SGL3DText::getCenter()
 	{
 	case left:temp.SGLV_X+=width/2;break;
 	case right:temp.SGLV_X-=width/2;break;
+	default:;
 	}
 	return temp;
 }

@@ -73,8 +73,6 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
  */
 void SGLObjBase::metaGenerate()
 {
-	GLenum error;
-	
 	loadMatrix();
 	if(FaceAt)
 	{
@@ -162,6 +160,7 @@ GLint SGLObjBase::beginList(bool draw)
 	{SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());}
 	rendering=true;
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
+	return ID;
 }
 void SGLObjBase::endList()
 {

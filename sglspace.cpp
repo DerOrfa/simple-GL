@@ -179,7 +179,6 @@ void SGLSpace::OnResize(int width, int height)
 
 void SGLSpace::setFlags(bool reCompile)
 {
-	GLuint error=0;
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_NORMALIZE);
 	
@@ -374,7 +373,7 @@ void SGLSpace::SetQuality(unsigned short int qual)
 void SGLSpace::GetGlInfoString(char str[])
 {
 	str[0]=0;
-	GLint LightCnt,RedBits,GreenBits,BlueBits,AlphaBits,ClipPlanesCnt;
+	GLint ClipPlanesCnt,LightCnt;
 	GLboolean RGBAMode;
 	glGetIntegerv(GL_MAX_LIGHTS,&LightCnt);
 	glGetIntegerv(GL_MAX_CLIP_PLANES,&ClipPlanesCnt);
@@ -391,7 +390,7 @@ void SGLSpace::GetGlInfoString(char str[])
 void SGLSpace::printErrors()
 {
 	GLuint error=0;
-	while(error=glGetError())
+	while((error=glGetError()))
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
 
@@ -458,7 +457,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 
 	OnResize(w,h);
 
-	while(error=glGetError())
+	while((error=glGetError()))
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
 
@@ -488,7 +487,7 @@ void SGLSpace::defaultCam(boost::shared_ptr<SGLBaseCam> cam)
  */
 void SGLSpace::setGridsSize(GLuint size)
 {
-	GLuint oldsize=Grids.Grid1->Size;
+  //	GLuint oldsize=Grids.Grid1->Size;
 	Grids.Grid1->setSize(size);
 	Grids.Grid2->setSize(size);
 	Grids.Grid3->setSize(size);

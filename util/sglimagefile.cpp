@@ -34,8 +34,8 @@ SGLImageFile::SGLImageFile(unsigned int xSize,unsigned int ySize)
 
 SGLImageFile::SGLImageFile(const char *imageFile)
 {
-	GLint bytes;
-	GLubyte *buffer;
+// 	GLint bytes;
+// 	GLubyte *buffer;
 	data=0;
 
 	if(!RGBImageLoad(imageFile))return;
@@ -244,7 +244,7 @@ bool SGLImageFile::RGBImageLoad(const char *fileName)
 		sizeX=FileNotFoundImage.width;
 		sizeY=FileNotFoundImage.height;
 		components=FileNotFoundImage.bytes_per_pixel;
-		if(data = (unsigned char *)malloc(sizeX*sizeY*4+1))
+		if((data = (unsigned char *)malloc(sizeX*sizeY*4+1)))
 		{
 			GIMP_IMAGE_RUN_LENGTH_DECODE(data,FileNotFoundImage.rle_pixel_data,sizeX*sizeY,components);
 			//sizeof(FileNotFoundImage.rle_pixel_data)

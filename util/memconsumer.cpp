@@ -14,16 +14,16 @@
 MemConsumer::MemConsumer()
 {
 	MemConsumer::list.push_back(this);
-	sigCreate(boost::shared_ptr<MemConsumer>(this));
+	sigCreate(*this);
 }
 
 
 MemConsumer::~MemConsumer()
 {
 	MemConsumer::list.remove(this);
-	sigDelete(this);
+	sigDelete(*this);
 }
 
 std::list<MemConsumer*> MemConsumer::list;
-SGLSignal<void (boost::shared_ptr<MemConsumer>)> MemConsumer::sigCreate;
-SGLSignal<void (MemConsumer*)> MemConsumer::sigDelete;//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber
+SGLSignal<void (const MemConsumer&)> MemConsumer::sigCreate,MemConsumer::sigDelete;
+//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber

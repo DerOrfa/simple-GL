@@ -88,7 +88,6 @@ void SGLTextBackend_glf::generate_3DText(GLdouble tiefe,string myText,GLenum Vis
 {
 	if(!isReady())return;
 
-	int error;
 	int len=myText.size();
 
 	glfSetCurrentFont(myFontID);

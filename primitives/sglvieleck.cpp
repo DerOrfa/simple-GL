@@ -61,7 +61,7 @@ void SGLPolygon::CopyEckVekt(VektorList &Ecken)
 {
 	VektorList::size_type s=Ecken.size();
 	EckVektoren.resize(s);
-	for(int i=0;i<s;i++)
+	for(VektorList::size_type i=0;i<s;i++)
 		EckVektoren[i].reset(new SGLVektor(*Ecken[i]));
 	resetTexKoord();
 }
@@ -178,7 +178,7 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
 		Center.texKoord[0]=x;
 		Center.texKoord[1]=y;
 	}
-	else if(eckNr>=EckVektoren.size() || !EckVektoren[eckNr])
+	else if((unsigned int)eckNr>=EckVektoren.size() || !EckVektoren[(unsigned int)eckNr])
 	{
 		SGLprintError("Der Vektor %d existiert nicht",eckNr);
 		return;
@@ -196,17 +196,17 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
  */
 void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y,GLfloat z)
 {
-	if(eckNr>=EckVektoren.size()  || !EckVektoren[eckNr])
-	{
-		SGLprintError("Der Vektor %d existiert nicht",eckNr);
-		return;
-	}
-	else if(eckNr==-1)
+	if(eckNr==-1)
 	{
 		Center.texKoord.resize(3);
 		Center.texKoord[0]=x;
 		Center.texKoord[1]=y;
 		Center.texKoord[2]=z;
+	}
+	else if((unsigned int)eckNr>=EckVektoren.size()  || !EckVektoren[(unsigned int)eckNr])
+	{
+		SGLprintError("Der Vektor %d existiert nicht",eckNr);
+		return;
 	}
 	else
 	{
@@ -263,7 +263,7 @@ void SGLPolygon::generateWithNormales()
 
 	CenterNorm+=Norm[0];
 
-	for(int i=1;i<s-1;i++)
+	for(VektorList::size_type i=1;i<s-1;i++)
 	{
 		//Normale aus vorherigem, aktuellem und nächsten Vektor bilden
 		Norm[i]=Normale(
@@ -289,7 +289,7 @@ void SGLPolygon::generateWithNormales()
 	else
 	glBegin(GL_POLYGON);
 		EckVektoren[0]->DrawVertex(&Norm[0]);
-		for(int i=1;i<s-1;i++)
+		for(VektorList::size_type i=1;i<s-1;i++)
 			EckVektoren[i]->DrawVertex(&Norm[i]);
 		EckVektoren[s-1]->DrawVertex(&Norm[s-1]);
 
@@ -310,7 +310,7 @@ void SGLPolygon::generateWithoutNormales()
 		Center.DrawVertex();
 	}
 	else glBegin(GL_POLYGON);
-		for(int i=0;i<EckVektoren.size();i++)
+		for(VektorList::size_type i=0;i<EckVektoren.size();i++)
 			EckVektoren[i]->DrawVertex();
 		if(useCenter && VisMode!=GL_LINE)
 			EckVektoren[0]->DrawVertex();

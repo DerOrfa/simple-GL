@@ -387,21 +387,21 @@ void glfDrawWiredSymbol(char s)
 	float x, y;
 
 	if ((curfont < 0) || (fonts[curfont] == NULL)) return;
-	if (fonts[curfont]->symbols[s] == NULL) return;
+	if (fonts[curfont]->symbols[(unsigned char)s] == NULL) return;
 
 	glBegin(GL_LINE_LOOP);
-	tvp = fonts[curfont]->symbols[s]->vdata;
+	tvp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 	cur_line = 0;
-	for (i=0; i<fonts[curfont]->symbols[s]->vertexs; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->vertexs; i++)
 	{
 		x = *tvp++;
 		y = *tvp++;
 		glVertex2f(x, y);
-		if (fonts[curfont]->symbols[s]->ldata[cur_line] == i)
+		if (fonts[curfont]->symbols[(unsigned char)s]->ldata[cur_line] == i)
 		{
 			glEnd();
 			cur_line++;
-			if (cur_line < fonts[curfont]->symbols[s]->lines) glBegin(GL_LINE_LOOP);
+			if (cur_line < fonts[curfont]->symbols[(unsigned char)s]->lines) glBegin(GL_LINE_LOOP);
 			else break; /* No more lines */
 		}
 	}
@@ -434,13 +434,14 @@ static void DrawString(char *s, void (*funct) (char s))
 		distance = 0;
 		for (i=0; i<(int)strlen(s); i++)
 		{
-			if ((fonts[curfont]->symbols[s[i]] == NULL) || (s[i] == ' '))
+			if ((fonts[curfont]->symbols[(unsigned char)s[i]] == NULL) || (s[i] == ' '))
 			{
 				if (m_direction == GLF_LEFT || m_direction == GLF_UP) distance += SpaceSize;
 				else distance -= SpaceSize;
 			}
 			else
 				if (i < ((int)strlen(s)-1))
+				  {
 					if (s[i+1] == ' ')
 					{
 						if (m_direction == GLF_LEFT || m_direction == GLF_UP) distance += SymbolDist;
@@ -448,23 +449,24 @@ static void DrawString(char *s, void (*funct) (char s))
 					}
 					else
 					{
-						if (fonts[curfont]->symbols[s[i+1]] == NULL) continue;
+						if (fonts[curfont]->symbols[(unsigned char)s[i+1]] == NULL) continue;
 
 						if (m_direction == GLF_LEFT || m_direction == GLF_RIGHT)
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i]]->rightx);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i+1]]->leftx);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->rightx);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i+1]]->leftx);
 							if (m_direction == GLF_LEFT) distance += sda+sdb+SymbolDist;
 							else distance -= sda+sdb+SymbolDist;
 						}
 						else
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i]]->topy);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i]]->bottomy);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->topy);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->bottomy);
 							if (m_direction == GLF_DOWN) distance -= sda+sdb+SymbolDist;
 							else distance += sda+sdb+SymbolDist;
 						}
 					}
+				  }
 		}
 	}
 
@@ -488,10 +490,10 @@ static void DrawString(char *s, void (*funct) (char s))
 	{
 		switch (m_direction)
 		{
-			case GLF_LEFT : glTranslatef(-(1-(float)fabs(fonts[curfont]->symbols[s[0]]->leftx)), 0, 0); break;
-			case GLF_RIGHT : glTranslatef((1-(float)fabs(fonts[curfont]->symbols[s[0]]->rightx)), 0, 0); break;
-			case GLF_UP : glTranslatef(0, (1-(float)fabs(fonts[curfont]->symbols[s[0]]->topy)), 0); break;
-			case GLF_DOWN : glTranslatef(0, -(1-(float)fabs(fonts[curfont]->symbols[s[0]]->bottomy)), 0); break;
+			case GLF_LEFT : glTranslatef(-(1-(float)fabs(fonts[curfont]->symbols[(unsigned char)s[0]]->leftx)), 0, 0); break;
+			case GLF_RIGHT : glTranslatef((1-(float)fabs(fonts[curfont]->symbols[(unsigned char)s[0]]->rightx)), 0, 0); break;
+			case GLF_UP : glTranslatef(0, (1-(float)fabs(fonts[curfont]->symbols[(unsigned char)s[0]]->topy)), 0); break;
+			case GLF_DOWN : glTranslatef(0, -(1-(float)fabs(fonts[curfont]->symbols[(unsigned char)s[0]]->bottomy)), 0); break;
 		}
 	}
 
@@ -499,7 +501,7 @@ static void DrawString(char *s, void (*funct) (char s))
 	for (i=0; i<(int)strlen(s); i++)
 	{
 		if (s[i] != ' ') (*funct) (s[i]);
-		if ((fonts[curfont]->symbols[s[i]] == NULL) || (s[i] == ' '))
+		if ((fonts[curfont]->symbols[(unsigned char)s[i]] == NULL) || (s[i] == ' '))
 		{
 			switch (m_direction)
 			{
@@ -511,6 +513,7 @@ static void DrawString(char *s, void (*funct) (char s))
 		}
 		else
 			if (i < ((int)strlen(s)-1))
+			  {
 				if (s[i+1] == ' ')
 				{
 					switch (m_direction)
@@ -523,19 +526,19 @@ static void DrawString(char *s, void (*funct) (char s))
 				}
 				else
 				{
-					if (fonts[curfont]->symbols[s[i+1]] == NULL) continue;
+					if (fonts[curfont]->symbols[(unsigned char)s[i+1]] == NULL) continue;
 
 					if (m_direction == GLF_LEFT || m_direction == GLF_RIGHT)
 					{
 						if (m_direction == GLF_LEFT)
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i]]->rightx);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i+1]]->leftx);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->rightx);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i+1]]->leftx);
 						}
 						else
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i+1]]->rightx);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i]]->leftx);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i+1]]->rightx);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->leftx);
 						}
 
 						if (m_direction == GLF_LEFT) glTranslatef(sda+sdb+SymbolDist, 0, 0);
@@ -545,13 +548,13 @@ static void DrawString(char *s, void (*funct) (char s))
 					{
 						if (m_direction == GLF_DOWN)
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i]]->topy);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i+1]]->bottomy);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->topy);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i+1]]->bottomy);
 						}
 						else
 						{
-							sda = (float)fabs(fonts[curfont]->symbols[s[i+1]]->topy);
-							sdb = (float)fabs(fonts[curfont]->symbols[s[i]]->bottomy);
+							sda = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i+1]]->topy);
+							sdb = (float)fabs(fonts[curfont]->symbols[(unsigned char)s[i]]->bottomy);
 						}
 
 						if (m_direction == GLF_DOWN) glTranslatef(0, -(sda+sdb+SymbolDist), 0);
@@ -559,6 +562,7 @@ static void DrawString(char *s, void (*funct) (char s))
 					}
 
 				}
+			  }
 	}
 	glPopMatrix();
 }
@@ -589,13 +593,13 @@ void glfDrawSolidSymbol(char s)
 
 	if ((curfont<0) || (fonts[curfont] == NULL)) return;
 
-	if (fonts[curfont]->symbols[s] == NULL) return;
+	if (fonts[curfont]->symbols[(unsigned char)s] == NULL) return;
 
-	b = fonts[curfont]->symbols[s]->fdata;
-	vp = fonts[curfont]->symbols[s]->vdata;
+	b = fonts[curfont]->symbols[(unsigned char)s]->fdata;
+	vp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 
 	glBegin(GL_TRIANGLES);
-	for (i=0; i<fonts[curfont]->symbols[s]->facets; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->facets; i++)
 	{
 		for (j=0; j<3; j++)
 		{
@@ -659,48 +663,48 @@ void glfDraw3DWiredSymbol(char s)
 
 	/* Draw front symbol */
 	glBegin(GL_LINE_LOOP);
-	tvp = fonts[curfont]->symbols[s]->vdata;
+	tvp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 	cur_line = 0;
-	for (i=0; i<fonts[curfont]->symbols[s]->vertexs; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->vertexs; i++)
 	{
 		x = *tvp;
 		tvp++;
 		y = *tvp;
 		tvp++;
 		glVertex3f(x, y, 1);
-		if (fonts[curfont]->symbols[s]->ldata[cur_line] == i)
+		if (fonts[curfont]->symbols[(unsigned char)s]->ldata[cur_line] == i)
 		{
 			glEnd();
 			cur_line++;
-			if (cur_line < fonts[curfont]->symbols[s]->lines) glBegin(GL_LINE_LOOP);
+			if (cur_line < fonts[curfont]->symbols[(unsigned char)s]->lines) glBegin(GL_LINE_LOOP);
 			else break; /* No more lines */
 		}
 	}
 
 	/* Draw back symbol */
 	glBegin(GL_LINE_LOOP);
-	tvp = fonts[curfont]->symbols[s]->vdata;
+	tvp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 	cur_line = 0;
-	for (i=0; i<fonts[curfont]->symbols[s]->vertexs; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->vertexs; i++)
 	{
 		x = *tvp;
 	    tvp++;
 		y = *tvp;
 		tvp++;
 		glVertex3f(x, y, 1+SymbolDepth);
-		if (fonts[curfont]->symbols[s]->ldata[cur_line] == i)
+		if (fonts[curfont]->symbols[(unsigned char)s]->ldata[cur_line] == i)
 		{
 			glEnd();
 			cur_line++;
-			if (cur_line < fonts[curfont]->symbols[s]->lines) glBegin(GL_LINE_LOOP);
+			if (cur_line < fonts[curfont]->symbols[(unsigned char)s]->lines) glBegin(GL_LINE_LOOP);
 			else break; /* No more lines */
 		}
 	}
 
 	/* Draw lines between back and front symbols */
 	glBegin(GL_LINES);
-	tvp = fonts[curfont]->symbols[s]->vdata;
-	for (i=0; i<fonts[curfont]->symbols[s]->vertexs; i++)
+	tvp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->vertexs; i++)
 	{
 		x = *tvp;
 		tvp++;
@@ -754,12 +758,12 @@ void glfDraw3DSolidSymbol(char s)
 	if ((curfont<0) || (fonts[curfont] == NULL)) return;
 	if (fonts[curfont]->symbols[(int)s] == NULL) return;
 
-	b = fonts[curfont]->symbols[s]->fdata;
-	vp = fonts[curfont]->symbols[s]->vdata;
+	b = fonts[curfont]->symbols[(unsigned char)s]->fdata;
+	vp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 
 	glBegin(GL_TRIANGLES);
 	glNormal3f(0, 0, 1);
-	for (i=0; i<fonts[curfont]->symbols[s]->facets; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->facets; i++)
 	{
 		b += 2;
 		for (j=0; j<3; j++)
@@ -773,12 +777,12 @@ void glfDraw3DSolidSymbol(char s)
 	}
 	glEnd();
 
-	b = fonts[curfont]->symbols[s]->fdata;
-	vp = fonts[curfont]->symbols[s]->vdata;
+	b = fonts[curfont]->symbols[(unsigned char)s]->fdata;
+	vp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 
 	glBegin(GL_TRIANGLES);
 	glNormal3f(0, 0, -1);
-	for (i=0; i<fonts[curfont]->symbols[s]->facets; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->facets; i++)
 	{
 		for (j=0; j<3; j++)
 		{
@@ -792,9 +796,9 @@ void glfDraw3DSolidSymbol(char s)
 
 	flag = 0;
 	glBegin(GL_QUAD_STRIP);
-	tvp = fonts[curfont]->symbols[s]->vdata;
+	tvp = fonts[curfont]->symbols[(unsigned char)s]->vdata;
 	cur_line = 0;
-	for (i=0; i<fonts[curfont]->symbols[s]->vertexs; i++)
+	for (i=0; i<fonts[curfont]->symbols[(unsigned char)s]->vertexs; i++)
 	{
 		x = *tvp;
 		tvp++;
@@ -809,14 +813,14 @@ void glfDraw3DSolidSymbol(char s)
 		glNormal3f(x, y, 0);
 		glVertex3f(x, y, 1);
 		glVertex3f(x, y, 1+SymbolDepth);
-		if (fonts[curfont]->symbols[s]->ldata[cur_line] == i)
+		if (fonts[curfont]->symbols[(unsigned char)s]->ldata[cur_line] == i)
 		{
 			glVertex3f(bx, by, 1);
 			glVertex3f(bx, by, 1+SymbolDepth);
 			flag = 0;
 			glEnd();
 			cur_line++;
-			if (cur_line < fonts[curfont]->symbols[s]->lines) glBegin(GL_QUAD_STRIP);
+			if (cur_line < fonts[curfont]->symbols[(unsigned char)s]->lines) glBegin(GL_QUAD_STRIP);
 			else break; /* No more lines */
 		}
 	}
@@ -874,14 +878,14 @@ void glfGetStringBoundsF(int fd, char *s, float *minx, float *miny, float *maxx,
 
 	if (font == NULL) return;
 
-	if (font->symbols[s[0]])
-		minxx = font->symbols[s[0]]->leftx;
+	if (font->symbols[(unsigned char)s[0]])
+		minxx = font->symbols[(unsigned char)s[0]]->leftx;
 	else
 		minxx = 0.0;
 
 	for (i=0; i<(int)strlen(s); i++)
 	{
-		if ((font->symbols[s[i]] == NULL) || (s[i] == ' '))
+		if ((font->symbols[(unsigned char)s[i]] == NULL) || ((unsigned char)s[i] == ' '))
 			cw += SpaceSize;
 		else
 		{
@@ -1638,7 +1642,7 @@ void glfDrawBString(char *s)
 
 	/* Calculate length of all string */
 	for (i=0; i<(int)strlen(s); i++)
-		temp_trans += m_widths[bmf_curfont].width[s[i]] + sym_space;
+		temp_trans += m_widths[bmf_curfont].width[(unsigned char)s[i]] + sym_space;
 
 	glListBase(list_base[bmf_curfont]);
 	if (m_bitmap_string_center == GL_TRUE)
@@ -1686,7 +1690,7 @@ void glfDrawBMaskString(char *s)
 
 	/* Calculate length of all string */
 	for (i=0; i<(int)strlen(s); i++)
-		temp_trans += m_widths[bmf_curfont].width[s[i]] + sym_space;
+		temp_trans += m_widths[bmf_curfont].width[(unsigned char)s[i]] + sym_space;
 
 	glPushMatrix();
 	glPushAttrib(GL_CURRENT_BIT);

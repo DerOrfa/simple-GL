@@ -18,6 +18,7 @@
 #include "sglmisc.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include <GL/glu.h>
 
 short SGLshowInfos=1;
 short SGLshowWarnings=1;

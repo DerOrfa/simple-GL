@@ -10,6 +10,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #include "readtex.h"
+#include <GL/glu.h>
 
 
 #ifndef SEEK_SET

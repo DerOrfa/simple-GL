@@ -142,7 +142,6 @@ Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis
 */
 void SGLVektor::DrawVertex()
 {
-	GLenum error;
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
 	bool texOK=false;
 	if(SGLTextur::TexLoaded)
@@ -226,8 +225,8 @@ void SGLVektor::translateTo()
  */
 void SGLVektor::DrawVektor(SGLVektor from)
 {
-	bool Texture2D=glIsEnabled(GL_TEXTURE_2D);
-	bool Light=glIsEnabled(GL_LIGHTING);
+  //	bool Texture2D=glIsEnabled(GL_TEXTURE_2D);
+  //	bool Light=glIsEnabled(GL_LIGHTING);
 /*	Bringt nur was, wenn diese Flags IN der GL-Maschine gesetzt sind
 	ein glEnable weiter ober in dieser oder einer anderen Liste steht zwar dort,
 	aber es kann nicht garantiert werden, daï¿½es schon "wirkt".

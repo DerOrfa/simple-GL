@@ -1,5 +1,7 @@
-CXXFLAGS= -O2 -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread
-CFLAGS=$(CXXFLAGS)
+
+CFLAGS += -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread 
+CXXFLAGS = $(CFLAGS)
+
 
 CORE_DIR=
 HELPER_DIR=helper/

@@ -21,10 +21,11 @@
 */
 class MemConsumer
 {
-	static SGLSignal<void (boost::shared_ptr<MemConsumer>)> sigCreate;
-	static SGLSignal<void (MemConsumer*)> sigDelete;//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber
+	static SGLSignal<void (const MemConsumer&)> sigCreate,sigDelete;
+	//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber
 	//1: auto-löschen von shared_ptr geht nat nich, wenn das obj selbst einen shared_ptr hält (deshalb auch eine shared_ptr in "list")
 	//2: wenn destruktor durch shared_ptr ausgelöst wird, und selbst einen shared_ptr erz, haben wir nen shred_ptr auf ein nicht mehr ex. obj => KABUM
+	//3: Obj selbst kann keinen shared_ptr von sich erz, wenn der seinen Kontext verlässt hat sich das Ob damit selbst gekillt
 public:
 	template<class realClass> class NotifyCreateSlot :public SGLSlot{
 	public:
@@ -32,7 +33,7 @@ public:
 		{
 			MemConsumer::sigCreate.connect(*((realClass*)this));
 		}
-		virtual void operator()(boost::shared_ptr<MemConsumer> newob) const =NULL;
+		virtual void operator()(const MemConsumer &newob) const =NULL;
 		virtual ~NotifyCreateSlot(){}
 	};
 	template<class realClass> class NotifyDeleteSlot :public SGLSlot{
@@ -41,7 +42,7 @@ public:
 		{
 			MemConsumer::sigDelete.connect(*((realClass*)this));
 		}
-		virtual void operator()(MemConsumer *newob) const =NULL;
+		virtual void operator()(const MemConsumer &newob) const =NULL;
 		virtual ~NotifyDeleteSlot(){}
 	};
 

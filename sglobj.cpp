@@ -35,7 +35,7 @@ GLuint SGLObj::Compile(bool draw,bool free)
 
 	SGLMetaObj *meta=dynamic_cast<SGLMetaObj*>(this);
 	if(meta)meta->compileSubObjects();
-	while(error=glGetError())
+	while((error=glGetError()))
 	{
 		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
@@ -57,7 +57,7 @@ GLuint SGLObj::Compile(bool draw,bool free)
 	}
 	endList();
 	
-	while(error=glGetError())
+	while((error=glGetError()))
 	{
 		SGLprintError("[GLerror] %s beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}

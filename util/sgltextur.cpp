@@ -66,6 +66,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 	return valid=true;
 #else
 	SGLprintError("Für 2D-Texturen wird DevIL benötigt");
+	return valid=false;
 #endif
 }
 
@@ -305,7 +306,7 @@ short SGLBaseTex::def2dim(GLenum def)
 	case GL_TEXTURE_1D:return 1;
 	case GL_TEXTURE_2D:return 2;
 	case GL_TEXTURE_3D:return 3;
-	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);}
+	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);return 0;}
 	}
 }
 
@@ -372,7 +373,7 @@ GLint SGLBaseTex::getTexByteSize()
 	if(w+d+h)
 	#define NZ(val)	(val ? val:1)
 	{
-		return NZ(w)*NZ(d)*NZ(h)*fakt;
+	  return int(NZ(w)*NZ(d)*NZ(h)*fakt);
 	}
 	#undef NZ
 	return 0;
@@ -384,7 +385,7 @@ GLint SGLBaseTex::getTexByteSize()
  */
 void SGLBaseTex::freeTexture()
 {
-	if(ID<=0 || glIsTexture(ID))
+	if(ID<=0 || glIsTexture(ID) == GL_FALSE)
 	{
 		SGLprintWarning("Versuch die ungültige Textur %d zu löschen",ID);
 	}

@@ -185,7 +185,6 @@ SGLLensFlare::SGLLensFlare(SGLCamera *Camera,SGLLight  *Light)
 	IgnoreClip=true;
 	IgnoreLight=true;
 
-	int i;
 	priority=ontop;
 }
 

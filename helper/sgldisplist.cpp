@@ -56,6 +56,7 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 	Objects=src.Objects;
 	check_recompile=src.check_recompile;
 	check_sorting=src.check_sorting;
+	return *this;
 }
 
 void SGLObjList::CallAllLists()
@@ -114,9 +115,12 @@ bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
 	{
 		SGLprintError("Es existiert kein Objekt mit der ID %d",ListID);
 	}
+
 	switch(Face)
 	{
 	case GL_CW:
+		if(ObjCnt_CW==std::numeric_limits<unsigned short>::max())
+		{SGLprintError("Sorry, zu viele Objekte");return false;}
 		if(ObjCnt_CW>=ObjSize_CW)
 			grow(Objects_CW,ObjSize_CW,ObjCnt_CW*2);
 		if(Objects_CW)
@@ -125,6 +129,8 @@ bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
 			return true;
 		}
 	case GL_CCW:
+		if(ObjCnt_CCW==std::numeric_limits<unsigned short>::max())
+		{SGLprintError("Sorry, zu viele Objekte");return false;}
 		if(ObjCnt_CCW>=ObjSize_CCW)
 			grow(Objects_CCW,ObjSize_CCW,ObjCnt_CCW*2);
 		if(Objects_CCW)
@@ -157,7 +163,7 @@ bool SGLObjList::removeOb(shared_obj obj)
 
 bool SGLObjList::removeOb_CW(GLuint ListID)
 {
-	int i=0;
+	unsigned short i=0;
 	if(!ObjCnt_CW)return false;
 	while(Objects_CW[i]!=ListID)
 		if(Objects_CW[i])i++;
@@ -171,7 +177,7 @@ bool SGLObjList::removeOb_CW(GLuint ListID)
 
 bool SGLObjList::removeOb_CCW(GLuint ListID)
 {
-	int i=0;
+	unsigned short i=0;
 	if(!ObjCnt_CCW)return false;
 	while(Objects_CCW[i]!=ListID)
 		if(Objects_CCW[i])i++;
@@ -185,9 +191,9 @@ bool SGLObjList::removeOb_CCW(GLuint ListID)
 
 void SGLObjList::Clear()
 {
-	for(int i=0;i<ObjCnt_CW;i++)
+	for(unsigned short	i=0;i<ObjCnt_CW;i++)
 		Objects_CW[i] =0;
-	for(int i=0;i<ObjCnt_CCW;i++)
+	for(unsigned short	i=0;i<ObjCnt_CCW;i++)
 		Objects_CCW[i]=0;
 	// @todo wozu eig. ?
 	ObjCnt_CW=ObjCnt_CCW=0;
@@ -196,7 +202,7 @@ void SGLObjList::Clear()
 /*!
     \fn template<class T> bool SGLObjList::grow(T *&liste,unsigned int &cnt,unsigned int newsize)
  */
-template<class T> bool SGLObjList::grow(T *&liste,unsigned int &oldsize,unsigned int newsize)
+template<class T> bool SGLObjList::grow(T *&liste,unsigned short &oldsize,unsigned short newsize)
 {
 	if(oldsize>=newsize){SGLprintWarning("kein Resize nötig");return false;}
 	if(!(liste=(T*)realloc(liste,newsize*sizeof(T))))
@@ -244,8 +250,8 @@ void SGLObjList::ListInfo()
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{
 		shared_obj ob=*i;
-		int oldlen=strlen(elemente);
-		int newnlen=oldlen+FormatStr_Len+strlen(cnt)+strlen(ob->guesType())+strlen(ob->priority)+strlen(ob->ID);
+		unsigned int oldlen=strlen(elemente);
+		unsigned int newnlen=oldlen+FormatStr_Len+strlen(cnt)+strlen(ob->guesType())+strlen(ob->priority)+strlen(ob->ID);
 		if(newnlen>size)
 		{
 			elemente=(char*)realloc(elemente,(newnlen+1)*sizeof(char));
@@ -257,7 +263,7 @@ void SGLObjList::ListInfo()
 }
 
 
-unsigned int SGLObjList::isThere(SGLObjBase *obj)
+unsigned short SGLObjList::isThere(SGLObjBase *obj)
 {
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{

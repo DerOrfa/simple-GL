@@ -12,7 +12,7 @@ SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,MaterialPtr Material,unsigne
 {
 	int ecken=BasisFl.EckVektoren.size();
 
-	SGLVektor	SeitenVekt[4],*BodenVekt= new SGLVektor[ecken],*DeckVekt= new SGLVektor[ecken];
+	SGLVektor	/*SeitenVekt[4],*/*BodenVekt= new SGLVektor[ecken],*DeckVekt= new SGLVektor[ecken];
 	SGLPolygon	*Flaechen= new SGLPolygon[ecken+1];
 
 	SGLVektor oldOben,oldUnten,b=*BasisFl.EckVektoren[0];
