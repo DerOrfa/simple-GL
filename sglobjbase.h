@@ -12,6 +12,7 @@
 
 #include "sglmatrixobj.h"
 #include <list>
+#include "sglsignal.h"
 
 class SGLObjList;
 
@@ -34,6 +35,13 @@ template<class T> struct CompObj : public unary_function<T&, void>
 class SGLObjBase:public SGLMatrixObj
 {
 public:
+	class CompilerMerker:public boost::signals::trackable
+	{
+	public:
+		CompilerMerker(SGLObjBase *obj);
+		SGLObjBase *obj;
+		void operator()() const;
+	}compileNextTime;
 	enum Prio{floor=INT_MIN,under=-10,std=0,flstd=10,ontop=INT_MAX};
 	SGLObjBase(const SGLObjBase &src);
 	SGLObjBase(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
@@ -55,17 +63,14 @@ public:
 	SGLVektor getCenterInSpace();
 	SGLVektor getMyPos();
 	GLuint metaCompile(bool force_compile=false);
-	void compileNextTime();
-	void link(SGLObjBase *obj);
-	void unlink(SGLObjBase *obj);
-	void notifyChange();
+	boost::signals::connection link(SGLObjBase &obj);
+	void unlink(boost::signals::connection conn);
+	SGLSignal<void ()> notifyChange;
 	GLint beginList(bool draw);
 	void endList();
 	short priority;
 	short should_compile;
 	SGLObjList* myList;
-protected:
-	list<SGLObjBase*> changeReciver,changeSender;
 };
 
 typedef boost::shared_ptr<SGLObjBase> shared_obj;

@@ -179,8 +179,8 @@ SGLLensFlare::SGLLensFlare(SGLCamera *Camera,SGLLight  *Light)
 	size=1;
 	this->Camera=Camera;
 	this->Light=Light;
-	Light->link(this);
-	Camera->link(this);
+	Light->link(*this);
+	Camera->link(*this);
 	init_flares();load_textures(); //muss NACH "this->Light=Light" kommen
 	IgnoreClip=true;
 	IgnoreLight=true;
@@ -191,8 +191,9 @@ SGLLensFlare::SGLLensFlare(SGLCamera *Camera,SGLLight  *Light)
 
 SGLLensFlare::~SGLLensFlare()
 {
-	Light->unlink(this);
-	Camera->unlink(this);
+//	Light->unlink(this);
+//	Camera->unlink(this);
+//@todo unlink ist outdated
 }
 
 SGLVektor SGLLensFlare::getCenter()

@@ -27,12 +27,13 @@
 class SGLGrid : public SGLHelper
 {
 public:
-	SGLGrid(short GridType,GLint GridSize=5);
+	SGLGrid(short GridType);
 	~SGLGrid();
 	virtual void generate();
 	short Type;
 	GLint Size;
     public: SGLVektor getCenter();
+    void setSize(GLuint size);
 };
 
 #endif

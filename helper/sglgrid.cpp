@@ -18,9 +18,10 @@
 #include "sglgrid.h"
 #include "../sglmisc.h"
 
-SGLGrid::SGLGrid(short GridType,GLint GridSize)
+SGLGrid::SGLGrid(short GridType)
 {
-	Type=GridType;Size=GridSize;
+	Type=GridType;
+	Size=5;
 }
 SGLGrid::~SGLGrid()
 {
@@ -29,8 +30,7 @@ SGLGrid::~SGLGrid()
 /** No descriptions */
 void SGLGrid::generate()
 {
-  GLint i,j;
-  GLdouble FontScale=0.001*Size;
+	GLint i,j;
 	switch(Type)
 	{
 	case 1:
@@ -55,11 +55,15 @@ void SGLGrid::generate()
 			glBegin(GL_LINES);
  			for (i = -Size; i <= Size; i++)if(i){glVertex2i(i, -Size);glVertex2i(i, Size);}
 			for (i = -Size; i <= Size; i++)if(i){glVertex2i(-Size, i);glVertex2i(Size, i);}
+			glEnd();
 
+			glBegin(GL_LINES);
 			for (i = -Size; i <= Size; i++)if(i){glVertex3i(0, i,Size);glVertex3i(0, i,-Size);}
 			for (i = -Size; i <= Size; i++)if(i){glVertex3i(0, Size,i);glVertex3i(0, -Size,i);}
+			glEnd();
 
-  		for (i = -Size; i <= Size; i++)if(i){glVertex3i(i, 0,Size);glVertex3i(i, 0,-Size);}
+			glBegin(GL_LINES);
+			for (i = -Size; i <= Size; i++)if(i){glVertex3i(i, 0,Size);glVertex3i(i, 0,-Size);}
 			for (i = -Size; i <= Size; i++)if(i){glVertex3i(Size, 0,i);glVertex3i(-Size, 0,i);}
 			glEnd();
 		}break;
@@ -112,3 +116,13 @@ SGLVektor SGLGrid::getCenter()
 	return SGLVektor(0,0,0);
 }
 
+
+
+/*!
+    \fn SGLGrid::setSize(GLuint size)
+ */
+void SGLGrid::setSize(GLuint size)
+{
+	Size=size;
+	Compile(false,is_free);
+}

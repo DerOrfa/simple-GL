@@ -12,11 +12,11 @@
 #include <typeinfo> 
 #include <GL/glu.h>
 
-SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
+SGLObjBase::SGLObjBase(const SGLObjBase &src):
+SGLMatrixObj(GL_MODELVIEW),
+compileNextTime(this)
 {
 	ID=0;
-	changeReciver = src.changeReciver;
-	changeSender = src.changeSender;
 	FaceAt = src.FaceAt;
 	FrontFace = src.FrontFace;
 	IgnoreClip = src.IgnoreClip;
@@ -28,7 +28,9 @@ SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 	is_free=shared=false;
 }
 
-SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLMatrixObj(GL_MODELVIEW)
+SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLMatrixObj(GL_MODELVIEW),
+compileNextTime(this)
 {
 	ID=0;
 	ResetTransformMatrix();
@@ -43,15 +45,6 @@ SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFa
 }
 SGLObjBase::~SGLObjBase()
 {
-	list<SGLObjBase*>::iterator i=changeReciver.begin();
-	list<SGLObjBase*>::size_type len=changeReciver.size();
-	while(len--)//lt. STL-Standart sollten Iteratoren trotz remove gltig bleiben
-		unlink(*i++);
-
-	i=changeSender.begin();
-	len=changeSender.size();
-	while(len--)
-		(*i++)->unlink(this);
 
 	if(myList)
 	{
@@ -150,55 +143,19 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 	return ret;
 }
 
-
-/*!
-	Stellt sicher, daß das Objekt bei nächster Gelegenheit Kompiliert wird
-    \fn SGLObjBase::compileNextTime
- */
-void SGLObjBase::compileNextTime()
-{
-	if(myList)
-		myList->check_recompile=true;
-	else if(!is_free)
-		{SGLprintDebug("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daß es neu generiert werden muß", guesType());}
-	if(!should_compile)should_compile=1;
-}
-
-
 /*!
     \fn SGLObjBase::link(SGLObjBase *obj)
  */
-void SGLObjBase::link(SGLObjBase *obj)
+boost::signals::connection SGLObjBase::link(SGLObjBase &obj)
 {
-	//Der unwarscheinliche Fall, das obj mehrfach eingetr. wird ist nich weiter schlimm
-	//jedesmal die liste durchsuchen wäre "schlimmer"
-	changeReciver.push_back(obj);
-	obj->changeSender.push_back(this);
+	return notifyChange.connect(obj.compileNextTime);
 }
 
-void SGLObjBase::unlink(SGLObjBase *obj)
+void SGLObjBase::unlink(boost::signals::connection conn)
 {
-	//Hoffentlich flennt der nicht rum, wenn obj nich da ist
-	changeReciver.remove(obj);
-	obj->changeSender.remove(this);
+	conn.disconnect();
 }
 
-
-/*!
-    \fn SGLObjBase::notifyChange()
- */
-void SGLObjBase::notifyChange()
-{
-	list<SGLObjBase*>::iterator i=changeReciver.begin();
-	list<SGLObjBase*>::size_type len=changeReciver.size();
-	while(len--)
-		(*i++)->compileNextTime();
-}
-
-
-/*!
-    \fn SGLObjBase::initList(bool draw)
- */
 GLint SGLObjBase::beginList(bool draw)
 {
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
@@ -210,4 +167,20 @@ void SGLObjBase::endList()
 {
 	glEndList();
 	rendering=false;
+}
+
+
+SGLObjBase::CompilerMerker::CompilerMerker(SGLObjBase *obj){this->obj=obj;}
+
+/*!
+	Stellt sicher, daß das Objekt bei nächster Gelegenheit Kompiliert wird
+    \fn SGLObjBase::notifyChange()
+ */
+void SGLObjBase::CompilerMerker::operator()() const
+{
+	if(obj->myList)
+		obj->myList->check_recompile=true;
+	else if(!obj->is_free)
+		{SGLprintDebug("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daß es neu generiert werden muß", obj->guesType());}
+	if(!obj->should_compile)obj->should_compile=1;
 }

@@ -88,9 +88,12 @@ void SGLSpace::callHelper(int stage)
 	if(Grids.doGrid & 1)
 	  {
 		glEnable(GL_BLEND);
-		if(Grids.X->should_compile)Grids.X->Compile(true,true);
-		if(Grids.Y->should_compile)Grids.Y->Compile(true,true);
-		if(Grids.Z->should_compile)Grids.Z->Compile(true,true);
+		if(Grids.X->should_compile)
+			Grids.X->Compile(true,true);
+		if(Grids.Y->should_compile)
+			Grids.Y->Compile(true,true);
+		if(Grids.Z->should_compile)
+			Grids.Z->Compile(true,true);
 		glCallLists(3,GL_UNSIGNED_INT,Grids.Beschr);
 		glDisable(GL_BLEND);
 	  }
@@ -477,8 +480,31 @@ void SGLSpace::defaultCam(boost::shared_ptr<SGLBaseCam> cam)
 	Grids.Y->FaceAt=&Camera->Pos;
 	Grids.Z->FaceAt=&Camera->Pos;
 
-	Camera->link(Grids.X);
-	Camera->link(Grids.Y);
-	Camera->link(Grids.Z);
+	Camera->link(*Grids.X);
+	Camera->link(*Grids.Y);
+	Camera->link(*Grids.Z);
 }
 
+
+
+/*!
+    \fn SGLSpace::setGridsSize(GLuint size)
+ */
+void SGLSpace::setGridsSize(GLuint size)
+{
+	GLuint oldsize=Grids.Grid1->Size;
+	Grids.Grid1->setSize(size);
+	Grids.Grid2->setSize(size);
+	Grids.Grid3->setSize(size);
+	
+	Grids.X->MoveTo(size+size/10.,0,0);
+	Grids.Y->MoveTo(0,size+size/10.,0);
+	Grids.Z->MoveTo(0,0,size+size/10.);
+	Grids.X->Scale(size/10.);
+	Grids.Y->Scale(size/10.);
+	Grids.Z->Scale(size/10.);
+	
+	Grids.X->compileNextTime();
+	Grids.Y->compileNextTime();
+	Grids.Z->compileNextTime();
+}

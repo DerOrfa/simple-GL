@@ -9,3 +9,5 @@ libsgl_la_LIBADD = $(top_builddir)/libsgl/util/libutil.la $(top_builddir)/libsgl
 
 
 
+
+noinst_HEADERS = sglsignal.h

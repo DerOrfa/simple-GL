@@ -120,6 +120,7 @@ public:
 	void defaultCam(boost::shared_ptr<SGLBaseCam> cam);
 	struct {unsigned int x,y;}Size;
 	SGLBaseCam::ViewModi resizeMode;
+    void setGridsSize(GLuint size);
 
 protected:
 	void callHelper(int stage=1);
