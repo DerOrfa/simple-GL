@@ -166,7 +166,7 @@ void SGLVektor::DrawVertex()
 				glMultiTexCoord3f(i,texKoord[0], texKoord[1],texKoord[2]);
 			break;
 		default:{
-		SGLprintError("Ungltiger Texturtyp (%d) beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded ,buff);}break;
+		SGLprintError("Texturtyp (%d) passt nicht zu den verfügbaren Texturkoordinaten beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded, coord,buff);}break;
 		}
 		texOK=true;//@todo naja nich immer
 	}

@@ -54,17 +54,11 @@ void SGLMatrixObj::Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdoubl
 
 void SGLMatrixObj::ResetTransformMatrix(const GLdouble *newMatrix)
 {
-	for(int i=0;i<16;i++)
+	if(newMatrix)memcpy(MyTransformMatrix,newMatrix,sizeof(GLdouble)*16);
+	else for(int i=0;i<16;i++)
 	{
-		if(newMatrix)
-		{
-			MyTransformMatrix[i]=newMatrix[i];
-		}
-		else
-		{
-			if(i%5)MyTransformMatrix[i]=0;
-			else MyTransformMatrix[i]=1;
-		}
+		if(i%5)MyTransformMatrix[i]=0;
+		else MyTransformMatrix[i]=1;
 	}
 }
 

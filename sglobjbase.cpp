@@ -82,14 +82,13 @@ void SGLObjBase::metaGenerate()
 		GLdouble XZ_wink,XY_wink;
 		SGLVektor tVekt=getCenterInSpace();
 		tVekt.resize(3);
-		//Fr toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
+		//Für toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
 		tVekt=(*FaceAt)-tVekt;
 		tVekt.toWink(XZ_wink,XY_wink);
 		glRotated(-XZ_wink,0,1,0);
 		glRotated(90,0,1,0);
 		glRotated(-XY_wink,1,0,0);
 	}
-//	SGLprintInfo("Generiere \"%s\" Prio: %d ID: %d",guesType(),priority,ID);
 	generate();
 	unloadMatrix();
 	notifyChange();

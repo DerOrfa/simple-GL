@@ -97,6 +97,13 @@ inline GLint sglGeti(GLenum pname)
 };
 #endif
 
+//lt. SGI wird der Bereich 0x6000-0x7FFF die offziell für enums verwendet werden
+#define NON_GL_ENUM_BLOCK_BEGIN 0x6000
+#define NON_GL_ENUM_BLOCK_END 0x7FFF
+
+#define SGL_TEX_MODE_TINT NON_GL_ENUM_BLOCK_BEGIN+1
+
+
 #endif
 
 
