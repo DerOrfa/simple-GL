@@ -199,7 +199,6 @@ void SGLBaseCam::recalcEcken()
 	case resizeView:
 	{
 		recalcAngle((Ecken[1]-Ecken[2]).Len()/2);
-		recalcEckenMode=scaleView;
 	}break;
 	case moveCam:
 	{
@@ -227,6 +226,7 @@ void SGLBaseCam::recalcEcken()
 		SGLprintError("Ungültiger Modus für die Berechnung der Kameradaten");
 		break;
 	}
+	recalcEckenMode=scaleView;
 }
 
 SGLVektor SGLBaseCam::getLookVektor(){return SGLVektor(Pos-LookAt);}
