@@ -42,7 +42,11 @@ void ViewTrans::update(const SGLVektor &defaultDepth,bool force)
 
 bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
-	update();
+	if(outDated)
+	{
+		SGLprintWarning("Implizites Laden der Viewmatrix aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist");
+		update();
+	}
 	if(gluProject(src.SGLV_X,src.SGLV_Y,src.SGLV_Z,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))
 	{
 		dst.SGLV_Y=view[3]-dst.SGLV_Y;
@@ -73,7 +77,11 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,SGLVektor 
 
 bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst)
 {
-	update();
+	if(outDated)
+	{
+		SGLprintWarning("Implizites Laden der Viewmatrix aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist");
+		update();
+	}
 	if(gluUnProject(x,view[3] - int(y) ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
 	else{
 	SGLprintError("Fehler beim Umrechnen der Coordinaten %g %g %g",x,y,depth);
@@ -367,6 +375,7 @@ void SGLBaseCam::loadView()
 		  UpVect.SGLV_X,UpVect.SGLV_Y,UpVect.SGLV_Z);
 	glMatrixMode(oldmode);
 	ViewMatr.update(LookAt);
+	
 }
 
 void SGLBaseCam::unloadView()
@@ -410,4 +419,19 @@ void SGLBaseCam::setView(unsigned int width,unsigned int height)
 	ViewMatr.view[2]=width;
 	ViewMatr.view[3]=height;
 	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand - auﬂerdem ‰ndert sich das nur, wenn das fenster ge‰ndert wird
+}
+
+void SGLBaseCam::confirmViewMat()
+{
+	if(ViewMatr.outDated)
+	{
+		bool do_unload=false;
+		if(!loaded)
+		{
+			do_unload=true;
+			loadView();
+		}
+		ViewMatr.update();
+		if(do_unload)unloadView();
+	}
 }

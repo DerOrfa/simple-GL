@@ -151,14 +151,15 @@ void SGLSpace::OnResize(int width, int height)
 	{
 		if(resizeMode!=SGLBaseCam::scaleView)
 		{
+			Camera->confirmViewMat();
 			GLdouble screenDepth=Camera->ViewMatr.getDepth(Camera->LookAt);
 			Camera->ViewMatr.screen2welt(width,0,screenDepth,*Camera->Ecken[0]);
 			Camera->ViewMatr.screen2welt(0,0,screenDepth,*Camera->Ecken[1]);
 			Camera->ViewMatr.screen2welt(0,height,screenDepth,*Camera->Ecken[2]);
 			Camera->ViewMatr.screen2welt(width,height,screenDepth,*Camera->Ecken[3]);
 		}
-		Camera->recalcEckenMode=resizeMode;
 		Camera->setView(width,height);
+		Camera->recalcEckenMode=resizeMode;
 		Camera->Compile();
 	}
 	else

@@ -70,6 +70,7 @@ public:
 	void MoveCam(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
 	double ViewLength();
 	void ResetView();
+	void confirmViewMat();
 
 	SGLVektor Pos,LookAt,UpVect;
 	GLdouble Angle,ClipFace,ClipHoriz;
