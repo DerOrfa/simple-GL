@@ -62,9 +62,9 @@ public:
 	SGLVektor getMyPos();
 	GLuint metaCompile(bool force_compile=false);
 	void compileNextTime();
-    void link(SGLObjBase *obj);
-    void unlink(SGLObjBase *obj);
-    void notifyChange();
+	void link(SGLObjBase *obj);
+	void unlink(SGLObjBase *obj);
+	void notifyChange();
 	virtual const char* guesType();
 	short priority;
 	short should_compile;

@@ -76,7 +76,9 @@ void SGLSpace::reDraw()
 
 void SGLSpace::resetView(short mode)
 {
-  switch(mode)
+	glClearDepth(1);
+	glClearColor(bgColor.r,bgColor.g,bgColor.b,0);
+	switch(mode)
 	{
 	case 0:
 	//Normale 3-Dimensionale Ansicht
@@ -93,7 +95,6 @@ void SGLSpace::resetView(short mode)
 	case 1:
 	//2-Dimensionale Display-Ansicht (HUD z.B.)
 	// @todo Nochmal SAUBER lösen
-	glColor3f(1,1,1);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -172,10 +173,13 @@ void SGLSpace::setTitle(const char title[])
   SDL_WM_SetCaption(title, icon);
 }
 
-SGLSpace::SGLSpace(int XSize, int YSize)
+SGLSpace::SGLSpace(int XSize, int YSize,unsigned int R,unsigned int G,unsigned int B)
 {
 	GLuint	error=0;
 	TranspObjLst.renderTransparent=true;
+	bgColor.r=float(R)/255;
+	bgColor.g=float(G)/255;
+	bgColor.b=float(B)/255;
 
 	MouseInfo.FollowMouse=true;
 	DoIdle=StatusInfo.glServerReady=StatusInfo.running=false;
@@ -538,14 +542,6 @@ bool SGLSpace::reCompileIntObs(bool redraw)
 	else CompileIntObs();
 	if(redraw)reDraw();
 	return true;
-}
-
-void SGLSpace::ScreenShot(const char *imageFile)
-{
-	// @todo tut noch nix -- geht das nich eleganter .... mittels SDL z.B. ??
-	unsigned int xSize=StatusInfo.WindowHeight,ySize=StatusInfo.WindowWidth;
-	SGLImageFile SShotFile(xSize,ySize);
-	glReadPixels(0,0,xSize,ySize,GL_RGBA,GL_UNSIGNED_BYTE,SShotFile.data);
 }
 
 void SGLSpace::SetQuality(unsigned short int qual)

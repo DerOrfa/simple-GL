@@ -75,7 +75,7 @@ SGLPolygon::~SGLPolygon()
  */
 void SGLPolygon::generate()
 {
-	if(glIsEnabled(GL_LIGHTING))generateWithNormales();
+	if(!IgnoreLight && glIsEnabled(GL_LIGHTING))generateWithNormales();
 	else generateWithoutNormales();
 }
 
@@ -206,6 +206,7 @@ SGLDreiEck::SGLDreiEck(SGLVektor *Ecken[3]):SGLPolygon(Ecken,3){}
     \fn SGLDreiEck::SGLDreiEck()
  */
 SGLDreiEck::SGLDreiEck(){}
+SGLDreiEck::~SGLDreiEck(){}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -365,7 +366,8 @@ void SGLPolygon::generateWithNormales()
 		EckVektoren.Vekt[0]->DrawVertex(Norm);
 		for(int i=1;i<EckVektoren.Cnt-1;i++)EckVektoren.Vekt[i]->DrawVertex(Norm+i);
 		EckVektoren.Vekt[EckVektoren.Cnt-1]->DrawVertex(Norm+EckVektoren.Cnt-1);
-	if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex(Norm);
+		
+		if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex(Norm);
 	glEnd();
 }
 

@@ -380,14 +380,14 @@ void SGLLensFlare::load_textures(void)
 	for (i = 0; i < 3; i++)
 	{
 		shineTex[i] = id;
-		sprintf(filename, "helper/Shine%d.bw", i);
+		sprintf(filename, "data/pics/Shine%d.bw", i);
 		setup_texture(filename, shineTex[i], minFilter, maxFilter);
 		id++;
 	}
 	for (i = 0; i < 6; i++)
 	{
 		flareTex[i] = id;
-		sprintf(filename, "helper/Flare%d.bw", i + 1);
+		sprintf(filename, "data/pics/Flare%d.bw", i + 1);
 		setup_texture(filename, flareTex[i], minFilter, maxFilter);
 		id++;
 	}

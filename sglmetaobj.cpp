@@ -8,12 +8,10 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 #include "sglmetaobj.h"
-//#include "primitives/sglflobj.h"
 
 SGLMetaObj::SGLMetaObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
 :SGLObj(PosX,PosY,PosZ,SizeFact)
-{
-}
+{}
 
 
 SGLMetaObj::~SGLMetaObj()
@@ -31,14 +29,14 @@ void SGLMetaObj::generate()
 	for(i=Objs.size();i;i--)
 		glCallList(Objs[i-1]);
 
-	//Verhindern, daﬂ das Enable wegoptimiert wird 
-	//gibt Probleme wenn die Liste bei ge‰ndertem Zustand der Maschine aufgerufen wird
-	glDisable(GL_BLEND);
-	glEnable(GL_BLEND);
-	for(i=TrObjs.size();i;i--)
-		glCallList(TrObjs[i-1]);
-	glDisable(GL_BLEND);
+	if(TrObjs.size())
+	{
+		//Verhindern, daﬂ das Enable wegoptimiert wird 
+		//gibt Probleme wenn die Liste bei ge‰ndertem Zustand der Maschine aufgerufen wird
+		glDisable(GL_BLEND);
+		glEnable(GL_BLEND);
+		for(i=TrObjs.size();i;i--)
+			glCallList(TrObjs[i-1]);
+		glDisable(GL_BLEND);
+	}
 }
-
-
-

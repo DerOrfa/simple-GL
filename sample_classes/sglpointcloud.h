@@ -1,14 +1,3 @@
-//
-// C++ Interface: sglpointcloud
-//
-// Description:
-//
-//
-// Author:  <enni@Willow.Reimer>, (C) 2004
-//
-// Copyright: See COPYING file that comes with this distribution
-//
-//
 
 #include "../primitives/sglflobj.h"
 #include "../sglmetaobj.h"
@@ -35,6 +24,8 @@ public:
 	static int sortY(const void * P1,const void *P2);
 	static int sortZ(const void * P1,const void *P2);
 	static SGLVektor *splitList(SGLVektor List[],unsigned int cnt,unsigned int &cnt1,unsigned int &cnt2);
+    void getExtrema(SGLVektor *&maxX, SGLVektor *&minX,SGLVektor *&maxY,SGLVektor *&minY, SGLVektor *&maxZ, SGLVektor *&minZ);
+    void getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor *&drei,SGLVektor *&vier);
 };
 
 class SGLPointCloud : public SGLMetaObj
@@ -44,11 +35,9 @@ public:
 	~SGLPointCloud();
 
 	subSGLPointCloud *cloud;
-	SGLQuader *quader;
-	SGLQuader *marker;
-	SGLRechtEck *grenze;
 	void compileSubObjects();
 	SGLVektor getCenter();
+    void init();
+	vector<SGLDreiEck> seiten;
 	vector<SGLStrecke> hilfsLinien;
-	SGLStrecke divide(SGLVektor *Liste,unsigned int cnt);
 };

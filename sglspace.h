@@ -20,8 +20,8 @@
 
 #ifdef WIN32
 	#include <windows.h>								// Header File For Windows
-	#include <gl\gl.h>								// Header File For The OpenGL32 Library
-	#include <gl\glu.h>								// Header File For The GLu32 Library
+	#include <gl\gl.h>									// Header File For The OpenGL32 Library
+	#include <gl\glu.h>									// Header File For The GLu32 Library
 	#include <gl\glaux.h>								// Header File For The GLaux Library
 #else
 	#include <GL/gl.h>
@@ -77,6 +77,11 @@ public:
 		int	running,WindowWidth,WindowHeight,framecount,fps;
 		time_t	time;
 	}StatusInfo;
+	
+	struct
+	{
+		GLfloat r,g,b;
+	}bgColor;
 
 	bool FullScreen(bool FullScreen=true);
 
@@ -86,7 +91,7 @@ public:
     SGLConsole		*mainConsole;
 
 	SGLObjList ObjLst,TranspObjLst;
-	SGLSpace(int XSize=800, int YSize=600);
+	SGLSpace(int XSize=800, int YSize=600,unsigned int R=0,unsigned int G=0,unsigned int B=0);
 	~SGLSpace();
 	virtual void OnDraw();
 	virtual void OnMouseMove( int x, int y, unsigned int BtnDown );
@@ -105,15 +110,11 @@ public:
 	void TwoSided(bool TwoSideRendering=true);
 
 	void CompileIntObs();
-//	void CompileExtObs();
 	bool reCompileIntObs(bool redraw=true);
-//	bool reCompileExtObs(bool redraw=true);
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
 	void OnMouseClick(int button, int x, int y);
 	void registerObj(SGLFlObj *Obj);
 	void registerObj(SGLObj *Obj);
-//	void Compile();
-	void ScreenShot(const char *imageFile);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
@@ -129,7 +130,6 @@ private:
 	bool setup_video(int w,int h);
 	void resetView(short mode=0);
 	void callHelper(int stage=1);
-//	void recalcLookAt();
 	void DrawExtObjs();
 	void show_status();
 };
