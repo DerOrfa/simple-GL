@@ -1,5 +1,5 @@
 /***************************************************************************
-                          eglobj.cpp  -  description
+                          sglobj.cpp  -  description
                              -------------------
     begin                : Sat Sep 15 2001
     copyright            : (C) 2001 by Enrico Reimer

@@ -161,12 +161,15 @@ void SGLSpace::setFlags(bool reCompile)
 	glEnable(GL_NORMALIZE);
 	
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER,0);
+	
 	glDisable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
 //	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_LIGHTING);
-	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);/*GL_ONE_MINUS_DST_ALPHA,GL_DST_ALPHA*/
 
 	glDisable(GL_DITHER);
 
