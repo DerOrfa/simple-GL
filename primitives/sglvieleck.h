@@ -29,7 +29,7 @@ class SGLPolygon : public SGLFlObj
 public:
 	SGLPolygon();
 	SGLPolygon(SGLVektor Ecken[],short int VektCnt);
-	SGLPolygon(VektorPtr Ecken[],short int VektCnt);
+//	SGLPolygon(VektorPtr Ecken[],short int VektCnt);
 
 	void generate();
 

@@ -51,7 +51,7 @@ SGLPolygon::SGLPolygon()
     \fn SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
  */
 SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt){CopyEckVekt(Ecken,VektCnt);}
-SGLPolygon::SGLPolygon(VektorPtr Ecken[],short int VektCnt){LinkEckVekt(Ecken,VektCnt);}
+//SGLPolygon::SGLPolygon(VektorPtr Ecken[],short int VektCnt){LinkEckVekt(Ecken,VektCnt);}
 
 /*!
     \fn SGLPolygon::generate()
@@ -96,14 +96,6 @@ void SGLPolygon::LinkEckVekt(VektorPtr Ecken[],short int VektCnt)
 	resetTexKoord();
 }
 
-/*!
-    \fn SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
- */
-void SGLPolygon::LinkEckVekt(VektorList &Ecken)
-{
-	EckVektoren=Ecken;
-	resetTexKoord();
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -157,7 +157,7 @@ void SGLSpace::OnResize(int width, int height)
 				pair<unsigned int,unsigned int>(0,height),
 				pair<unsigned int,unsigned int>(width,height)
 			};
-			Camera->ViewMatr.screen2welt(screen,Camera->LookAt,Camera->Ecken,4);
+//			Camera->ViewMatr.screen2welt(screen,Camera->LookAt,Camera->Ecken,4);
 		}
 		Camera->recalcEckenMode=resizeMode;
 		Camera->setView(width,height);

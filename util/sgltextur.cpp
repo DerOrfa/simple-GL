@@ -76,7 +76,6 @@ SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
 	ID=0;
 	ResetTransformMatrix();
 	shouldBeLoaded=loaded=false;
-	multitex=NULL;
 	renderMode=GL_REPLACE;//Per Default ersetzt die Textur alles was da war
 	envColor[0]=envColor[1]=envColor[2]=envColor[3]=0;
 }

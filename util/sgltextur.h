@@ -30,7 +30,7 @@ class SGLBaseTex:public SGLMatrixObj
 public:
 	SGLBaseTex();
 	virtual ~SGLBaseTex();
-	SGLBaseTex *multitex;
+	boost::shared_ptr<SGLBaseTex> multitex;
 	GLuint	ID;
 	GLenum TexType;
 	bool loadTex();

@@ -50,7 +50,7 @@ struct ViewTrans
 	bool screen2welt(const unsigned int x,const unsigned int y,const SGLVektor &depthVekt,SGLVektor &dst);
 	bool screen2welt(const unsigned int x,const unsigned int y,GLdouble depth,SGLVektor &dst);
 	bool screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,SGLVektor welt[],unsigned int Vcnt);//irgendwann mal weghauen
-	bool screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,VektorPtr welt[],unsigned int Vcnt);
+//	bool screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,VektorPtr welt[],unsigned int Vcnt);
 };
 
 class SGLBaseCam: public SGLHelper

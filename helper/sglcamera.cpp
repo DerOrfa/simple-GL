@@ -85,12 +85,12 @@ bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVe
 		screen2welt(screen[i].first,screen[i].second,depth,welt[i]);
 }
 
-bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,VektorPtr welt[],unsigned int Vcnt)
-{
-	GLdouble depth=getDepth(depthVekt);
-	for(int i=0;i<Vcnt;i++)
-		screen2welt(screen[i].first,screen[i].second,depth,*welt[i]);
-}
+// bool ViewTrans::screen2welt(pair<unsigned int,unsigned int> screen[],const SGLVektor &depthVekt,VektorPtr welt[],unsigned int Vcnt)
+// {
+// 	GLdouble depth=getDepth(depthVekt);
+// 	for(int i=0;i<Vcnt;i++)
+// 		screen2welt(screen[i].first,screen[i].second,depth,*welt[i]);
+// }
 
 
 SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
