@@ -55,10 +55,7 @@ SGLObjBase::~SGLObjBase()
 
 	if(myList)myList->removeOb(this);
 	glDeleteLists(ID,1);
-	if(!ID)
-	{
-		SGLprintInfo("Nicht gezeichnetes Objekt gelöscht");
-	}
+	if(!ID){SGLprintInfo("Nie generiertes Objekt gelöscht");}
 }
 
 
@@ -70,10 +67,7 @@ SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
 }
 
 SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
-{
-	return Normale(SGLVektor(Pkt2-Pkt1),SGLVektor(Pkt3-Pkt1));
-}
-
+{return Normale(SGLVektor(Pkt2-Pkt1),SGLVektor(Pkt3-Pkt1));}
 
 /*!
     \fn SGLObjBase::metaGenerate()
@@ -199,12 +193,8 @@ void SGLObjBase::notifyChange()
 GLint SGLObjBase::beginList(bool draw)
 {
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
-	{
-		SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());
-	}
+	{SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());}
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
 }
 void SGLObjBase::endList()
-{
-	glEndList();
-}
+{glEndList();}

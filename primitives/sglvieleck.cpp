@@ -69,7 +69,7 @@ void SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
 {
 	EckVektoren.resize(VektCnt);
 	for(int i=0;i<VektCnt;i++)
-		EckVektoren[i]=VektorPtr(new SGLVektor(Ecken[i]));
+		EckVektoren[i].reset(new SGLVektor(Ecken[i]));
 	resetTexKoord();
 }
 
@@ -81,7 +81,7 @@ void SGLPolygon::CopyEckVekt(VektorList &Ecken)
 	VektorList::size_type s=Ecken.size();
 	EckVektoren.resize(s);
 	for(int i=0;i<s;i++)
-		EckVektoren[i]=VektorPtr(new SGLVektor(*Ecken[i]));
+		EckVektoren[i].reset(new SGLVektor(*Ecken[i]));
 	resetTexKoord();
 }
 

@@ -8,7 +8,7 @@
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,SGLMaterial *Material,unsigned short mode):SGLPolygonObj(Material)
+SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,MaterialPtr Material,unsigned short mode):SGLPolygonObj(Material)
 {
 	int ecken=BasisFl.EckVektoren.size();
 

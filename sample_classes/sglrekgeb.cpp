@@ -4,7 +4,7 @@
 
 #define HIGHFAKTOR	.6
 
-SGLRekGeb::SGLRekGeb(int Ecken,SGLMaterial *Material):SGLFlObj(Material)
+SGLRekGeb::SGLRekGeb(int Ecken,MaterialPtr Material):SGLFlObj(Material)
 {
 	ecken=Ecken;
 	RekDepth=6;

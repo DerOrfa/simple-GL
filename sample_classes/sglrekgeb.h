@@ -10,7 +10,7 @@
 class SGLRekGeb : public SGLFlObj
 {
 public:
-	SGLRekGeb(int Ecken=6,SGLMaterial *Material=0);
+	SGLRekGeb(int Ecken=6,MaterialPtr Material=MaterialPtr());
 	~SGLRekGeb();
 public: // Public attributes
 	int Mode;

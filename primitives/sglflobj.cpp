@@ -20,13 +20,13 @@
 #include <GL/glu.h>
 #include "../sglmisc.h"
 
-SGLFlObj::SGLFlObj(SGLMaterial* Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLFlObj::SGLFlObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObj(PosX,PosY,PosZ,SizeFact)
 {
 	GLint MasterPolyMode[2];
 	glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
 	VisMode=GLenum(MasterPolyMode[0]);
-	resetMaterial(boost::shared_ptr<SGLMaterial>(Material));
+	resetMaterial(MaterialPtr(Material));
 	priority=flstd;
 	twoSideRender=false;
 }
@@ -131,9 +131,9 @@ void SGLFlObj::DrahtGitter(bool DO)
 		VisMode=GL_FILL;
 }
 
-void SGLFlObj::resetMaterial(boost::shared_ptr<SGLMaterial> NewMaterial)
+void SGLFlObj::resetMaterial(MaterialPtr NewMaterial)
 {
-	Mat= NewMaterial ? NewMaterial : boost::shared_ptr<SGLMaterial> (new SGLMaterial);
+	Mat= NewMaterial ? NewMaterial : MaterialPtr (new SGLMaterial);
 /*	if(Mat && Mat->tex && Mat->tex->valid)
 		resetTexKoord();*/
 	//nicht mehr nötig, da ALLE Texturkoordinaten haben

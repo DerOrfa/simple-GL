@@ -20,7 +20,7 @@
 class SGL3DText : public SGLText
 {
 public:
-    SGL3DText(const char Text[]="", char fontname[]="",SGLMaterial *Material=NULL,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+    SGL3DText(const char Text[]="", char fontname[]="",MaterialPtr Material=MaterialPtr (),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
     ~SGL3DText();
 
 	GLdouble tiefe;

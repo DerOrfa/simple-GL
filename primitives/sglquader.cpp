@@ -20,7 +20,7 @@
 #include "../sglmisc.h"
 
 
-SGLQuader::SGLQuader(SGLMaterial *Material,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLQuader::SGLQuader(MaterialPtr Material,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	this->breite=breite;
@@ -61,7 +61,7 @@ void SGLQuader::ColorCube()
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-SGLCube::SGLCube(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLCube::SGLCube(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLQuader(Material,1,1,1,PosX,PosY,PosZ,SizeFact){}
 
 /*!
@@ -109,8 +109,8 @@ void SGLQuader::recalcEdges(bool compile)
 	SET_VEKTPTR_VAL(EckPunkte[1][2],SGLVektor( breite/2, hoehe/2,-tiefe/2));
 	SET_VEKTPTR_VAL(EckPunkte[1][3],SGLVektor(-breite/2, hoehe/2,-tiefe/2));
 
-// 	for(int i=0;i<this->Fl.Cnt;i++)
-// 		boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[i])->setupCenter();
+	for(int i=0;i<this->Fl.Cnt;i++)
+		boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[i])->setupCenter();
 
 	if(compile)Compile();
 }

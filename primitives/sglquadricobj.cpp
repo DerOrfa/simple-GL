@@ -1,6 +1,6 @@
 #include "sglquadricobj.h"
 
-SGLQuadricObj::SGLQuadricObj(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
+SGLQuadricObj::SGLQuadricObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
   :SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	quadric=gluNewQuadric();
@@ -16,7 +16,7 @@ SGLVektor SGLQuadricObj::getCenter()
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-SGLSphere::SGLSphere(SGLMaterial *Material,GLint slices,GLint stacks,GLdouble Size) :SGLQuadricObj(Material)
+SGLSphere::SGLSphere(MaterialPtr Material,GLint slices,GLint stacks,GLdouble Size) :SGLQuadricObj(Material)
 {
 	this->slices= slices ? slices:GLint(Size*15.)+10;
 	this->stacks= stacks ? stacks:GLint(Size*15.)+10;

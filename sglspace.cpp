@@ -113,6 +113,7 @@ void SGLSpace::show_status()
 
 SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B)
 {
+	Grids.BeschrMat=MaterialPtr(new  SGLMaterial);
 	TranspObjLst.renderTransparent=true;
 	bgColor.r=float(R)/255;
 	bgColor.g=float(G)/255;
@@ -419,11 +420,11 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Grid2= new SGLGrid(2);
 	Grids.Grid3= new SGLGrid(3);
 
-	Grids.BeschrMat.Transparenz=.5;
-	Grids.BeschrMat.SetColor(0,1,0);
-	Grids.X= new SGL3DText("X","",&Grids.BeschrMat,6,0,0,.5);
-	Grids.Y= new SGL3DText("Y","",&Grids.BeschrMat,0,6,0,.5);
-	Grids.Z= new SGL3DText("Z","",&Grids.BeschrMat,0,0,6,.5);
+	Grids.BeschrMat->Transparenz=.5;
+	Grids.BeschrMat->SetColor(0,1,0);
+	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.5);
+	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
+	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
 
 	Grids.Beschr[0]=Grids.X->Compile();
 	Grids.Beschr[1]=Grids.Y->Compile();

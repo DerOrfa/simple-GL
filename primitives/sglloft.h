@@ -21,7 +21,7 @@
 class SGLLoft : public SGLPolygonObj
 {
 public:
-	SGLLoft(SGLPolygon &Flaeche,SGLVektor loft=SGLVektor(0,0,1),SGLMaterial *Material=0,unsigned short mode=3);
+	SGLLoft(SGLPolygon &Flaeche,SGLVektor loft=SGLVektor(0,0,1),MaterialPtr Material=MaterialPtr(),unsigned short mode=3);
 	virtual ~SGLLoft();
 
 };

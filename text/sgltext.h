@@ -29,7 +29,7 @@ class SGLTextBackend;
 class SGLText : public SGLFlObj
 {
 public:
-	SGLText(char fontname[]="",SGLMaterial *Material=NULL,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLText(char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLText();
 	enum TextAlign{left,center,right};
 protected:

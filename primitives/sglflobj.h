@@ -30,7 +30,7 @@ class SGLFlObj : public SGLObj
 {
 public:
 	SGLFlObj(
-		SGLMaterial *Mat=NULL,
+		MaterialPtr Material=MaterialPtr (),
 		GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,
 		GLdouble SizeFact=1
 		);
@@ -38,11 +38,11 @@ public:
 	GLuint Compile();
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);
-	void resetMaterial(boost::shared_ptr<SGLMaterial> NewMaterial=boost::shared_ptr<SGLMaterial>());
+	void resetMaterial(MaterialPtr NewMaterial=MaterialPtr());
     virtual void resetTexKoord();
 	
 	GLenum VisMode;
-	boost::shared_ptr<SGLMaterial> Mat;
+	MaterialPtr Mat;
     bool twoSideRender;
 };
 

@@ -62,4 +62,6 @@ public:
 	void SetMat(GLfloat col[3],GLfloat Transp,GLenum Face=GL_FRONT,GLenum ColorID=GL_SHININESS);
 };
 
+typedef	boost::shared_ptr<SGLMaterial> MaterialPtr;
+
 #endif

@@ -27,7 +27,7 @@
 class SGLQuadricObj : public SGLFlObj
 {
 public:
-	SGLQuadricObj(SGLMaterial *Material=0,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLQuadricObj(MaterialPtr Material=MaterialPtr (),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLQuadricObj();
 	GLUquadricObj *quadric;
 	SGLVektor getCenter();
@@ -39,7 +39,7 @@ public:
 class SGLSphere : public SGLQuadricObj
 {
 public:
-	SGLSphere(SGLMaterial *Material=0,GLint slices=0,GLint stacks=0,GLdouble Size=1);
+	SGLSphere(MaterialPtr Material=MaterialPtr(),GLint slices=0,GLint stacks=0,GLdouble Size=1);
 	~SGLSphere();
 	GLdouble size;
 	GLint slices,stacks;

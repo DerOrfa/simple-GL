@@ -19,13 +19,13 @@
 #include <stdio.h>
 #include "../sglmisc.h"
 
-SGLPolygonObj::SGLPolygonObj(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLPolygonObj::SGLPolygonObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	Fl.Cnt=0;
 }
 
-SGLPolygonObj::SGLPolygonObj(const SGLPolygon Flaechen[],short int FlCnt,SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLPolygonObj::SGLPolygonObj(const SGLPolygon Flaechen[],short int FlCnt,MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	SetFl(Flaechen,FlCnt);

@@ -9,7 +9,7 @@
  ***************************************************************************/
 #include "sgl3dtext.h"
 
-SGL3DText::SGL3DText(const char Text[], char fontname[],SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
+SGL3DText::SGL3DText(const char Text[], char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
 :SGLText(fontname,Material,PosX,PosY,PosZ,SizeFact)
 {
 	align=center;

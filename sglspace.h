@@ -64,7 +64,7 @@ public:
 		SGLGrid *Grid1,*Grid2,*Grid3;
 		SGL3DText *X,*Y,*Z;
 		GLuint Beschr[3];
-		SGLMaterial BeschrMat;
+		MaterialPtr BeschrMat;
 		short doGrid;
 	}Grids;
 
