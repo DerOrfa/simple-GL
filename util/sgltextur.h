@@ -35,7 +35,7 @@ public:
 	bool loadTex();
 	bool unloadTex();
 	virtual void SetParams();
-	bool genValidSize(GLint internalFormat,GLsizei &width,GLsizei &height,GLsizei &depth, GLenum format,GLenum type,bool border);
+	bool genValidSize(GLint internalFormat,GLsizei size[],unsigned short sizeCnt, GLenum format,GLenum type,bool border);
 	
 	static short TexLoaded;
 	static short def2dim(GLenum def);

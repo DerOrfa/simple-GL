@@ -26,7 +26,6 @@ SGLTextur::SGLTextur(const char *imageFile)
 {
 	weich=repeat=true;	
 	if(imageFile)Load2DImage(imageFile);
-	shouldBeLoaded=loaded=false;
 }
 
 bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
@@ -76,6 +75,7 @@ SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE)
 {
 	ID=0;
 	ResetTransformMatrix();
+	shouldBeLoaded=loaded=false;
 }
 
 SGLBaseTex::~SGLBaseTex()
@@ -140,48 +140,83 @@ void SGLBaseTex::SetParams()
 }
 
 /*!
-	Generiert gltige Werte für Tiefe Breite und Höhe einer Textur.
+	Generiert gültige Werte für Tiefe Breite und Höhe einer Textur.
 	
 	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nächstgrößte Zweierpotenz ersetzt.
 	Ist ein Wert zu groß wird er halbiert.
 
     \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
  */
-bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei &width,GLsizei &height,GLsizei &depth, GLenum format,GLenum type,bool border)
+
+bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short sizeCnt, GLenum format,GLenum type,bool border)
 {
+	#define FORALL_SIZE(IT)	for(unsigned short IT=0;IT<sizeCnt;IT++)
+
 	if(!glIsTexture(ID)){SGLprintError("OpenGL kennt die Textur \"%d\" nicht",ID);}
-	GLsizei w=2,h=2,d=2;
-	for(GLint x, y, z;;) 
+	GLsizei *newSize=new GLsizei[sizeCnt];
+	GLsizei tmpSize=4;
+	FORALL_SIZE(i)newSize[i]=4;
+	GLenum proxyType;
+	bool sizeEnought=false;
+	unsigned short grown=0;
+	for(;;)
 	{
-		glTexImage3D(GL_PROXY_TEXTURE_3D_EXT,0,internalFormat,w+(border ? 2:0),h+(border ? 2:0),d+(border ? 2:0),(border ? 1:0),format,type,NULL);
-		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_WIDTH,  &x);
-		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_HEIGHT, &y);
-		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_DEPTH,  &z);
-		if (x > 0 && y > 0 && z > 0 && (w<width || h<height || d<depth)) 
+		switch(sizeCnt)
 		{
-			if(w<width)w=w<<1;
-			if(h<height)h=h<<1;
-			if(d<depth)d=d<<1;
+		case 1:
+			proxyType=GL_PROXY_TEXTURE_1D;
+			glTexImage1D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
+		case 2:
+			proxyType=GL_PROXY_TEXTURE_2D;
+			glTexImage2D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
+		case 3:
+			proxyType=GL_PROXY_TEXTURE_3D;
+			glTexImage3D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
+		default:
+			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
 		}
-		else break;
+		glGetTexLevelParameteriv(proxyType, 0, GL_TEXTURE_WIDTH,  &tmpSize);
+		bool sizeOK=true;
+		if(tmpSize <= 0)
+		{
+			sizeOK=false;
+			newSize[grown]>>=1;
+		}
+		if(sizeEnought)break;
+		else for(;grown<sizeCnt;grown++)
+		{
+			if(newSize[grown]<size[grown]){newSize[grown]<<=1;break;}
+			else if(grown==sizeCnt-1)sizeEnought=true;
+		}
+		
+		if (!sizeOK) break;
 	}
+	
 	GLuint err = glGetError();
 	if(err)
 	{
 		SGLprintError("%s beim Prüfen der Texturdaten [GLerror]",gluErrorString(err));
-		w=h=d=0;
+		for(int i=0;i<sizeCnt;i++)newSize[i]=0;
 	}
-	else if(w<width || h<height || d<depth)
+	else if(!sizeEnought)
 	{
-		w/=2;h/=2;d/=2;
-		SGLprintError("Der Texturspeicher der Grafikkarte ist zu klein. Er lässt nur %dx%dx%d zu.",w,h,d);
+		unsigned int StrLen=sizeCnt-1;
+		FORALL_SIZE(i)StrLen+=strlen(newSize[i]);
+		char *formatStr=new char[StrLen+1];
+		formatStr[0]=0;
+		FORALL_SIZE(i)
+			sprintf(formatStr+strlen(formatStr),"%d%s",newSize[i],i<sizeCnt-1 ? "x":"");
+		SGLprintError("Der Texturspeicher der Grafikkarte ist zu klein. Sie lässt höchstens eine %s-Textur zu",formatStr);
 		err=true;
+		delete formatStr;
 	}
-	width = w;
-	if(&height != &width)height= h;
-	if(&depth != &height && &depth != &width)depth=d;
+
+	FORALL_SIZE(i)size[i]=newSize[i];
+	delete newSize;
 	return !err;
+	#undef FORALL_SIZE
 }
+
 
 short SGLBaseTex::TexLoaded=0;
 
@@ -233,7 +268,7 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(INTENSITY,intens);
 	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
 	if(unload)unloadTex();
-	return r+b+b+alpha+lum+intens,index;
+	return r+b+b+alpha+lum+intens+index;
 	#undef GET_CHAN_SIZE
 }
 

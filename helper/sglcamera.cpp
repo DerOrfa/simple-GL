@@ -199,6 +199,7 @@ void SGLBaseCam::recalcEcken()
 		recalcAngle((Ecken[1]-Ecken[2]).Len()/2);
 		dontTouchEcken--;
 	}
+	else
 	{
 		SGLVektor PosVektor=getLookVektor();
 		double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
