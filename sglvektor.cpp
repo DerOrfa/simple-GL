@@ -44,7 +44,7 @@ SGLVektor::SGLVektor(GLfloat Array[3]):EVektor<GLdouble>(3)
 
 SGLVektor::SGLVektor(const EVektor<GLdouble> &src):EVektor<GLdouble>(src)
 {
-	SGLV_R=SGLV_G=SGLV_B=0;
+	SGLV_R=SGLV_G=SGLV_B=-1;
 }
 
 SGLVektor::SGLVektor(const SGLVektor &src):EVektor<GLdouble>(src)
