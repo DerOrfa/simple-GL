@@ -52,6 +52,7 @@ public:
 	bool	check_recompile,check_sorting;
 	bool	renderTransparent,render_non_native;
 	void	ListInfo();
+	unsigned int isThere(SGLObjBase *obj);
 
 private:
 	bool	removeOb_CW(GLuint ListID);

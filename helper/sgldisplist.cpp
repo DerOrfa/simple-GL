@@ -246,3 +246,12 @@ void SGLObjList::ListInfo()
 	}
 	SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
 }
+
+
+unsigned int SGLObjList::isThere(SGLObjBase *obj)
+{
+	
+	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+		if(i->get()==obj)return i->use_count();
+	return 0;
+}

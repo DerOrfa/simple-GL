@@ -119,10 +119,9 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	bgColor.g=float(G)/255;
 	bgColor.b=float(B)/255;
 
-	Camera=NULL;;
 	MouseInfo.FollowMouse=true;
 	resizeMode=SGLBaseCam::scaleView;
-	isMyCam=DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
+	DoIdle=StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
 	cloned=false;
@@ -140,8 +139,6 @@ SGLSpace::~SGLSpace()
 		delete Grids.Z;
 		for(int i=0;i<5;i++)delete ClipPlanes[i];
 	}
-	if(isMyCam)delete Camera;
-
 }
 
 void SGLSpace::OnResize(int width, int height)
@@ -306,21 +303,29 @@ void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SGLSpace::registerObj(SGLFlObj *Obj)
+void SGLSpace::registerObj(shared_obj Obj)
 {
-	if(Obj->Mat && Obj->Mat->Transparenz)
-		TranspObjLst.AddOb(Obj);
-	else ObjLst.AddOb(Obj);
+	shared_ptr<SGLFlObj> fl_ob=dynamic_pointer_cast<SGLFlObj>(Obj);
+	if(fl_ob)
+	{
+		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+			TranspObjLst.AddOb(fl_ob);
+		return;
+	}
+	ObjLst.AddOb(Obj);
+	
 }
-void SGLSpace::unregisterObj(SGLFlObj *Obj)
+void SGLSpace::unregisterObj(shared_obj Obj)
 {
-	if(Obj->Mat && Obj->Mat->Transparenz)
-		TranspObjLst.removeOb(Obj);
-	else ObjLst.removeOb(Obj);
+	shared_ptr<SGLFlObj> fl_ob=dynamic_pointer_cast<SGLFlObj>(Obj);
+	if(fl_ob)
+	{
+		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+			TranspObjLst.removeOb(Obj);
+		return;
+	}
+	ObjLst.removeOb(Obj);
 }
-void SGLSpace::registerObj(SGLObj *Obj){ObjLst.AddOb(Obj);}
-void SGLSpace::unregisterObj(SGLObj *Obj){ObjLst.removeOb(Obj);}
-
 void SGLSpace::CompileIntObs()
 {
 	if(StatusInfo.glServerReady)
@@ -433,9 +438,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[1]=Grids.Y->Compile();
 	Grids.Beschr[2]=Grids.Z->Compile();
 
-	assert(!isMyCam);
-	defaultCam(new SGLCamera());
-	isMyCam=true;
+	defaultCam(boost::shared_ptr<SGLBaseCam>(new SGLCamera()));
 
 	Grids.doGrid=1;
 
@@ -454,13 +457,12 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
 
-void SGLSpace::defaultCam(SGLBaseCam *cam)
+void SGLSpace::defaultCam(boost::shared_ptr<SGLBaseCam> cam)
 {
 	assert(cam);
-	if(isMyCam)
-		delete Camera;
-	isMyCam=false;
-	registerObj(Camera=cam);
+	unregisterObj(Camera);
+	Camera.swap(cam);
+	registerObj(Camera);
 	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)
 		Camera->setView(StatusInfo.WindowWidth,StatusInfo.WindowHeight);
 	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungültig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}

@@ -53,7 +53,11 @@ SGLObjBase::~SGLObjBase()
 	while(len--)
 		(*i++)->unlink(this);
 
-	if(myList)myList->removeOb(this);
+	if(myList)
+	{
+		unsigned int count=myList->isThere(this);
+		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
+	}
 	glDeleteLists(ID,1);
 /*	if(!ID)
 	{SGLprintInfo("Nie generiertes Objekt 0x%x gelöscht",this);}*/

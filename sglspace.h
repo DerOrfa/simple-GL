@@ -83,7 +83,7 @@ public:
 
 
 	SGLClipPlane	*ClipPlanes[5];
-	SGLBaseCam		*Camera;
+	boost::shared_ptr<SGLBaseCam> Camera;
 	SGLLight		*StdLight;
 
 	SGLObjList ObjLst;
@@ -108,10 +108,8 @@ public:
 	void CompileIntObs();
 	bool reCompileIntObs(bool redraw=true);
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
-	void registerObj(SGLFlObj *Obj);
-	void registerObj(SGLObj *Obj);
-	void unregisterObj(SGLFlObj *Obj);
-	void unregisterObj(SGLObj *Obj);
+	void registerObj(shared_obj Obj);
+	void unregisterObj(shared_obj Obj);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
@@ -119,8 +117,7 @@ public:
 	void sglInit(unsigned int w=100,unsigned int h=100);
 	static bool globalColorAktive;
 	SGLConsole	*mainConsole;
-	void defaultCam(SGLBaseCam *cam);
-	bool isMyCam;
+	void defaultCam(boost::shared_ptr<SGLBaseCam> cam);
 	struct {unsigned int x,y;}Size;
 	SGLBaseCam::ViewModi resizeMode;
 
