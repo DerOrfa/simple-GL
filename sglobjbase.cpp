@@ -184,3 +184,20 @@ void SGLObjBase::notifyChange()
 	while(len--)
 		(*i++)->compileNextTime();
 }
+
+
+/*!
+    \fn SGLObjBase::initList(bool draw)
+ */
+GLint SGLObjBase::beginList(bool draw)
+{
+	if(!(glIsList(ID) || (ID=glGenLists(1))))
+	{
+		SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());
+	}
+	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
+}
+void SGLObjBase::endList()
+{
+	glEndList();
+}

@@ -77,16 +77,13 @@ void SGLSpace::resetView(short mode)
 
 void SGLSpace::callHelper(int stage)
 {
-  switch(stage)
+	switch(stage)
 	{
 	case 1:
 	//Helper Zeichnen
-	glCallList(ClipPlanes[0]->ID);
-	glCallList(ClipPlanes[1]->ID);
-	glCallList(ClipPlanes[2]->ID);
-	glCallList(ClipPlanes[3]->ID);
-
-
+	for(int i=0;i<4;i++)
+		if(ClipPlanes[i]->ID)glCallList(ClipPlanes[i]->ID);
+	
 	if(Grids.doGrid & 1)glCallList(Grids.Grid1->ID);
 	if(Grids.doGrid & 2)glCallList(Grids.Grid2->ID);
 	if(Grids.doGrid & 4)glCallList(Grids.Grid3->ID);

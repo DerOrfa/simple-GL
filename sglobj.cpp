@@ -31,11 +31,11 @@ GLuint SGLObj::Compile()
 	GLuint error=0,i;
 	bool EnableClip[5];
 
-	if(!(glIsList(ID) || (ID=glGenLists(1))))
+	while(error=glGetError())
 	{
-		SGLprintError("Konnte keine Displayliste für das %s-Objekt erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());
+		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
-	glNewList(ID,GL_COMPILE_AND_EXECUTE);
+	beginList(true);
 	{
 		if(IgnoreLight)
 			glDisable(GL_LIGHTING);
@@ -54,7 +54,9 @@ GLuint SGLObj::Compile()
 	glEndList();
 	
 	while(error=glGetError())
-	{SGLprintError("[GLerror] %s beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());}
+	{
+		SGLprintError("[GLerror] %s beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+	}
 	return ID;
 }
 

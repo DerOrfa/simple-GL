@@ -36,7 +36,7 @@ void SGLObjList::CallAllLists()
 	if(renderTransparent)
 		glEnable(GL_BLEND);//Ab hier transparent
 	if(check_recompile)Compile();
-	
+
 	glFrontFace(GL_CW);
 	for(int i=ObjCnt_CW;i;i--) //@todo sollte schon noch geprüft werden (wenigstens im Debug)
 		if(!glIsList(Objects_CW[i]))

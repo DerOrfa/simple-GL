@@ -67,8 +67,8 @@ void SGLLight::generate()
 
 void SGLLight::CamLight()
 {
-	glNewList(ID,GL_COMPILE);
-	glEndList();//Die Liste leeren (Cameralichter brauchen nicht jedesmal neugezeichnet werden)
+	beginList(false);
+	endList();//Die Liste leeren (Cameralichter brauchen nicht jedesmal neugezeichnet werden)
 
 	const GLint Pos[4]={0,0,1,1};
 	SetUp();

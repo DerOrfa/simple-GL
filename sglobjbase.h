@@ -60,6 +60,8 @@ public:
 	void link(SGLObjBase *obj);
 	void unlink(SGLObjBase *obj);
 	void notifyChange();
+	GLint beginList(bool draw);
+	void endList();
 	short priority;
 	short should_compile;
 	SGLObjList* myList;
