@@ -84,7 +84,6 @@ void SGLPolygon::LinkEckVekt(VektorPtr Ecken[],short int VektCnt)
  */
 SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor Ecke4):SGLPolygon()
 {
-	cout << "erzeuge Viereck " << this << endl;
 	SGLVektor tEck[4];
 	tEck[0]=Ecke1;
 	tEck[1]=Ecke2;
@@ -92,11 +91,6 @@ SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor
 	tEck[3]=Ecke4;
 	CopyEckVekt(tEck,4);
 	setupCenter();
-}
-
-SGLVierEck::~SGLVierEck()
-{
-	cout << "lösche Viereck " << this << endl;
 }
 
 void SGLVierEck::Link(VektorPtr Ecke1,VektorPtr Ecke2,VektorPtr Ecke3,VektorPtr Ecke4)

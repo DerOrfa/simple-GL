@@ -31,7 +31,6 @@ SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 	for(int n=0;n<2;n++)for(int i=0;i<4;i++)
 		TOUCH_VEKTPTR(EckPunkte[n][i]);//MUSS vor der Verwendung von EckPunkte kommen, sonst kann es passieren, daß sie ungültig sind
 	
-	cout << "Quader: trage Vierecke als seiten ein" << endl;
 	for(int i=0;i<6;i++)
 	{
 		Fl.Fl[i]= boost::shared_ptr<SGLVierEck>(new SGLVierEck);	
