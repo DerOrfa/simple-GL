@@ -104,7 +104,7 @@ void SGLMatrixObj::saveAktMatrix()
 }
 void SGLMatrixObj::saveMatrix(GLenum mode)
 {
-#define CASE_SET(CASE)	case CASE:type=GL_MODELVIEW ## _MATRIX
+#define CASE_SET(CASE)	case CASE:type=CASE ## _MATRIX
 	GLenum type;
 	switch(mode)
 	{
@@ -117,3 +117,16 @@ void SGLMatrixObj::saveMatrix(GLenum mode)
 	glGetDoublev(type,MyTransformMatrix);
 #undef CASE_SET
 }
+
+/*!
+    \fn SGLObjBase::guesType()
+ */
+const char*  SGLMatrixObj::guesType()
+{
+#ifndef WIN32
+	return typeid(*this).name();
+#else
+	return "VC60 kann kein typeid??";
+#endif
+}
+

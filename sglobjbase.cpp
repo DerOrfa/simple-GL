@@ -183,16 +183,3 @@ void SGLObjBase::notifyChange()
 	while(len--)
 		(*i++)->compileNextTime();
 }
-
-
-/*!
-    \fn SGLObjBase::guesType()
- */
-const char*  SGLObjBase::guesType()
-{
-#ifndef WIN32
-	return typeid(*this).name();
-#else
-	return "VC60 kann kein typeid??";
-#endif
-}

@@ -129,10 +129,10 @@ void SGLBaseTex::SetParams()
 }
 
 /*!
-	Generiert gltige Werte fr Tiefe Breite und Höhe einer Textur.
+	Generiert gltige Werte für Tiefe Breite und Höhe einer Textur.
 	
 	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nächstgrößte Zweierpotenz ersetzt.
-	Ist ein Wert zu groï¿½ wird er halbiert.
+	Ist ein Wert zu groß wird er halbiert.
 
     \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
  */

@@ -435,8 +435,6 @@ bool SGLPolygon::canSee(SGLVektor aim)
  */
 SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex):SGLRechtEck(breite,hoehe)
 {
-	depth=0;
-	useCenter=false;
 	if(volumeTex)
 	{
 		if(volumeTex->TexType!=GL_TEXTURE_3D)
@@ -445,18 +443,11 @@ SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex):SGL
 	}
 }
 
-void SGL3DPlane::resetTexKoord(GLint xshift,GLint yshift,GLint zshift)
+void SGL3DPlane::resetTexKoord()
 {
-	setTexKoord(0,EckVektoren.Vekt[0]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[0]->SGLV_Y/5+.5+yshift,EckVektoren.Vekt[0]->SGLV_Z/5+.5+zshift);
-	setTexKoord(1,EckVektoren.Vekt[1]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[1]->SGLV_Y/5+.5+yshift,EckVektoren.Vekt[1]->SGLV_Z/5+.5+zshift);
-	setTexKoord(2,EckVektoren.Vekt[2]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[2]->SGLV_Y/5+.5+yshift,EckVektoren.Vekt[2]->SGLV_Z/5+.5+zshift);
-	setTexKoord(3,EckVektoren.Vekt[3]->SGLV_X/5+.5+xshift,EckVektoren.Vekt[3]->SGLV_Y/5+.5+yshift,EckVektoren.Vekt[3]->SGLV_Z/5+.5+zshift);
-}
-
-void SGL3DPlane::setHigh(SGLObjBase *plane,SDL_Event event)
-{
-	if(event.key.keysym.sym==SDLK_SPACE)((SGL3DPlane*)plane)->depth+=.1;
-/*	((SGL3DPlane*)plane)->resetTexKoord(((SGL3DPlane*)plane)->depth);
-	((SGL3DPlane*)plane)->compileNextTime();*/
-	cout << ((SGL3DPlane*)plane)->depth << endl;
+	setTexKoord(0,0,0,.5);
+	setTexKoord(1,0,1,.5);
+	setTexKoord(2,1,1,.5);
+	setTexKoord(3,1,0,.5);
+	setTexKoord(-1,.5,.5,.5);
 }

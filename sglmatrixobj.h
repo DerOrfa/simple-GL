@@ -38,10 +38,11 @@ public:
 	void MoveTo(GLdouble x,GLdouble y, GLdouble z);
 	void Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdouble amount);
 	void ResetTransformMatrix(const GLdouble *newMatrix=NULL);
-    void loadMatrix();
-    void unloadMatrix();
-    void saveMatrix(GLenum type);
-    void saveAktMatrix();
+	void loadMatrix();
+	void unloadMatrix();
+	void saveMatrix(GLenum type);
+	void saveAktMatrix();
+	virtual const char* guesType();
 
 protected:
 	GLdouble MyTransformMatrix[16];
