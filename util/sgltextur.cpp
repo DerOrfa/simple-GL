@@ -23,6 +23,7 @@ SGLTextur::SGLTextur(const char *imageFile)
 {
 	weich=repeat=true;	
 	if(imageFile)Load2DImage(imageFile);
+	loaded=false;
 }
 
 bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
@@ -91,6 +92,7 @@ bool SGLBaseTex::loadTex()
 		glBindTexture(TexType,ID);
 		SetParams();
 		SGLTextur::TexLoaded=dim;
+		loaded=true;
 
 		if(!glAreTexturesResident(1,&ID,&ret))
 		{
@@ -112,6 +114,7 @@ bool SGLBaseTex::unloadTex()
 	else{SGLprintWarning("Hä %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
+	loaded=false;
 	return ret;
 }
 
@@ -170,4 +173,70 @@ short SGLBaseTex::def2dim(GLenum def)
 	case GL_TEXTURE_3D:return 3;
 	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);}
 	}
+}
+
+/*!
+	Liefert tatsächliche Informationen über die Textur in der GL-Maschiene.
+	(tatsächliche Dimensionen, tatsächliche Größe)
+    \fn SGLBaseTex::GLint getTexInfo(GLenum pname)
+ */
+GLint SGLBaseTex::getTexInfo(GLenum pname)
+{
+	bool unload=false;
+	GLint ret;
+	if(!loaded)//Falls die Text nicht geladen ist
+		loadTex();
+	
+	glGetTexLevelParameteriv(TexType,0,pname,&ret);
+	if(unload)unloadTex();
+	return ret;
+}
+
+
+/*!
+    \fn SGLBaseTex::getTexElemBitSize()
+ */
+GLint SGLBaseTex::getTexElemBitSize()
+{
+	#define GET_CHAN_SIZE(CH,RET)	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_ ## CH ## _SIZE,&RET)
+	bool unload=false;
+	GLint r,g,b,alpha,lum,intens,index;
+	if(!loaded)//Falls die Text nicht geladen ist
+		loadTex();
+	
+	GET_CHAN_SIZE(RED,r);
+	GET_CHAN_SIZE(GREEN,g);
+	GET_CHAN_SIZE(BLUE,b);
+	GET_CHAN_SIZE(ALPHA,alpha);
+	GET_CHAN_SIZE(LUMINANCE,lum);
+	GET_CHAN_SIZE(INTENSITY,intens);
+	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
+	if(unload)unloadTex();
+	return r+b+b+alpha+lum+intens,index;
+	#undef GET_CHAN_SIZE(CH,RET)
+}
+
+
+/*!
+    \fn SGLBaseTex::getTexByteSize
+ */
+GLint SGLBaseTex::getTexByteSize()
+{
+	bool unload=false;
+	GLint w,h,d;
+	double fakt=getTexElemBitSize()/8.;
+	if(!loaded)//Falls die Text nicht geladen ist
+		loadTex();
+	
+	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_WIDTH,&w);
+	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_DEPTH,&d);
+	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_HEIGHT,&h);
+	if(unload)unloadTex();
+	if(w+d+h)
+	#define NZ(val)	(val ? val:1)
+	{
+		return NZ(w)*NZ(d)*NZ(h)*fakt;
+	}
+	#undef NZ(val)
+	return 0;
 }

@@ -167,6 +167,7 @@ SGLCamera::SGLCamera(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLBaseCam(PosX,
 }
 void SGLCamera::generate()
 {
+	glColor3f(1,1,1); 
 	if(showCross)
 	{
 		SGLVektor Vert[2],Horiz[2];
@@ -181,7 +182,6 @@ void SGLCamera::generate()
 	
 	getViewRect(Ecken);
 
-	glColor3f(1,1,1); 
 	int error;
 	glBegin(GL_LINE_LOOP);
 		Ecken[0].DrawPureVertex();

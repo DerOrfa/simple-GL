@@ -39,8 +39,11 @@ public:
 	
 	static short TexLoaded;
 	static short def2dim(GLenum def);
+    GLint getTexInfo(GLenum pname);
+    GLint getTexElemBitSize();
+    GLint getTexByteSize();
 	bool weich,repeat;
-	bool valid,MipMap;
+	bool valid,MipMap,loaded;
 };
 
 class SGLTextur:public SGLBaseTex
