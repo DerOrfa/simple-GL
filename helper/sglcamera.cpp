@@ -130,8 +130,13 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 {
+	RotateCamAround(Xdeg,Ydeg,LookAt);
+}
+
+void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
+{
 	if(lockGierCam && lockKippCam)return;
-	Pos=Pos-LookAt;
+	Pos=Pos-around;
 
 	if(!lockGierCam)Pos=Pos.Rotate(UpVect,Xdeg);
 	if(!lockKippCam)
@@ -140,7 +145,7 @@ void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 		Pos=Pos.Rotate(HelpVect,Ydeg);
 		UpVect=UpVect.Rotate(HelpVect,Ydeg);
 	}
-	Pos=Pos+LookAt;
+	Pos=Pos+around;
 	Compile();
 	ViewMatr.outDated=true;
 }

@@ -26,8 +26,6 @@
 #include "sglmisc.h"
 #include <boost/shared_ptr.hpp>
 
-//#include "util/sglmaterial.h"
-
 #define	SGLV_X	operator[](0)
 #define	SGLV_Y	operator[](1)
 #define	SGLV_Z	operator[](2)

@@ -260,12 +260,17 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 
 void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 {
+	RotateCamAround(RelX,RelY,Cam,Cam->LookAt);
+}
+
+void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam,SGLVektor &around)
+{
 	double XRollFact=SIN(RelY*90),XRotateFact=COS(XRollFact*90);
 	double YRollFact=SIN(RelX*90),YRotateFact=COS(YRollFact*90);
 	double XRot=(RelX-MouseInfo.OldX);
 	double YRot=(RelY-MouseInfo.OldY);
 
-	Camera->RotateCam(-XRot*XRotateFact*40,-YRot*YRotateFact*40);
+	Camera->RotateCamAround(-XRot*XRotateFact*40,-YRot*YRotateFact*40,around);
 	Camera->Roll(XRot*30*XRollFact-YRot*30*YRollFact);
 
 	sprintf(StatusInfo.StatusString,"%sCamera rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
