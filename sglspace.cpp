@@ -309,8 +309,10 @@ void SGLSpace::registerObj(shared_obj Obj)
 	if(fl_ob)
 	{
 		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+		{
 			TranspObjLst.AddOb(fl_ob);
-		return;
+			return;
+		}
 	}
 	ObjLst.AddOb(Obj);
 	
@@ -321,8 +323,10 @@ void SGLSpace::unregisterObj(shared_obj Obj)
 	if(fl_ob)
 	{
 		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+		{
 			TranspObjLst.removeOb(Obj);
-		return;
+			return;
+		}
 	}
 	ObjLst.removeOb(Obj);
 }
@@ -434,9 +438,9 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
 	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
 
-	Grids.Beschr[0]=Grids.X->Compile();
-	Grids.Beschr[1]=Grids.Y->Compile();
-	Grids.Beschr[2]=Grids.Z->Compile();
+	Grids.Beschr[0]=Grids.X->Compile(true,true);
+	Grids.Beschr[1]=Grids.Y->Compile(true,true);
+	Grids.Beschr[2]=Grids.Z->Compile(true,true);
 
 	defaultCam(boost::shared_ptr<SGLBaseCam>(new SGLCamera()));
 

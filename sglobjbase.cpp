@@ -25,7 +25,7 @@ SGLObjBase::SGLObjBase(const SGLObjBase &src):SGLMatrixObj(GL_MODELVIEW)
 	ResetTransformMatrix(src.MyTransformMatrix);
 	priority = src.priority;
 	should_compile = true;
-	shared=false;
+	is_free=shared=false;
 }
 
 SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLMatrixObj(GL_MODELVIEW)
@@ -55,6 +55,7 @@ SGLObjBase::~SGLObjBase()
 
 	if(myList)
 	{
+		cout << myList->Objects.size() << endl;
 		unsigned int count=myList->isThere(this);
 		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
 	}
@@ -131,7 +132,7 @@ SGLVektor SGLObjBase::getMyPos()
 
 
 /*!
-	Stellt sicher, das eine CallListe fr dieses Objekt in der OpenGL-Pipeline
+	Stellt sicher, das eine CallListe für dieses Objekt in der OpenGL-Pipeline
 	vorliegt, und liefert sie. ES WIRD ABER NICHT GEZEICHNET
     \fn SGLObjBase::metaCompile(bool force_compile=false)
  */
@@ -154,10 +155,7 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 void SGLObjBase::compileNextTime()
 {
 	if(myList)myList->check_recompile=true;
-	else
-	{
-//@todo		SGLprintWarning("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daï¿½es neu generiert werden muï¿½,guesType());
-	}
+	else if(!is_free){SGLprintWarning("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daß es neu generiert werden muß", guesType());}
 	if(!should_compile)should_compile=1;
 }
 
@@ -168,7 +166,7 @@ void SGLObjBase::compileNextTime()
 void SGLObjBase::link(SGLObjBase *obj)
 {
 	//Der unwarscheinliche Fall, das obj mehrfach eingetr. wird ist nich weiter schlimm
-	//jedesmal die liste durchsuchen wï¿½e "schlimmer"
+	//jedesmal die liste durchsuchen wäre "schlimmer"
 	changeReciver.push_back(obj);
 	obj->changeSender.push_back(this);
 }

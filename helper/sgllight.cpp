@@ -69,7 +69,7 @@ void SGLLight::CamLight()
 {
 	beginList(false);
 	endList();//Die Liste leeren (Cameralichter brauchen nicht jedesmal neugezeichnet werden)
-
+	is_free=true;
 	const GLint Pos[4]={0,0,1,1};
 	SetUp();
 	SetParam(GL_SPOT_CUTOFF,30);

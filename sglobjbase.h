@@ -38,14 +38,14 @@ public:
 	SGLObjBase(const SGLObjBase &src);
 	SGLObjBase(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	virtual ~SGLObjBase();
-	virtual GLuint Compile(bool draw=true)=0;
+	virtual GLuint Compile(bool draw=true,bool free=false)=0;
 	virtual void generate()=0;
 
 	static SGLVektor Normale(SGLVektor Vekt1,SGLVektor Vekt2);
 	static SGLVektor Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3);
 
 	GLuint ID;
-	bool IgnoreClip,IgnoreLight,shared;
+	bool IgnoreClip,IgnoreLight,shared,is_free;
 	GLenum FrontFace;
 	SGLVektor* FaceAt;
 	void metaGenerate();

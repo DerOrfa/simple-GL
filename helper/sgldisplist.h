@@ -35,6 +35,7 @@ public:
 		bool operator()(shared_obj &x, shared_obj &y) { return y->priority < x->priority; }
 	};
 	SGLObjList(bool transp=false);
+	virtual ~SGLObjList();
 	SGLObjList(const SGLObjList &src);
 	SGLObjList& operator=(const SGLObjList &src);
 	bool	removeOb(GLuint ListID);

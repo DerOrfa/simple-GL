@@ -29,8 +29,9 @@ SGLObj(PosX,PosY,PosZ,SizeFact)
 	twoSideRender=false;
 }
 
-GLuint SGLFlObj::Compile(bool draw)
+GLuint SGLFlObj::Compile(bool draw,bool free)
 {
+	is_free=free;
 	GLboolean	doCullFaces=false,doBlend=false;
 	GLint		CullFace;
 	int i;

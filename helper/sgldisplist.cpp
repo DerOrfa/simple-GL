@@ -31,6 +31,15 @@ SGLObjList::SGLObjList(const SGLObjList &src)
 	operator=(src);
 }
 
+SGLObjList::~SGLObjList()
+{
+	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+	{
+		if(*i){if((*i)->myList==this)(*i)->myList=NULL;}//Alle Objekte trennen
+		else{SGLprintError("Huch, da is ein Ungültiges Objekt in der Liste an Stelle %d von %d",distance(i, Objects.begin()),Objects.size());}
+	}
+}
+
 SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 {
 	Objects_CW=Objects_CCW=NULL;
@@ -206,7 +215,6 @@ template<class T> bool SGLObjList::grow(T *&liste,unsigned int &oldsize,unsigned
  */
 void SGLObjList::Compile(bool force)
 {
-	
 	if(Objects.empty())return;
 	Clear();
 	if(check_sorting)
@@ -250,8 +258,10 @@ void SGLObjList::ListInfo()
 
 unsigned int SGLObjList::isThere(SGLObjBase *obj)
 {
-	
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
-		if(i->get()==obj)return i->use_count();
+	{
+		if(*i){if(i->get()==obj)return i->use_count();}
+		else{SGLprintError("Huch, da is ein Ungültiges Objekt in der Liste an Stelle %d von %d",distance(i, Objects.begin()),Objects.size());}
+	}
 	return 0;
 }

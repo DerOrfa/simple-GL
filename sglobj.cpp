@@ -27,8 +27,9 @@ SGLObjBase(PosX,PosY,PosZ,SizeFact)
 	priority=std;
 }
 
-GLuint SGLObj::Compile(bool draw)
+GLuint SGLObj::Compile(bool draw,bool free)
 {
+	is_free=free;
 	GLuint error=0,i;
 	bool EnableClip[5];
 
