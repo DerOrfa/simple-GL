@@ -6,7 +6,7 @@
 #include <queue>
 #include "../sglmisc.h"
 
-struct kante{SGLVektor *start,*end;};
+struct kante{SGLVektor *start,*end;QHDreiEck *nachbar;};
 
 QHDreiEck::QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei):SGLDreiEck(eins,zwei,drei)
 {
@@ -62,6 +62,12 @@ unsigned int QHDreiEck::hasKante(SGLVektor *eins,SGLVektor *zwei)
 	return 0;
 }
 
+QHDreiEck::~QHDreiEck()
+{
+	for(int i=0;i<3;i++)
+		if(Nachbar[i])Nachbar[i]->delNachbar(this);
+}
+
 subSGLPointCloud::subSGLPointCloud(int PktCnt,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ):
 SGLFlObj(NULL,PosX,PosY,PosZ,1)
 {
@@ -108,115 +114,6 @@ void subSGLPointCloud::generate()
 {
 	for(int i=0;i<pktCnt;i++)punkte[i].DrawPkt(.1);
 }
-
-SGLVektor subSGLPointCloud::getCenter()
-{
-// @todo "not really implemented yet!!"
-	return SGLVektor(0,0,0);
-}
-
-subSGLPointCloud::~subSGLPointCloud(){}
-
-int subSGLPointCloud::sortX(const void * P1,const void *P2)
-{
-	if(((SGLVektor*)P1)->SGLV_X<((SGLVektor*)P2)->SGLV_X)return -1;
-	else if(((SGLVektor*)P1)->SGLV_X>((SGLVektor*)P2)->SGLV_X)return 1;
-	else return 0;
-}
-
-int subSGLPointCloud::sortY(const void * P1,const void *P2)
-{
-	if(((SGLVektor*)P1)->SGLV_Y<((SGLVektor*)P2)->SGLV_Y)return -1;
-	else if(((SGLVektor*)P1)->SGLV_Y>((SGLVektor*)P2)->SGLV_Y)return 1;
-	else return 0;
-}
-
-int subSGLPointCloud::sortZ(const void * P1,const void *P2)
-{
-	if(((SGLVektor*)P1)->SGLV_Z<((SGLVektor*)P2)->SGLV_Z)return -1;
-	else if(((SGLVektor*)P1)->SGLV_Z>((SGLVektor*)P2)->SGLV_Z)return 1;
-	else return 0;
-}
-
-SGLVektor * subSGLPointCloud::splitList(SGLVektor List[],unsigned int cnt,unsigned int &cnt1,unsigned int &cnt2)
-{
-	cnt1=cnt/2;
-	cnt2=cnt-cnt1;
-	return List+cnt1;
-}
-
-
-SGLPointCloud::SGLPointCloud(int PktCnt,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ):
-SGLMetaObj(PosX,PosY,PosZ,1)
-{
-	cloud=new subSGLPointCloud(PktCnt,breite,hoehe,tiefe,PosX,PosY,PosZ);
-	init();
-	grow(0);
-	compileSubObjects();
-}
-
-SGLPointCloud::~SGLPointCloud()
-{
-	if(cloud)delete cloud;
-}
-
-void SGLPointCloud::compileSubObjects()
-{
-	Objs.clear();
-	TrObjs.clear();
-	Objs.push_back(cloud->Compile());
-	for(int i=hilfsLinien.size();i;i--)
-		Objs.push_back(hilfsLinien[i-1].Compile());
-	for(int i=seiten.size();i;i--)
-		Objs.push_back(seiten[i-1].Compile());
-}
-
-SGLVektor SGLPointCloud::getCenter()
-{
-	return cloud->getCenter();
-}
-
-
-/*!
-    \fn SGLPointCloud::init()
- */
-void SGLPointCloud::init()
-{
-	SGLVektor *pt1,*pt2,*pt3,*pt4;
-	cloud->getTetraeder(pt1,pt2,pt3,pt4);
-	seiten.clear();
-	if(QHDreiEck(pt1,pt2,pt3).canSee(*pt4))
-		seiten.push_back(QHDreiEck(pt1,pt3,pt2));
-	else
-		seiten.push_back(QHDreiEck(pt1,pt2,pt3));
-	
-	if(QHDreiEck(pt1,pt2,pt4).canSee(*pt3))
-		seiten.push_back(QHDreiEck(pt1,pt4,pt2));
-	else
-		seiten.push_back(QHDreiEck(pt1,pt2,pt4));
-	
-	seiten[0].addNachbar(&seiten.back());
-
-	if(QHDreiEck(pt1,pt3,pt4).canSee(*pt2))
-		seiten.push_back(QHDreiEck(pt1,pt4,pt3));
-	else
-		seiten.push_back(QHDreiEck(pt1,pt3,pt4));
-
-	seiten[0].addNachbar(&seiten.back());
-	seiten[1].addNachbar(&seiten.back());
-	
-	if(QHDreiEck(pt2,pt3,pt4).canSee(*pt1))
-		seiten.push_back(QHDreiEck(pt2,pt4,pt3));
-	else
-		seiten.push_back(QHDreiEck(pt2,pt3,pt4));
-	
-	seiten[0].addNachbar(&seiten.back());
-	seiten[1].addNachbar(&seiten.back());
-	seiten[2].addNachbar(&seiten.back());
-	
-	compileNextTime();
-}
-
 
 /*!
     \fn subSGLPointCloud::getExtrema(SGLVektor &maxX, SGLVektor &minX,SGLVektor &maxY,SGLVektor &minY, SGLVektor &maxZ, SGLVektor &minZ)
@@ -281,18 +178,100 @@ void subSGLPointCloud::getTetraeder(SGLVektor *&eins, SGLVektor *&zwei,SGLVektor
 	}
 }
 
+SGLVektor subSGLPointCloud::getCenter()
+{
+// @todo "not really implemented yet!!"
+	return SGLVektor(0,0,0);
+}
+
+subSGLPointCloud::~subSGLPointCloud(){}
+
+SGLPointCloud::SGLPointCloud(int PktCnt,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ):
+SGLMetaObj(PosX,PosY,PosZ,1)
+{
+	cloud=new subSGLPointCloud(PktCnt,breite,hoehe,tiefe,PosX,PosY,PosZ);
+	init();
+	compileSubObjects();
+}
+
+SGLPointCloud::~SGLPointCloud()
+{
+	if(cloud)delete cloud;
+}
+
+void SGLPointCloud::compileSubObjects()
+{
+	Objs.clear();
+	TrObjs.clear();
+	Objs.push_back(cloud->Compile());
+	
+	cout << distance(seiten.begin(), seiten.end())<<" Dreiecke" << endl;
+	for_each(seiten.begin(), seiten.end(), compObj<SGLFlObj>(&Objs));
+}
+
+SGLVektor SGLPointCloud::getCenter()
+{
+	return cloud->getCenter();
+}
+
+
+/*!
+    \fn SGLPointCloud::init()
+ */
+void SGLPointCloud::init()
+{
+	SGLVektor *pt1,*pt2,*pt3,*pt4;
+	//vier möglichst weit voneinander entfernte Punkte finden
+	cloud->getTetraeder(pt1,pt2,pt3,pt4);
+	
+	seiten.clear();
+	//Wenn Seite aus p1,p2 und p3 den vierten Punkt sehen kann
+	if(QHDreiEck(pt1,pt2,pt3).canSee(*pt4))
+		seiten.push_back(QHDreiEck(pt1,pt3,pt2));//sie anders herum eintragen
+	else
+		seiten.push_back(QHDreiEck(pt1,pt2,pt3));
+	
+	if(QHDreiEck(pt1,pt2,pt4).canSee(*pt3))//zweite Seite
+		seiten.push_back(QHDreiEck(pt1,pt4,pt2));
+	else
+		seiten.push_back(QHDreiEck(pt1,pt2,pt4));
+	
+	list<QHDreiEck>::iterator it=seiten.begin();
+	it->addNachbar(&seiten.back()); //erste und zweite Seite "bekannt machen"
+
+	if(QHDreiEck(pt1,pt3,pt4).canSee(*pt2))//dritte Seite
+		seiten.push_back(QHDreiEck(pt1,pt4,pt3));
+	else
+		seiten.push_back(QHDreiEck(pt1,pt3,pt4));
+
+	it->addNachbar(&seiten.back());//erste und dritte Seite "bekannt machen"
+	(++it)->addNachbar(&seiten.back());//zweite und dritte Seite "bekannt machen"
+	
+	if(QHDreiEck(pt2,pt3,pt4).canSee(*pt1))//vierte Seite
+		seiten.push_back(QHDreiEck(pt2,pt4,pt3));
+	else
+		seiten.push_back(QHDreiEck(pt2,pt3,pt4));
+	
+	(it=seiten.begin())->addNachbar(&seiten.back());//erste und vierte Seite "bekannt machen"
+	(++it)->addNachbar(&seiten.back());//zweite und vierte Seite "bekannt machen"
+	(++it)->addNachbar(&seiten.back());//dritte und vierte Seite "bekannt machen"
+	
+	compileNextTime();
+}
 
 /*!
     \fn SGLPointCloud::grow
  */
-int SGLPointCloud::grow(unsigned int seite)
+int SGLPointCloud::grow(list<QHDreiEck>::iterator seite)
 {
-	QHDreiEck *dEck=&seiten[seite];
+	QHDreiEck *dEck=&(*seite);
 		
-	double maxEntf=0;
 	SGLVektor *maxPkt=NULL;
 	queue<QHDreiEck*> offen;
 	queue<kante> kanten;
+	//Punkt mit möglichst großer Entf zur Fläche suchen
+	{
+	double maxEntf=0;
 	for(int i=0;i<cloud->pktCnt;i++)
 	{
 		//@todo Punke die zum dreieck gehören sind unintressant
@@ -308,10 +287,10 @@ int SGLPointCloud::grow(unsigned int seite)
 			maxPkt=&cloud->punkte[i];
 		}
 		else if(entf<0)
+		//Punkt liegt auf Falscher Seite - könnte möglicherweise weg
 		{}
 	}
-	
-	std::map<SGLVektor*,unsigned int> touched;
+	}
 	
 	if(maxPkt)
 	{
@@ -320,22 +299,55 @@ int SGLPointCloud::grow(unsigned int seite)
 			dEck=offen.front();
 			for(int i=0;i<3;i++)
 			{
-				if(dEck->Nachbar[i]->canSee(*maxPkt))
-					offen.push(dEck->Nachbar[i]);
+				QHDreiEck *kantenNachbar=dEck->Nachbar[i];
+				if(!kantenNachbar)continue;
+				if(kantenNachbar->canSee(*maxPkt))
+					offen.push(kantenNachbar);
 				else
 				{
-					kante kt={dEck->EckVektoren.Vekt[i],dEck->EckVektoren.Vekt[(i+1)%3]};
+					kante kt=
+					{
+						dEck->EckVektoren.Vekt[i],
+						dEck->EckVektoren.Vekt[(i+1)%3],
+						kantenNachbar
+					};
+					kantenNachbar->delNachbar(dEck);
 					kanten.push(kt);
 				}
 			}
+			for(list<QHDreiEck>::iterator it=seiten.begin();it!=seiten.end();it++)
+			{
+				if(&(*it)==dEck)
+				{
+					seiten.erase(it);
+					break;
+				}
+			}
 		}
-		touched[dEck->EckVektoren.Vekt[0]]=2;
-		touched[dEck->EckVektoren.Vekt[1]]=2;
-		touched[dEck->EckVektoren.Vekt[2]]=2;
 		
-/*		seiten.push_back(QHDreiEck(dEck->EckVektoren.Vekt[0],dEck->EckVektoren.Vekt[1],maxPkt));
-		seiten.erase(seiten.begin()+seite);*/
+		QHDreiEck *lastDr=NULL;
+		QHDreiEck *firstDr=NULL;
+		for(;!kanten.empty();kanten.pop())
+		{
+			kante kt=kanten.front();
+			seiten.push_back(QHDreiEck(kt.start,kt.end,maxPkt));
+			QHDreiEck *inserted=&seiten.back();
+			inserted->addNachbar(kt.nachbar);
+			if(lastDr)inserted->addNachbar(lastDr);
+			else firstDr=inserted;
+			lastDr=inserted;
+		}
+		firstDr->addNachbar(lastDr);
+		compileSubObjects();
 		compileNextTime();
 	}
 	return maxPkt ? 1:0;
+}
+
+/*!
+    \fn SGLPointCloud::on_mouse(SGLObjBase *target,SDL_Event event)
+ */
+void SGLPointCloud::on_mouse(SGLObjBase *target,SDL_Event event)
+{
+	cout << (((SGLPointCloud*)target)->grow(((SGLPointCloud*)target)->seiten.begin()) ? "Gefunden":"nicht Gefunden") << endl;
 }

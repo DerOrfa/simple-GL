@@ -32,6 +32,7 @@ class QHDreiEck : public SGLDreiEck
 {
 public:
 	QHDreiEck(SGLVektor *eins,SGLVektor *zwei,SGLVektor *drei);
+	~QHDreiEck();
 	QHDreiEck *Nachbar[3];
 	unsigned int hasKante(SGLVektor *eins,SGLVektor *zwei);
 	bool addNachbar(QHDreiEck *Nachbar);
@@ -47,8 +48,8 @@ public:
 	subSGLPointCloud *cloud;
 	void compileSubObjects();
 	SGLVektor getCenter();
-    void init();
-    int grow(unsigned int seite);
-	vector<QHDreiEck> seiten;
-	vector<SGLStrecke> hilfsLinien;
+	void init();
+	int grow(list<QHDreiEck>::iterator seite);
+	static void on_mouse(SGLObjBase *target,SDL_Event event);
+	list<QHDreiEck> seiten;
 };

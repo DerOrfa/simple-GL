@@ -46,6 +46,7 @@ void SGLSpace::procEvent(SDL_Event e)
 	case SDL_QUIT:OnQuit();exit(0);break;//Beendende Signale von OS (SIGINT, Fenster geschlossen ...)
 	case SDL_VIDEORESIZE:setVideoMode(e.resize.w,e.resize.h);
     }
+	callEventListeners(e.type,e);
 }
 
 bool SGLSpace::setup_video(int width, int height)
@@ -643,3 +644,33 @@ bool SGLSpace::setVideoMode(int width, int height, bool FullScreen,bool fixedSiz
 	reDraw();
 	return true;
 }
+
+void SGLSpace::addEventListener(Uint8 eventType,SDLEventListener evl)
+{
+	eventListeners.insert(pair<Uint8 , SDLEventListener>(eventType,evl));
+}
+
+void SGLSpace::addEventListener(Uint8 eventType,
+	SGLObjBase *target_obj,
+	void (*target_func)(SGLObjBase *target,SDL_Event event))
+{
+	SDLEventListener evl={target_obj,target_func};
+	addEventListener(eventType,evl);
+}
+
+/*!
+    \fn SGLSpace::callEventListeners(Uint8 type,SDL_Event event)
+ */
+void SGLSpace::callEventListeners(Uint8 type,SDL_Event &event)
+{
+	for(multimap<Uint8, SDLEventListener>::iterator it=eventListeners.find(type);
+		it!=eventListeners.end();
+		it++)
+	{
+		SGLObjBase *target=it->second.target;
+		it->second.target_func(target,event);
+		Uint8 newType=it->first;
+		if(newType!=type)break;
+	}
+}  
+

@@ -22,11 +22,21 @@
 #include "sglvektor.h"
 #include <list>
 
+#include <SDL.h>
+
 class SGLObjList;
 
 /**
 @author Enrico Reimer
 */
+
+template<class T> struct compObj : public unary_function<T&, void>
+{
+	compObj(vector<GLint> *targetList) {Objs=targetList;}
+	void operator() (T &x) {Objs->push_back(x.Compile()); }
+	vector<GLint> *Objs;
+};
+
 class SGLObjBase{
 public:
 	enum Prio{floor=INT_MIN,under=-10,std=0,flstd=10,ontop=INT_MAX};
@@ -74,4 +84,10 @@ protected:
 };
 
 #include "helper/sgldisplist.h"
+
+struct SDLEventListener
+{
+	SGLObjBase *target;
+	void (*target_func)(SGLObjBase *target,SDL_Event event);
+};
 #endif

@@ -127,17 +127,14 @@ SGLVektor SGLVektor::operator =(EVektor<GLdouble> &VektPtr)
 void SGLVektor::DrawVertex(SGLVektor* Normale)
 {
 	if(Normale)Normale->SetNormale();
-//	else if(glIsEnabled(GL_LIGHTING))SetNormale();
+	else{SGLprintWarning("Zeichne Vertex ohne Normale");}
+	DrawVertex();
+}
+
+void SGLVektor::DrawVertex()
+{
 	if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)
-	{
 		glColor3dv(Color);
-		int error; 
-//@todo kann SUN kein glError in glBegin ?
-/*		while(error=glGetError())
-		{
-			SGLprintError("[GLerror] %s\n",gluErrorString(GLenum(error)));
-		} */
-	}
 	else
 	{
 		switch(texKoord.size())
@@ -148,7 +145,8 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 	}
 	glVertex3d(SGLV_X,SGLV_Y,SGLV_Z);
 }
-void SGLVektor::SetNormale()
+
+inline void SGLVektor::SetNormale()
 {glNormal3d(SGLV_X,SGLV_Y,SGLV_Z);}
 
 void SGLVektor::SetColor(GLdouble R, GLdouble G, GLdouble B)

@@ -99,7 +99,8 @@ METASOURCES = AUTO
 SUBDIRS = backend_glf
 lib_LTLIBRARIES = libtext.la
 libtext_la_SOURCES = sgl3dtext.cpp sgl3dtext.h sglconsole.cpp sglconsole.h sgltextbackend.cpp sgltextbackend.h sgltext.cpp sgltext.h
-libtext_la_LIBADD = $(top_builddir)/libsgl/text/backend_glf/libtextbackend_glf.a
+
+libtext_la_LIBADD = $(top_builddir)/libsgl/text/backend_glf/libtextbackend_glf.la
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
@@ -112,7 +113,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libtext_la_LDFLAGS = 
 libtext_la_DEPENDENCIES =  \
-$(top_builddir)/libsgl/text/backend_glf/libtextbackend_glf.a
+$(top_builddir)/libsgl/text/backend_glf/libtextbackend_glf.la
 libtext_la_OBJECTS =  sgl3dtext.lo sglconsole.lo sgltextbackend.lo \
 sgltext.lo
 CXXFLAGS = @CXXFLAGS@

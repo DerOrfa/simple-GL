@@ -55,8 +55,10 @@ public:
 	GLdouble Ywink();
 	SGLVektor operator =(EVektor<GLdouble> &VektPtr);
 
-	void	DrawVertex(SGLVektor* Normale=0);
-	void	SetNormale();
+	void	DrawVertex(SGLVektor* Normale);
+	void	DrawVertex();
+	
+	inline void	SetNormale();
 	void	SetColor(GLdouble R=-1,GLdouble G=-1,GLdouble B=-1);
 	void	SetColor(unsigned char R,unsigned char G,unsigned char B);
 	void	SetColor(int R=-1,int G=-1,int B=-1);

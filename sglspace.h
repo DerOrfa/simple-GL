@@ -39,6 +39,7 @@
 
 #include "primitives/sglflobj.h"
 #include <SDL/SDL.h>
+#include <map>
 
 
 /**Basisklasse für alle SGL- Raumklassen
@@ -52,7 +53,9 @@ public:
 	bool Go(unsigned int Mode=1);
 	int DoIdle;
 	void OnIdle();
-
+	
+	multimap<Uint8, SDLEventListener> eventListeners;
+	
 	struct
 	{
 		double OldX,OldY;
@@ -125,6 +128,9 @@ public:
 	virtual void OnQuit();
 	void CallQuit();
 	bool setVideoMode(int xsize=800, int ysize=600, bool FullScreen=false,bool fixedSize=false);
+	void addEventListener(Uint8 eventType,SDLEventListener evl);
+	void addEventListener(Uint8 eventType,SGLObjBase *target_obj,void (*target_func)(SGLObjBase *target,SDL_Event event));
+	void callEventListeners(Uint8 type,SDL_Event &event);
 
 private:
 	bool setup_video(int w,int h);
