@@ -89,6 +89,7 @@ void SGLObjBase::metaGenerate()
 //	SGLprintInfo("Generiere \"%s\" Prio: %d ID: %d",guesType(),priority,ID);
 	generate();
 	unloadMatrix();
+	notifyChange();
 }
 
 /*!
@@ -141,7 +142,7 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 
 
 /*!
-	Stellt sicher, daï¿½das Objekt bei nï¿½hster Gelegenheit mindestens einmal Kompiliert wird
+	Stellt sicher, daß das Objekt bei nächster Gelegenheit Kompiliert wird
     \fn SGLObjBase::compileNextTime
  */
 void SGLObjBase::compileNextTime()

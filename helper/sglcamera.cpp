@@ -40,7 +40,6 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 	LookAt=LookAt+Pos;
 
 	Compile();
-	notifyChange();
 }
 
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
@@ -54,21 +53,18 @@ void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 
 	Pos=Pos+LookAt;
 	Compile();
-	notifyChange();
 }
 
 void SGLBaseCam::Roll(GLdouble degree)
 {
 	UpVect=UpVect.Rotate(EVektor<GLdouble>(Pos-LookAt),degree);
 	Compile();
-	notifyChange();
 }
 
 void SGLBaseCam::MoveZoom(GLdouble fact)
 {
 	Pos=(EVektor<GLdouble>(Pos-LookAt)*fact)+LookAt;
 	Compile();
-	notifyChange();
 }
 void SGLBaseCam::OptZoom(GLdouble fact)
 {
@@ -90,7 +86,6 @@ void SGLBaseCam::ResetView()
 	Angle=30;
 	ResetUpVect();
 	Compile();
-	notifyChange();
 }
 
 void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull)
