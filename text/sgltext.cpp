@@ -29,8 +29,6 @@ SGLText::~SGLText()
 	delete Backend;
 }
 
-
-
 /*!
     \fn SGLText::loadBackend(char fontname[])
  */

@@ -31,7 +31,7 @@ public:
 	~SGLTextur();
 	GLuint	ID;
 	GLenum TexType;
-	bool valid;
+	bool valid,MipMap;
 	bool Load2DImage(const char *imageFile, bool MipMap=true);
 	bool Load2DImage(char *imageFile, bool MipMap=true);
 	bool Load3DImage(char *imageFile, bool MipMap=true);

@@ -370,7 +370,7 @@ void SGLSpace::setFlags(bool reCompile)
 	glDisable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
-	glEnable(GL_LINE_SMOOTH);
+//	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_LIGHTING);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 

@@ -108,4 +108,16 @@ public:
 	SGLQuadrat(GLdouble SeitenLaenge);
 };
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+  *@author Enrico Reimer
+  */
+class SGL3DPlane : public SGLRechtEck
+{
+public:
+	SGL3DPlane(GLdouble breite,GLdouble hoehe);
+	void resetTexKoord(GLfloat depth);
+};
+
 #endif

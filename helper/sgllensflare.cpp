@@ -211,19 +211,18 @@ void SGLLensFlare::generate()
 	glGetIntegerv(GL_BLEND_DST,&blendDst);
 
 
-	glEnable(GL_TEXTURE_2D);
+	if(!Texture2D)glEnable(GL_TEXTURE_2D);
+	if(!DoBlend)glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE);
 
 	GLdouble clipface= Camera->ClipFace >= 1 ?  Camera->ClipFace+.01 :1;
 	DoFlares(Camera,clipface);
 
 	glEnable(GL_DEPTH_TEST);
-	if(Texture2D)glDisable(GL_TEXTURE_2D);
+	if(!Texture2D)glDisable(GL_TEXTURE_2D);
 	if(!DoBlend)glDisable(GL_BLEND);
 	glBlendFunc(blendSrc,blendDst);
-	glDisable(GL_TEXTURE_2D);
 }
 
 Flare SGLLensFlare::set_flare(int type, float location, float scale, GLfloat color[3], float colorScale)
@@ -334,16 +333,16 @@ void SGLLensFlare::DoFlares(SGLCamera *cam, GLfloat near_clip)
 		glBegin(GL_QUADS);
 
 			glTexCoord2f(0.0, 0.0);
-			A.DrawVertex();
+			A.DrawPureVertex();
 
 			glTexCoord2f(1.0, 0.0);
-			B.DrawVertex();
+			B.DrawPureVertex();
 
 			glTexCoord2f(1.0, 1.0);
-			C.DrawVertex();
+			C.DrawPureVertex();
 
 			glTexCoord2f(0.0, 1.0);
-			D.DrawVertex();
+			D.DrawPureVertex();
 
 		glEnd();
 
@@ -370,6 +369,13 @@ void SGLLensFlare::setup_texture(char *filename, GLuint texobj, GLenum minFilter
 
 void SGLLensFlare::load_textures(void)
 {
+#ifdef DATA_DIR
+	#define PICS_DIR DATA_DIR "/pics"
+#else
+	#warning DATA_DIR ist nicht def.
+	#define PICS_DIR "/opt/prog/simpleGL/libsgl/data/pics"
+#endif
+	
 	char filename[256];
 	GLenum minFilter, maxFilter;
 	short id = 1, i;
@@ -382,14 +388,14 @@ void SGLLensFlare::load_textures(void)
 	for (i = 0; i < 3; i++)
 	{
 		shineTex[i] = id;
-		sprintf(filename, "data/pics/Shine%d.bw", i);
+		sprintf(filename, PICS_DIR "/Shine%d.bw", i);
 		setup_texture(filename, shineTex[i], minFilter, maxFilter);
 		id++;
 	}
 	for (i = 0; i < 6; i++)
 	{
 		flareTex[i] = id;
-		sprintf(filename, "data/pics/Flare%d.bw", i + 1);
+		sprintf(filename, PICS_DIR "/Flare%d.bw", i + 1);
 		setup_texture(filename, flareTex[i], minFilter, maxFilter);
 		id++;
 	}

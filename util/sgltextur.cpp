@@ -42,7 +42,8 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 
 bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 {
-	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	this->MipMap=MipMap;
+	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
 	TexType=GL_TEXTURE_2D;
 
 	if(MipMap)
@@ -71,7 +72,8 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 
 bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
-	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	this->MipMap=MipMap;
+	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
 	TexType=GL_TEXTURE_3D;
 
 	GLfloat pixels[32][32][32][3];
@@ -105,7 +107,7 @@ bool SGLTextur::loadTex()
 	GLboolean ret;
 	if(glIsTexture(ID))
 	{
-		short dim=TexType-GL_TEXTURE_1D+1;
+		short dim=def2dim(TexType);
 		if(glIsEnabled(TexType))
 		{
 			SGLprintWarning("%dD-Texturen sind schon aktiviert",dim,ID);
@@ -130,7 +132,7 @@ bool SGLTextur::unloadTex()
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
 	if(glIsEnabled(TexType))glDisable(TexType);
-	else{SGLprintWarning("Hä, %dD-Texturen waren gar nicht aktiv ?",TexType-GL_TEXTURE_1D+1);}
+	else{SGLprintWarning("Hä, %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
 	return ret;
@@ -144,7 +146,7 @@ void SGLTextur::SetParams()
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,MipMap ? GL_LINEAR_MIPMAP_LINEAR:GL_LINEAR);
 	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
 	glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);

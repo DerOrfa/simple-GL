@@ -404,3 +404,19 @@ bool SGLPolygon::canSee(SGLVektor aim)
 {
 	return (spat(aim)>=0);
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*!
+    \fn SGL3DPlane::SGL3DPlane(GLdouble SeitenLaenge)
+ */
+SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe):SGLRechtEck(breite,hoehe){}
+
+void SGL3DPlane::resetTexKoord(GLfloat depth)
+{
+	setTexKoord(0,0,0,depth);
+	setTexKoord(1,0,1,depth);
+	setTexKoord(2,1,1,depth);
+	setTexKoord(3,1,0,depth);
+	setTexKoord(-1,.5,.5,depth);
+}

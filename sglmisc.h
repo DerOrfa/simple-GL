@@ -19,6 +19,8 @@
 #define SGLMISC_H
 
 #include <stdio.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
 
 #define X_AXE	1
 #define Y_AXE	2
@@ -54,6 +56,7 @@ void _SGLprintInfo(const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
 void writeOut(FILE *out,const char text[], ...);
+short def2dim(GLenum def);
 
 extern short SGLshowErrors,SGLshowInfos,SGLshowWarnings;
 
