@@ -21,9 +21,9 @@ export DH_OPTIONS
 export CFLAGS = -Wall -g3
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
+	CFLAGS += -O0 
 else
-	CFLAGS += -O2
+	CFLAGS += -O0
 endif
 
 configure: configure-stamp
@@ -106,7 +106,7 @@ binary-common:
 #	dh_installinfo
 	dh_installman
 	dh_link
-	dh_strip
+#	dh_strip
 	dh_compress 
 #	dh_fixperms
 #	dh_perl

@@ -10,6 +10,7 @@
 #include "sglconsole.h"
 
 #include  "backend_glf/sgltextbackend_glf.h"
+#include "../util/sglmaterial.h"
 
 SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
 {

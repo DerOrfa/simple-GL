@@ -20,8 +20,12 @@
 
 
 
-#include "../util/sglmaterial.h"
 #include "../sglobj.h"
+#include <boost/shared_ptr.hpp>
+
+class SGLMaterial;
+
+typedef	boost::shared_ptr<SGLMaterial> MaterialPtr;
 
 /**
   *@author Enrico Reimer

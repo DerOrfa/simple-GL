@@ -36,6 +36,7 @@
 
 #include "text/backend_glf/sgltextbackend_glf.h"
 #include <assert.h>
+#include "util/sglmaterial.h"
 
 bool SGLSpace::globalColorAktive=false;
 
@@ -125,7 +126,6 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 
 	MouseInfo.OldX=MouseInfo.OldY=0;
 	MouseInfo.FollowMouse=true;
-	StatusInfo.StatusString[0]=0;
 	resizeMode=SGLBaseCam::scaleView;
 	StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;

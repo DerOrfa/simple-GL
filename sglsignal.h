@@ -18,6 +18,18 @@
 /**
 @author Enrico Reimer,,,
 */
+
+#ifdef signals
+#define QT_KONFLIKT
+#endif
+#ifdef slots
+#define QT_KONFLIKT
+#endif
+#ifdef QT_KONFLIKT
+#warning QT versucht gerade (warscheinlich erfolgreich) SGLSignals "kaputtzumachen"
+#warning du solltest libsgl-header immer vor QT headern laden - das hilft MANCHMAL
+#endif
+
 // MOC_SKIP_BEGIN
 using namespace boost::signals;
 class SGLSlot:public trackable
@@ -47,5 +59,4 @@ public:
 	}
 };
 // MOC_SKIP_END
-
 #endif

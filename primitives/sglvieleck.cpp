@@ -19,6 +19,7 @@
 #include "../sglmisc.h"
 #include <assert.h>
 #include <GL/glu.h>
+#include "../util/sglmaterial.h"
 
 /*!
     \fn SGLPolygon::SGLPolygon()

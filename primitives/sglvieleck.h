@@ -20,6 +20,7 @@
 
 #include "sglflobj.h"
 #include "../helper/sglcamera.h"
+#include "../util/sgltextur.h"
 
 /**
   *@author Enrico Reimer

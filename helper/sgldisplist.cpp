@@ -241,25 +241,31 @@ void SGLObjList::Compile(bool force)
  */
 void SGLObjList::ListInfo()
 {
-	char *elemente=(char*)malloc(sizeof(char));elemente[0]=0;
-	unsigned int size=0;
-	char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
-	unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
-
-	unsigned int cnt=0;
-	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+	if(SGLshowInfos)
 	{
-		shared_obj ob=*i;
-		unsigned int oldlen=strlen(elemente);
-		unsigned int newnlen=oldlen+FormatStr_Len+strlen(cnt)+strlen(ob->guesType())+strlen(ob->priority)+strlen(ob->ID);
-		if(newnlen>size)
+		char *elemente=(char*)malloc(sizeof(char));elemente[0]=0;
+		unsigned int size=0;
+		char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
+		unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
+	
+		unsigned int cnt=0;
+		for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 		{
-			elemente=(char*)realloc(elemente,(newnlen+1)*sizeof(char));
-			size=newnlen;
+			shared_obj ob=*i;
+			unsigned int oldlen=strlen(elemente);
+			unsigned int newnlen=oldlen+FormatStr_Len+strlen(cnt)+strlen(ob->guesType())+strlen(ob->priority)+strlen(ob->ID);
+			if(newnlen>size)
+			{
+				elemente=(char*)realloc(elemente,(newnlen+1)*sizeof(char));
+				size=newnlen;
+			}
+			sprintf(elemente+oldlen,FormatStr,cnt,ob->guesType(),ob->priority,ob->ID);
 		}
-		sprintf(elemente+oldlen,FormatStr,cnt,ob->guesType(),ob->priority,ob->ID);
+		SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
+		//@todo valgrind sagt hier was von "invalid write of size 1"
+		//@todo und das realloc passt ihm auch nich (im 2+n ten durchlauf)
+		//@todo und es hat recht, wenn das hier aktiv is, fällt alles Folgende auseinander
 	}
-	SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
 }
 
 

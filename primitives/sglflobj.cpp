@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <GL/glu.h>
 #include "../sglmisc.h"
+#include "../util/sglmaterial.h"
 
 SGLFlObj::SGLFlObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObj(PosX,PosY,PosZ,SizeFact)
