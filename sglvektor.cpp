@@ -90,6 +90,7 @@ SGLVektor SGLVektor::Rotate(SGLVektor RotVekt, GLdouble Amount)
 	return SGLVektor(RotMat * (*this));
 }
 
+//Der Winkel zu Z-Achse bei Rotation um Y-achse
 GLdouble SGLVektor::Ywink()
 {
 	GLdouble teiler=sqrt(SGLV_X*SGLV_X+SGLV_Z*SGLV_Z);
@@ -104,6 +105,8 @@ GLdouble SGLVektor::Ywink()
 		else return 180+ACOS(SGLV_X/teiler);
 	}
 }
+
+//Der Winkel zu Z-Achse bei Rotation um X-achse
 GLdouble SGLVektor::Xwink()
 {
 	GLdouble teiler=sqrt(SGLV_Z*SGLV_Z+SGLV_Y*SGLV_Y);

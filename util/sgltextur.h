@@ -42,7 +42,8 @@ public:
     GLint getTexInfo(GLenum pname);
     GLint getTexElemBitSize();
     GLint getTexByteSize();
-	bool weich,repeat;
+    void freeTexture();
+	bool weich,repeat,shouldBeLoaded;
 	bool valid,MipMap,loaded;
 };
 

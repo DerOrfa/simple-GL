@@ -46,6 +46,7 @@ public:
 
 	void MoveZoom(GLdouble fact);
 	void OptZoom(GLdouble fact);
+	void MoveAimTo(GLdouble x, GLdouble y, GLdouble z);
 	void MoveAim(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
 	void MoveCam(GLdouble xAmount, GLdouble yAmount=0, GLdouble zAmount=0);
 	double ViewLength();
@@ -55,14 +56,17 @@ public:
 	GLdouble Angle,ClipFace,ClipHoriz;
 	double ViewFormat;
 
-	void ReCalcUpVect(bool PosIsOnNull=false);
-	void ResetUpVect();
+	void ReCalcUpVect(bool PosIsOnNull=false,double deg=0);
+	void ResetUpVect(double rotdeg=0);
 
     SGLVektor getCenter();
     void getViewRect(SGLVektor Ecken[4]);
 	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
 	SGLVektor getLookVektor();
     bool showCross,move_cam_with_aim;
+	bool lockRoll,lockGierCam,lockKippCam;
+	bool lockGierAim,lockKippAim;
+	bool lockMoveZoom,lockOptZoom;
 };
 
 class SGLCamera: public SGLBaseCam

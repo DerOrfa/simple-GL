@@ -17,6 +17,7 @@
 
 #include "sgltextur.h"
 #include "../sglmisc.h"
+#include <GL/glu.h>
 #ifdef USE_DEVIL
 	#include <IL/ilut.h>
 #endif
@@ -25,7 +26,7 @@ SGLTextur::SGLTextur(const char *imageFile)
 {
 	weich=repeat=true;	
 	if(imageFile)Load2DImage(imageFile);
-	loaded=false;
+	shouldBeLoaded=loaded=false;
 }
 
 bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
@@ -41,7 +42,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 {
 #ifdef USE_DEVIL
 	this->MipMap=MipMap;
-	if(ID>0 && glIsTexture(ID))glDeleteTextures(1,&ID);ID=0;
+	freeTexture();
 	TexType=GL_TEXTURE_2D;
 
 	if(MipMap)
@@ -100,10 +101,11 @@ bool SGLBaseTex::loadTex()
 		SGLTextur::TexLoaded=dim;
 		loaded=true;
 
-		if(!glAreTexturesResident(1,&ID,&ret))
+		if(!glAreTexturesResident(1,&ID,&ret) && shouldBeLoaded)
 		{
-			SGLprintWarning("Die %dD-Textur \"%d\" ist nicht im Grafikspeicher",dim,ID);
+			SGLprintInfo("Die %dD-Textur \"%d\" ist nicht im Grafikspeicher",dim,ID);
 		}
+		shouldBeLoaded=true;
 	}
 	else{SGLprintError("OpenGL kennt die %dD-Textur \"%d\" nicht",dim,ID);}
 	loadMatrix();
@@ -151,7 +153,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei &width,GLsizei &heigh
 	GLsizei w=2,h=2,d=2;
 	for(GLint x, y, z;;) 
 	{
-		glTexImage3DEXT(GL_PROXY_TEXTURE_3D_EXT,0,internalFormat,w+(border ? 2:0),h+(border ? 2:0),d+(border ? 2:0),(border ? 1:0),format,type,NULL);
+		glTexImage3D(GL_PROXY_TEXTURE_3D_EXT,0,internalFormat,w+(border ? 2:0),h+(border ? 2:0),d+(border ? 2:0),(border ? 1:0),format,type,NULL);
 		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_WIDTH,  &x);
 		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_HEIGHT, &y);
 		glGetTexLevelParameteriv(GL_PROXY_TEXTURE_3D_EXT, 0, GL_TEXTURE_DEPTH,  &z);
@@ -162,6 +164,12 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei &width,GLsizei &heigh
 			if(d<depth)d=d<<1;
 		}
 		else break;
+	}
+	GLuint gluerr = glGetError();
+	if(gluerr)
+	{
+		SGLprintError("%s beim Prüfen der Texturdaten [GLerror]",gluErrorString(gluerr));
+		w=h=d=0;
 	}
 	width = w;
 	if(&height != &width)height= h;
@@ -245,4 +253,22 @@ GLint SGLBaseTex::getTexByteSize()
 	}
 	#undef NZ
 	return 0;
+}
+
+
+/*!
+    \fn SGLBaseTex::freeTexture()
+ */
+void SGLBaseTex::freeTexture()
+{
+	if(ID<=0 || glIsTexture(ID))
+	{
+		SGLprintWarning("Versuch die ungültige Textur %d zu löschen",ID);
+	}
+	else 
+	{
+		glDeleteTextures(1,&ID);
+		ID=0;
+		shouldBeLoaded=false;
+	}
 }

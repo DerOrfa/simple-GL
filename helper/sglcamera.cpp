@@ -26,17 +26,24 @@ SGLBaseCam::SGLBaseCam(GLdouble PosX,GLdouble PosY,GLdouble PosZ):SGLHelper()
 	Angle=30;
 	ViewFormat=1;
 	move_cam_with_aim=true;
+	lockRoll=lockGierCam=lockKippCam=false;
+	lockGierAim=lockKippAim=false;
+	lockMoveZoom=lockOptZoom=false;
 	ResetUpVect();
 }
 
 void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 {
+	if(lockGierAim && lockKippAim)return;
 	LookAt=LookAt-Pos;
 
-	LookAt=LookAt.Rotate(UpVect,Xdeg);
-	SGLVektor HelpVect=UpVect.Rotate(LookAt,90);
-	LookAt=LookAt.Rotate(HelpVect,Ydeg);
-	UpVect=UpVect.Rotate(HelpVect,Ydeg);
+	if(!lockGierAim)LookAt=LookAt.Rotate(UpVect,Xdeg);
+	if(!lockKippAim)
+	{
+		SGLVektor HelpVect=UpVect.Rotate(LookAt,90);
+		LookAt=LookAt.Rotate(HelpVect,Ydeg);
+		UpVect=UpVect.Rotate(HelpVect,Ydeg);
+	}
 
 	LookAt=LookAt+Pos;
 
@@ -45,30 +52,36 @@ void SGLBaseCam::RotateAim(GLdouble Xdeg,GLdouble Ydeg)
 
 void SGLBaseCam::RotateCam(GLdouble Xdeg, GLdouble Ydeg)
 {
+	if(lockGierCam && lockKippCam)return;
 	Pos=Pos-LookAt;
 
-	Pos=Pos.Rotate(UpVect,Xdeg);
-	SGLVektor HelpVect=UpVect.Rotate(Pos,90);
-	Pos=Pos.Rotate(HelpVect,Ydeg);
-	UpVect=UpVect.Rotate(HelpVect,Ydeg);
-
+	if(!lockGierCam)Pos=Pos.Rotate(UpVect,Xdeg);
+	if(!lockKippCam)
+	{
+		SGLVektor HelpVect=UpVect.Rotate(Pos,90);
+		Pos=Pos.Rotate(HelpVect,Ydeg);
+		UpVect=UpVect.Rotate(HelpVect,Ydeg);
+	}
 	Pos=Pos+LookAt;
 	Compile();
 }
 
 void SGLBaseCam::Roll(GLdouble degree)
 {
+	if(lockRoll)return;
 	UpVect=UpVect.Rotate(EVektor<GLdouble>(Pos-LookAt),degree);
 	Compile();
 }
 
 void SGLBaseCam::MoveZoom(GLdouble fact)
 {
+	if(lockMoveZoom)return;
 	Pos=(EVektor<GLdouble>(Pos-LookAt)*fact)+LookAt;
 	Compile();
 }
 void SGLBaseCam::OptZoom(GLdouble fact)
 {
+	if(lockOptZoom)return;
 	Angle/=fact;
 	if(Angle>179)Angle=179;
 	if(Angle<1)Angle=1;
@@ -89,32 +102,60 @@ void SGLBaseCam::ResetView()
 	Compile();
 }
 
-void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull)
+/*
+	Stellt den UpVekt basierend auf aktuellem UpVekt neu auf.
+	
+	Bildet Senkrechte auf Ebene von aktuellem UpVekt und dem Vektor vom Cam zum Ziel.
+	Rotiert den Vektor vom Cam zum Ziel um diese Senkrechte um 90 Grad, und Normalisiert das Erg.
+*/
+
+void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull,double rotdeg)
 {
 	if(!PosIsOnNull)Pos=Pos-LookAt;
 	SGLVektor HelpVekt(Pos.kreuzprod(UpVect));
 	UpVect=Pos.Rotate(HelpVekt,90);
+	if(rotdeg)UpVect=UpVect.Rotate(Pos,rotdeg);
 	UpVect.Normalize();
 	if(!PosIsOnNull)Pos=Pos+LookAt;
 }
 
-void SGLBaseCam::ResetUpVect()
+/*
+	Stellt den UpVect neu auf (Senkrecht auf ebene aus X/Z und Pos)
+	Wenn deg angegeben ist, wird UpVect entsprechend nachträglich um Pos rotiert
+*/
+void SGLBaseCam::ResetUpVect(double rotdeg)
 {
 	UpVect=SGLVektor(0,1);
-	ReCalcUpVect();
+	ReCalcUpVect(false,rotdeg);
+}
+
+void SGLBaseCam::MoveAimTo(GLdouble x, GLdouble y, GLdouble z)
+{
+	SGLVektor newAim=SGLVektor(x,y,z);
+	SGLVektor amount=newAim-LookAt;
+	LookAt=newAim;
+	if(move_cam_with_aim)MoveCam(amount.SGLV_X, amount.SGLV_Y, amount.SGLV_Z);
+	else
+	{
+		ReCalcUpVect();
+		Compile();
+	}
 }
 
 void SGLBaseCam::MoveAim(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
-	LookAt=LookAt-SGLVektor(xAmount,yAmount,zAmount);
+	LookAt=LookAt+SGLVektor(xAmount,yAmount,zAmount);
 	if(move_cam_with_aim)MoveCam(xAmount, yAmount, zAmount);
-	else ReCalcUpVect();
-	Compile();
+	else 
+	{
+		ReCalcUpVect();	
+		Compile();
+	}
 }
 
 void SGLBaseCam::MoveCam(GLdouble xAmount, GLdouble yAmount, GLdouble zAmount)
 {
-	Pos   =Pos   -SGLVektor(xAmount,yAmount,zAmount);
+	Pos   =Pos   +SGLVektor(xAmount,yAmount,zAmount);
 	ReCalcUpVect();
 	Compile();
 }

@@ -241,7 +241,7 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam*Cam)
 	double Yval=(RelY-MouseInfo.OldY);
 	SGLVektor V1=(Camera->UpVect.Rotate(Camera->getLookVektor(),-90))*Xval;
 	SGLVektor V2=Camera->UpVect*Yval;
-	SGLVektor V = (V1+V2)*10;
+	SGLVektor V = (V1+V2)*-10;
 	Cam->MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
@@ -436,7 +436,8 @@ void SGLSpace::defaultCam(SGLBaseCam *cam)
 	if(isMyCam)delete Camera;
 	isMyCam=false;
 	registerObj(Camera=cam);
-	Camera->ViewFormat=StatusInfo.WindowWidth/StatusInfo.WindowHeight;
+	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)Camera->ViewFormat=StatusInfo.WindowWidth/StatusInfo.WindowHeight;
+	else {SGLprintWarning("Die Bilddimensionen sind ungültig");}
 	Camera->Compile();
 
 	Grids.X->FaceAt=&Camera->Pos;
