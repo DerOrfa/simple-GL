@@ -510,28 +510,33 @@ void SGLSpace::setGridsSize(GLuint size)
  */
 void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 {
-	tex.changed.connect(reDraw);
+	tex.changed.connect(numeric_limits<group_type>::max(), reDraw);
+}
+
+void SGLSpace::draw()
+{
+	if(!StatusInfo.Processing)
+	{
+		StatusInfo.Processing=true;
+		resetView(0);
+		callHelper(1);
+		DrawExtObjs();
+		callHelper(2);
+
+		resetView(-1);
+		resetView(1);
+		show_status();
+	
+		printErrors();
+		glFinish();
+
+		StatusInfo.Processing=false;
+	}
+	else {SGLprintError("Tue grad tun");}
 }
 
 SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
 void SGLSpace::redrawSlot::operator()() 
 {
-	if(!myspace->StatusInfo.Processing)
-	{
-		myspace->StatusInfo.Processing=true;
-		myspace->resetView(0);
-		myspace->callHelper(1);
-		myspace->DrawExtObjs();
-		myspace->callHelper(2);
-
-		myspace->resetView(-1);
-		myspace->resetView(1);
-		myspace->show_status();
-	
-		myspace->printErrors();
-		glFinish();
-
-		myspace->StatusInfo.Processing=false;
-	}
-	else {SGLprintError("Tue grad tun");}
+	myspace->callUpdate();
 }

@@ -111,6 +111,8 @@ public:
 	void TwoSided(bool TwoSideRendering=true);
 
 	void CompileIntObs();
+	virtual void callUpdate()=0;
+	void draw();
 	bool reCompileIntObs(bool redraw=true);
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
 	void registerObj(shared_obj Obj);

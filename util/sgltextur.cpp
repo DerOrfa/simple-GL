@@ -425,10 +425,6 @@ void SGLBaseTex::replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr
 	}
 }
 
-
-/*!
-    \fn SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
- */
 void SGLBaseTex::addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
 {
 	addMTex(tex,boost::shared_ptr<SGLBaseTex>(),call_changed);
