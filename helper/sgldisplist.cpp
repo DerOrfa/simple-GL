@@ -164,7 +164,7 @@ bool SGLObjList::removeOb_Ptr(SGLObjBase *obj)
 		ObjPtr[i-1]=ObjPtr[i];
 	ObjPtr[i-1]=NULL;
 	ObjCnt_Ptr--;
-	obj->myList=NULL;
+	if(obj->myList==this)obj->myList=NULL;
 	return true;
 }
 
