@@ -13,7 +13,6 @@ SGLMetaObj::SGLMetaObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFa
 :SGLObj(PosX,PosY,PosZ,SizeFact)
 {}
 
-
 SGLMetaObj::~SGLMetaObj()
 {
 	Objs.clear();

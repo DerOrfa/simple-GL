@@ -20,21 +20,25 @@
 #include <GL/glu.h>
 #include "../sglmisc.h"
 
-SGLFlObj::SGLFlObj(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
+SGLFlObj::SGLFlObj(SGLMaterial* Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
 {
 	GLint MasterPolyMode[2];
 	glGetIntegerv(GL_POLYGON_MODE,MasterPolyMode);
 	VisMode=GLenum(MasterPolyMode[0]);
-	Mat=0;
-	resetMaterial(Material);
+	resetMaterial(boost::shared_ptr<SGLMaterial>(Material));
 	priority=flstd;
 	twoSideRender=false;
 }
 
-SGLFlObj::~SGLFlObj()
+SGLFlObj::SGLFlObj(const SGLFlObj& src):SGLObj(src)
 {
-	if(MatIsMine)delete Mat;
+	VisMode=src.VisMode;
+	Mat=src.Mat;
+	twoSideRender=src.twoSideRender;
 }
+
+
+SGLFlObj::~SGLFlObj(){}
 
 GLuint SGLFlObj::Compile()
 {
@@ -136,18 +140,12 @@ void SGLFlObj::DrahtGitter(bool DO)
 		VisMode=GL_FILL;
 }
 
-void SGLFlObj::resetMaterial(SGLMaterial *NewMaterial)
+void SGLFlObj::resetMaterial(boost::shared_ptr<SGLMaterial> NewMaterial)
 {
-	if(Mat)
-	{
-		if(MatIsMine)delete Mat;
-		Mat=0;
-	}
-	if(MatIsMine=!NewMaterial)Mat= new SGLMaterial;
-	else Mat=NewMaterial;
+	Mat= NewMaterial ? NewMaterial : boost::shared_ptr<SGLMaterial> (new SGLMaterial);
 /*	if(Mat && Mat->tex && Mat->tex->valid)
 		resetTexKoord();*/
-	//nicht mehr nï¿½ig, da ALLE Texturkoordinaten haben
+	//nicht mehr nötig, da ALLE Texturkoordinaten haben
 }
 
 /*!

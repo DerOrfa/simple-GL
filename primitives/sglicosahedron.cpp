@@ -18,7 +18,7 @@
 #include "sglicosahedron.h"
 
 SGLIcosahedron::SGLIcosahedron(unsigned short int SubDivisions,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
-SGLFlObj(0,PosX,PosY,PosZ,SizeFact)
+SGLFlObj(NULL,PosX,PosY,PosZ,SizeFact)
 {
 	X= 0.525731112119133606;
 	Z= 0.850650808352039932;

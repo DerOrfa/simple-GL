@@ -22,6 +22,7 @@
 
 #include "../util/sglmaterial.h"
 #include "../sglobj.h"
+#include <boost/shared_ptr.hpp>
 
 /**
   *@author Enrico Reimer
@@ -29,16 +30,22 @@
 class SGLFlObj : public SGLObj
 {
 public:
-	SGLFlObj(SGLMaterial *Material=0,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLFlObj(
+		SGLMaterial *Mat=NULL,
+		GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,
+		GLdouble SizeFact=1
+		);
+	SGLFlObj(const SGLFlObj& src);
+	
 	~SGLFlObj();
 	GLuint Compile();
-	GLenum VisMode;
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);
-	void resetMaterial(SGLMaterial *NewMaterial=0);
+	void resetMaterial(boost::shared_ptr<SGLMaterial> NewMaterial=boost::shared_ptr<SGLMaterial>());
     virtual void resetTexKoord();
-	SGLMaterial *Mat;
-	bool MatIsMine;
+	
+	GLenum VisMode;
+	boost::shared_ptr<SGLMaterial> Mat;
     bool twoSideRender;
 };
 

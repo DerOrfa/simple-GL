@@ -21,7 +21,6 @@ SGL3DText::SGL3DText(const char Text[], char fontname[],SGLMaterial *Material,GL
 
 SGL3DText::~SGL3DText()
 {
-	if(MatIsMine)delete Mat;
 }
 
 void SGL3DText::generate()

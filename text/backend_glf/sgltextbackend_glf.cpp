@@ -104,7 +104,7 @@ void SGLTextBackend_glf::generate_3DText(GLdouble tiefe,string myText,GLenum Vis
 
 		strcpy(tmp,myText.c_str());
 		getDim(myText,&width,NULL,&tiefe,&moveVekt,align);
-		cout << moveVekt << endl;
+//		cout << moveVekt << endl;
 		moveVekt=-moveVekt;
 		glPushMatrix();
 		glTranslated(moveVekt.SGLV_X,moveVekt.SGLV_Y,moveVekt.SGLV_Z);

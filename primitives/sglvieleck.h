@@ -27,23 +27,19 @@
 class SGLPolygon : public SGLFlObj
 {
 public:
+	typedef boost::shared_ptr<SGLVektor> VektorPtr;
+	typedef vector<VektorPtr> VektorList;
 	SGLPolygon();
-	SGLPolygon(const SGLPolygon &PolygonPtr);
 	SGLPolygon(SGLVektor Ecken[],short int VektCnt);
-	SGLPolygon(SGLVektor *Ecken[],short int VektCnt);
-	~SGLPolygon();
 
 	void generate();
 
 	void CopyEckVekt(SGLVektor Ecken[],short int VektCnt);
-	void CopyEckVekt(SGLVektor *Ecken[],short int VektCnt);
-	void LinkEckVekt(SGLVektor Ecken[],short int VektCnt);
-	void LinkEckVekt(SGLVektor *Ecken[],short int VektCnt);
-	void SetEckVekt(SGLVektor *Ecken[],short int VektCnt);
+	void CopyEckVekt(VektorList &Ecken);
+	void LinkEckVekt(VektorPtr Ecken[],short int VektCnt);
+	void LinkEckVekt(VektorList &Ecken);
 
-	bool MyVekt;
-	struct{SGLVektor *Vekt[50];short int Cnt;}EckVektoren;
-	SGLPolygon operator =(SGLPolygon PolygonPtr);
+	VektorList EckVektoren;
 
 	SGLVektor getCenter();
 	void setTexKoord(int eckNr,GLfloat x,GLfloat y);
@@ -119,7 +115,7 @@ public:
 class SGL3DPlane : public SGLRechtEck
 {
 public:
-	SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex);
+	SGL3DPlane(GLdouble breite,GLdouble hoehe,boost::shared_ptr<SGLBaseTex> volumeTex);
 	void resetTexKoord();
 };
 

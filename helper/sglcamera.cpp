@@ -409,5 +409,5 @@ void SGLBaseCam::setView(unsigned int width,unsigned int height)
 	ViewMatr.view[1]=0;
 	ViewMatr.view[2]=width;
 	ViewMatr.view[3]=height;
-	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand
+	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand - auﬂerdem ‰ndert sich das nur, wenn das fenster ge‰ndert wird
 }

@@ -27,14 +27,14 @@ SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 	this->hoehe=hoehe;
 	this->tiefe=tiefe;
 
-	Fl.Fl[0]= new SGLVierEck(&EckPunkte[0][0],&EckPunkte[0][1],&EckPunkte[0][2],&EckPunkte[0][3]);	//Front
-	Fl.Fl[1]= new SGLVierEck(&EckPunkte[1][3],&EckPunkte[1][2],&EckPunkte[1][1],&EckPunkte[1][0]);	//Hinten
+	Fl.Fl[0]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[0][0],&EckPunkte[0][1],&EckPunkte[0][2],&EckPunkte[0][3]));	//Front
+	Fl.Fl[1]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[1][3],&EckPunkte[1][2],&EckPunkte[1][1],&EckPunkte[1][0]));	//Hinten
 
-	Fl.Fl[2]= new SGLVierEck(&EckPunkte[0][0],&EckPunkte[0][3],&EckPunkte[1][3],&EckPunkte[1][0]);	//linke Seite
-	Fl.Fl[3]= new SGLVierEck(&EckPunkte[0][1],&EckPunkte[1][1],&EckPunkte[1][2],&EckPunkte[0][2]);	//Rechte Seite
+	Fl.Fl[2]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[0][0],&EckPunkte[0][3],&EckPunkte[1][3],&EckPunkte[1][0]));	//linke Seite
+	Fl.Fl[3]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[0][1],&EckPunkte[1][1],&EckPunkte[1][2],&EckPunkte[0][2]));	//Rechte Seite
 
-	Fl.Fl[4]= new SGLVierEck(&EckPunkte[0][3],&EckPunkte[0][2],&EckPunkte[1][2],&EckPunkte[1][3]);	//Deckel
-	Fl.Fl[5]= new SGLVierEck(&EckPunkte[1][0],&EckPunkte[1][1],&EckPunkte[0][1],&EckPunkte[0][0]);	//Boden
+	Fl.Fl[4]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[0][3],&EckPunkte[0][2],&EckPunkte[1][2],&EckPunkte[1][3]));	//Deckel
+	Fl.Fl[5]= boost::shared_ptr<SGLPolygon>(new SGLVierEck(&EckPunkte[1][0],&EckPunkte[1][1],&EckPunkte[0][1],&EckPunkte[0][0]));	//Boden
 	Fl.Cnt=6;
 	recalcEdges(false);
 	resetTexKoord();
@@ -108,7 +108,7 @@ void SGLQuader::recalcEdges(bool compile)
 	EckPunkte[1][3]=SGLVektor(-breite/2, hoehe/2,-tiefe/2);
 
 	for(int i=0;i<this->Fl.Cnt;i++)
-		((SGLVierEck*)Fl.Fl[i])->setupCenter();
+		boost::dynamic_pointer_cast<SGLVierEck>(Fl.Fl[i])->setupCenter();
 
 	if(compile)Compile();
 }

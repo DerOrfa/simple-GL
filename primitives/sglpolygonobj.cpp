@@ -23,20 +23,18 @@ SGLPolygonObj::SGLPolygonObj(SGLMaterial *Material,GLdouble PosX,GLdouble PosY,G
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 }
+
 SGLPolygonObj::SGLPolygonObj(const SGLPolygon Flaechen[],short int FlCnt,SGLMaterial *Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	SetFl(Flaechen,FlCnt);
 }
-SGLPolygonObj::~SGLPolygonObj()
-{
-	for(int i=0;i<Fl.Cnt;i++)delete Fl.Fl[i];
-}
+
 void SGLPolygonObj::SetFl(const SGLPolygon Flaechen[],short int FlCnt)
 {
 	Fl.Cnt=FlCnt;
 	for(int i=0;i<FlCnt;i++)
-		Fl.Fl[i]=new SGLPolygon(Flaechen[i]);
+		Fl.Fl[i]=boost::shared_ptr<SGLPolygon>(new SGLPolygon(Flaechen[i]));
 }
 /** No descriptions */
 void SGLPolygonObj::generate()

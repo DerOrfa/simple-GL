@@ -22,7 +22,7 @@ SGLPlanet::SGLPlanet(GLdouble radius,GLdouble efakt)
 
 	upVekt=SGLVektor(1,10);
 	Planet.size=.02;
-	if(Planet.MatIsMine)
+	if(Planet.Mat.use_count()<2)//@todo geht das auch klar ??
 	{
 		Planet.Mat->Aussen.GlanzFaktor=0;
 		Planet.Mat->Aussen.Farbe.Glanz[0]=0;

@@ -24,7 +24,6 @@ SGLMaterial::SGLMaterial()
 	resetMat(Aussen);
 	Transparenz=0;
 	UmgebGleichDifus=InnenGleichAussen=true;
-	tex=0;isMyTex=false;
 }
 SGLMaterial::SGLMaterial(GLfloat R,GLfloat G, GLfloat B,GLenum Face,bool selbstLeuchtend)
 {
@@ -33,7 +32,6 @@ SGLMaterial::SGLMaterial(GLfloat R,GLfloat G, GLfloat B,GLenum Face,bool selbstL
 	SetColor(R,G,B,Face,selbstLeuchtend);
 	Transparenz=0;
 	UmgebGleichDifus=InnenGleichAussen=true;
-	tex=0;isMyTex=false;
 }
 
 SGLMaterial::SGLMaterial(const char *imageFile)
@@ -43,12 +41,10 @@ SGLMaterial::SGLMaterial(const char *imageFile)
 	SetColor(0,0,0);
 	Transparenz=0;
 	UmgebGleichDifus=InnenGleichAussen=true;
-	tex=0;isMyTex=false;
 	SetTex(imageFile);
 }
 SGLMaterial::~SGLMaterial()
 {
-	if(isMyTex)delete tex;
 }
 
 void SGLMaterial::loadMat()
@@ -128,7 +124,7 @@ void SGLMaterial::SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face,bool selbs
 
 }
 
-bool SGLMaterial::SetTex(SGLBaseTex *TexPtr)
+bool SGLMaterial::SetTex(boost::shared_ptr<SGLBaseTex> TexPtr)
 {
 	if(TexPtr && TexPtr->valid)
 	{
@@ -147,7 +143,7 @@ bool SGLMaterial::SetTex(SGLBaseTex *TexPtr)
 bool SGLMaterial::SetTex(const char *imageFile)
 //Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {
-	if(SetTex(new SGLTextur(imageFile)))
+	if(SetTex(boost::shared_ptr<SGLBaseTex>(new SGLTextur(imageFile))))
 	{
 		isMyTex=true;
 		return true;

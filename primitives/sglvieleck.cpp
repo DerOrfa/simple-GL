@@ -27,24 +27,25 @@ SGLPolygon::SGLPolygon()
 	useCenter=false;
 	twoSideRender=true;
 }
-/*!
-    \fn SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
- */
-SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr):SGLFlObj(PolygonPtr)
-{
-	MyVekt=PolygonPtr.MyVekt;
-	EckVektoren.Cnt=PolygonPtr.EckVektoren.Cnt;
-	for(int i=0;i<PolygonPtr.EckVektoren.Cnt;i++)
-	{
-		if(MyVekt)
-			EckVektoren.Vekt[i]=new SGLVektor(*PolygonPtr.EckVektoren.Vekt[i]);
-		else
-			EckVektoren.Vekt[i]=PolygonPtr.EckVektoren.Vekt[i];
-	}
-	useCenter=PolygonPtr.useCenter;
-	twoSideRender=PolygonPtr.twoSideRender;
-	if(PolygonPtr.MatIsMine)Mat=NULL;//@todo Material sollte auch kopiert werden
-}
+
+// /*!
+//     \fn SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr)
+//  */
+// SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr):SGLFlObj(PolygonPtr)
+// {
+// 	MyVekt=PolygonPtr.MyVekt;
+// 	EckVektoren.Cnt=PolygonPtr.EckVektoren.Cnt;
+// 	for(int i=0;i<PolygonPtr.EckVektoren.Cnt;i++)
+// 	{
+// 		if(MyVekt)
+// 			EckVektoren.Vekt[i]=new SGLVektor(*PolygonPtr.EckVektoren.Vekt[i]);
+// 		else
+// 			EckVektoren.Vekt[i]=PolygonPtr.EckVektoren.Vekt[i];
+// 	}
+// 	useCenter=PolygonPtr.useCenter;
+// 	twoSideRender=PolygonPtr.twoSideRender;
+// 	Mat=PolygonPtr.Mat;//@todo Material sollte auch kopiert werden
+// }
 
 /*!
     \fn SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
@@ -52,24 +53,6 @@ SGLPolygon::SGLPolygon(const SGLPolygon &PolygonPtr):SGLFlObj(PolygonPtr)
 SGLPolygon::SGLPolygon(SGLVektor Ecken[],short int VektCnt)
 {
 	CopyEckVekt(Ecken,VektCnt);
-}
-
-/*!
-    \fn SGLPolygon::SGLPolygon(SGLVektor *Ecken[],short int VektCnt)
- */
-SGLPolygon::SGLPolygon(SGLVektor *Ecken[],short int VektCnt)
-{
-	SetEckVekt(Ecken,VektCnt);
-}
-
-/*!
-    \fn SGLPolygon::~SGLPolygon()
- */
-SGLPolygon::~SGLPolygon()
-{
-	if(MyVekt)
-		for(int i=0;i<EckVektoren.Cnt;i++)
-			delete EckVektoren.Vekt[i];
 }
 
 /*!
@@ -86,66 +69,42 @@ void SGLPolygon::generate()
  */
 void SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
 {
-	MyVekt=true;EckVektoren.Cnt=VektCnt;
+	EckVektoren.resize(VektCnt);
 	for(int i=0;i<VektCnt;i++)
-		EckVektoren.Vekt[i]=new SGLVektor(Ecken[i]);
+		EckVektoren[i]=VektorPtr(new SGLVektor(Ecken[i]));
 	resetTexKoord();
 }
 
 /*!
     \fn SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
  */
-void SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
+void SGLPolygon::CopyEckVekt(VektorList &Ecken)
 {
-	MyVekt=true;EckVektoren.Cnt=VektCnt;
-	for(int i=0;i<VektCnt;i++)
-		EckVektoren.Vekt[i]=new SGLVektor(*Ecken[i]);
+	VektorList::size_type s=Ecken.size();
+	EckVektoren.resize(s);
+	for(int i=0;i<s;i++)
+		EckVektoren[i]=VektorPtr(new SGLVektor(*Ecken[i]));
 	resetTexKoord();
 }
 
 /*!
     \fn SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
  */
-void SGLPolygon::LinkEckVekt(SGLVektor Ecken[],short int VektCnt)
+void SGLPolygon::LinkEckVekt(VektorPtr Ecken[],short int VektCnt)
 {
-	MyVekt=false;EckVektoren.Cnt=VektCnt;
+	EckVektoren.resize(VektCnt);
 	for(int i=0;i<VektCnt;i++)
-		EckVektoren.Vekt[i]=&Ecken[i];
+		EckVektoren[i]=Ecken[i];
 	resetTexKoord();
 }
 
 /*!
-    \fn SGLPolygon::CopyEckVekt(SGLVektor *Ecken[],short int VektCnt)
+    \fn SGLPolygon::CopyEckVekt(SGLVektor Ecken[],short int VektCnt)
  */
-void SGLPolygon::LinkEckVekt(SGLVektor *Ecken[],short int VektCnt)
+void SGLPolygon::LinkEckVekt(VektorList &Ecken)
 {
-	MyVekt=true;EckVektoren.Cnt=VektCnt;
-	for(int i=0;i<VektCnt;i++)
-		EckVektoren.Vekt[i]=Ecken[i];
+	EckVektoren=Ecken;
 	resetTexKoord();
-}
-
-/*!
-    \fn SGLPolygon::SetEckVekt(SGLVektor *Ecken[],short int VektCnt)
- */
-void SGLPolygon::SetEckVekt(SGLVektor *Ecken[],short int VektCnt)
-{
-	MyVekt=false;EckVektoren.Cnt=VektCnt;
-	for(int i=0;i<VektCnt;i++)
-		EckVektoren.Vekt[i]=Ecken[i];
-	resetTexKoord();
-}
-
-/*!
-    \fn SGLPolygon SGLPolygon::operator =(SGLPolygon PolygonPtr)
- */
-SGLPolygon SGLPolygon::operator =(SGLPolygon PolygonPtr)
-{
-	if(PolygonPtr.MyVekt)
-		CopyEckVekt(PolygonPtr.EckVektoren.Vekt,PolygonPtr.EckVektoren.Cnt);
-	else
-		SetEckVekt(PolygonPtr.EckVektoren.Vekt,PolygonPtr.EckVektoren.Cnt);
-	return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,27 +124,9 @@ SGLVierEck::SGLVierEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3,SGLVektor
 }
 
 /*!
-    \fn SGLVierEck::SGLVierEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3,SGLVektor *Ecke4)
- */
-SGLVierEck::SGLVierEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3,SGLVektor *Ecke4):SGLPolygon()
-{
-	SGLVektor *tEck[4];
-	tEck[0]=Ecke1;
-	tEck[1]=Ecke2;
-	tEck[2]=Ecke3;
-	tEck[3]=Ecke4;
-	SetEckVekt(tEck,4);
-	setupCenter();
-	resetTexKoord();
-}
-/*!
     \fn SGLVierEck::SGLVierEck(SGLVektor Ecken[4])
  */
 SGLVierEck::SGLVierEck(SGLVektor Ecken[4]):SGLPolygon(Ecken,4){setupCenter();resetTexKoord();}
-/*!
-    \fn SGLVierEck::SGLVierEck(SGLVektor *Ecken[4])
- */
-SGLVierEck::SGLVierEck(SGLVektor *Ecken[4]):SGLPolygon(Ecken,4){setupCenter();resetTexKoord();}
 
 /*!
     \fn SGLVierEck::SGLVierEck()
@@ -206,25 +147,9 @@ SGLDreiEck::SGLDreiEck(SGLVektor Ecke1,SGLVektor Ecke2,SGLVektor Ecke3):SGLPolyg
 }
 
 /*!
-    \fn SGLVierEck::~SGLVierEck()
- */
-SGLDreiEck::SGLDreiEck(SGLVektor *Ecke1,SGLVektor *Ecke2,SGLVektor *Ecke3):SGLPolygon()
-{
-	SGLVektor *tEck[3];
-	tEck[0]=Ecke1;
-	tEck[1]=Ecke2;
-	tEck[2]=Ecke3;
-	SetEckVekt(tEck,3);
-}
-
-/*!
     \fn SGLDreiEck::SGLDreiEck(SGLVektor Ecken[3])
  */
 SGLDreiEck::SGLDreiEck(SGLVektor Ecken[3]):SGLPolygon(Ecken,3){}
-/*!
-    \fn SGLDreiEck::SGLDreiEck(SGLVektor *Ecken[3])
- */
-SGLDreiEck::SGLDreiEck(SGLVektor *Ecken[3]):SGLPolygon(Ecken,3){}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -248,9 +173,9 @@ SGLQuadrat::SGLQuadrat(GLdouble SeitenLaenge):SGLRechtEck(SeitenLaenge,SeitenLae
 SGLVektor SGLPolygon::getCenter()
 {
 	SGLVektor ret;
-	for(int i=0;i<EckVektoren.Cnt;i++)
-		ret+=*EckVektoren.Vekt[i];
-	ret/=EckVektoren.Cnt;
+	for(int i=EckVektoren.size();i;i--)
+		ret+=*EckVektoren[i-1];
+	ret/=EckVektoren.size();
 	return ret;
 }
 
@@ -267,16 +192,16 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
 		Center.texKoord[0]=x;
 		Center.texKoord[1]=y;
 	}
-	else if(eckNr>=EckVektoren.Cnt || EckVektoren.Vekt[eckNr]==NULL)
+	else if(eckNr>=EckVektoren.size() || !EckVektoren[eckNr])
 	{
 		SGLprintError("Der Vektor %d existiert nicht",eckNr);
 		return;
 	}
 	else
 	{
-		EckVektoren.Vekt[eckNr]->texKoord.resize(2);
-		EckVektoren.Vekt[eckNr]->texKoord[0]=x;
-		EckVektoren.Vekt[eckNr]->texKoord[1]=y;
+		EckVektoren[eckNr]->texKoord.resize(2);
+		EckVektoren[eckNr]->texKoord[0]=x;
+		EckVektoren[eckNr]->texKoord[1]=y;
 	}
 }
 
@@ -285,7 +210,7 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y)
  */
 void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y,GLfloat z)
 {
-	if(eckNr>=EckVektoren.Cnt || EckVektoren.Vekt[eckNr]==NULL)
+	if(eckNr>=EckVektoren.size()  || !EckVektoren[eckNr])
 	{
 		SGLprintError("Der Vektor %d existiert nicht",eckNr);
 		return;
@@ -299,10 +224,10 @@ void SGLPolygon::setTexKoord(int eckNr,GLfloat x,GLfloat y,GLfloat z)
 	}
 	else
 	{
-		EckVektoren.Vekt[eckNr]->texKoord.resize(3);
-		EckVektoren.Vekt[eckNr]->texKoord[0]=x;
-		EckVektoren.Vekt[eckNr]->texKoord[1]=y;
-		EckVektoren.Vekt[eckNr]->texKoord[2]=z;
+		EckVektoren[eckNr]->texKoord.resize(3);
+		EckVektoren[eckNr]->texKoord[0]=x;
+		EckVektoren[eckNr]->texKoord[1]=y;
+		EckVektoren[eckNr]->texKoord[2]=z;
 	}
 }
 
@@ -325,27 +250,11 @@ void SGLVierEck::resetTexKoord()
  */
 void SGLVierEck::setupCenter()
 {
-	Center.SGLV_X=
-		(
-			EckVektoren.Vekt[0]->SGLV_X+
-			EckVektoren.Vekt[1]->SGLV_X+
-			EckVektoren.Vekt[2]->SGLV_X+
-			EckVektoren.Vekt[3]->SGLV_X
-		)/4;
-	Center.SGLV_Y=
-		(
-			EckVektoren.Vekt[0]->SGLV_Y+
-			EckVektoren.Vekt[1]->SGLV_Y+
-			EckVektoren.Vekt[2]->SGLV_Y+
-			EckVektoren.Vekt[3]->SGLV_Y
-		)/4;
-	Center.SGLV_Z=
-		(
-			EckVektoren.Vekt[0]->SGLV_Z+
-			EckVektoren.Vekt[1]->SGLV_Z+
-			EckVektoren.Vekt[2]->SGLV_Z+
-			EckVektoren.Vekt[3]->SGLV_Z
-		)/4;
+#define	SETUP_CENTER(DIM)	Center.DIM=(EckVektoren[0]->DIM+EckVektoren[1]->DIM+EckVektoren[2]->DIM+EckVektoren[3]->DIM)/4
+	SETUP_CENTER(SGLV_X);
+	SETUP_CENTER(SGLV_Y);
+	SETUP_CENTER(SGLV_Z);
+#undef SETUP_CENTER
 	useCenter=true;
 }
 
@@ -355,24 +264,37 @@ void SGLVierEck::setupCenter()
  */
 void SGLPolygon::generateWithNormales()
 {
-	SGLVektor* Norm=new SGLVektor[EckVektoren.Cnt];
+	VektorList::size_type s=EckVektoren.size();
+	SGLVektor* Norm=new SGLVektor[s];
 	SGLVektor  CenterNorm;
 
 	//Normale aus Letztem erstem und zweitem Vektor bilden
-	Norm[0]=Normale(*EckVektoren.Vekt[EckVektoren.Cnt-1],*EckVektoren.Vekt[0],*EckVektoren.Vekt[1]);
+	Norm[0]=Normale(
+		*EckVektoren[s-1],
+		*EckVektoren[0],
+		*EckVektoren[1]
+		);
 
 	CenterNorm+=Norm[0];
 
-	for(int i=1;i<EckVektoren.Cnt-1;i++)
+	for(int i=1;i<s-1;i++)
 	{
 		//Normale aus vorherigem, aktuellem und nächsten Vektor bilden
-		Norm[i]=Normale(*EckVektoren.Vekt[i-1],*EckVektoren.Vekt[i],*EckVektoren.Vekt[i+1]);
+		cout << EckVektoren[i-1]->size() << endl;
+		Norm[i]=Normale(
+			*EckVektoren[i-1],
+			*EckVektoren[i],
+			*EckVektoren[i+1]
+			);
 		CenterNorm+=Norm[i];
 	}
 
 	//Normale aus vorletztem, letztem und erstem Vektor bilden
-	Norm[EckVektoren.Cnt-1]=Normale(*EckVektoren.Vekt[EckVektoren.Cnt-2],*EckVektoren.Vekt[EckVektoren.Cnt-1],*EckVektoren.Vekt[0]);
-	CenterNorm+=Norm[EckVektoren.Cnt-1];
+	Norm[s-1]=Normale(
+		*EckVektoren[s-2],
+		*EckVektoren[s-1],
+		*EckVektoren[0]);
+	CenterNorm+=Norm[s-1];
 
 	if(useCenter && VisMode!=GL_LINE)
 	{
@@ -381,11 +303,13 @@ void SGLPolygon::generateWithNormales()
 	}
 	else
 	glBegin(GL_POLYGON);
-		EckVektoren.Vekt[0]->DrawVertex(Norm);
-		for(int i=1;i<EckVektoren.Cnt-1;i++)EckVektoren.Vekt[i]->DrawVertex(Norm+i);
-		EckVektoren.Vekt[EckVektoren.Cnt-1]->DrawVertex(Norm+EckVektoren.Cnt-1);
+		EckVektoren[0]->DrawVertex(&Norm[0]);
+		for(int i=1;i<s-1;i++)
+			EckVektoren[i]->DrawVertex(&Norm[i]);
+		EckVektoren[s-1]->DrawVertex(&Norm[s-1]);
 
-		if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex(Norm);
+		if(useCenter && VisMode!=GL_LINE)
+			EckVektoren[0]->DrawVertex(&Norm[0]);
 	glEnd();
 }
 
@@ -401,21 +325,24 @@ void SGLPolygon::generateWithoutNormales()
 		Center.DrawVertex();
 	}
 	else glBegin(GL_POLYGON);
-		for(int i=0;i<EckVektoren.Cnt;i++)EckVektoren.Vekt[i]->DrawVertex();
-		if(useCenter && VisMode!=GL_LINE)EckVektoren.Vekt[0]->DrawVertex();
+		for(int i=0;i<EckVektoren.size();i++)
+			EckVektoren[i]->DrawVertex();
+		if(useCenter && VisMode!=GL_LINE)
+			EckVektoren[0]->DrawVertex();
 	glEnd();
 }
 
 GLdouble SGLPolygon::spat(SGLVektor aim)
 {
-	if(EckVektoren.Cnt<3)
+	VektorList::size_type s=EckVektoren.size();
+	if(s<3)
 	{
 		SGLprintError("Keine Fläche");
 		return -1;
 	}
-	SGLVektor stuetzV(*EckVektoren.Vekt[0]);
-	SGLVektor V1(*EckVektoren.Vekt[EckVektoren.Cnt-1]-stuetzV);
-	SGLVektor V2(*EckVektoren.Vekt[1]-stuetzV);
+	SGLVektor stuetzV(*EckVektoren[0]);
+	SGLVektor V1(*EckVektoren[s-1]-stuetzV);
+	SGLVektor V2(*EckVektoren[1]-stuetzV);
 	aim-=stuetzV;
 	return -V1.spatprod(V2,aim);
 }
@@ -433,7 +360,7 @@ bool SGLPolygon::canSee(SGLVektor aim)
 /*!
     \fn SGL3DPlane::SGL3DPlane(GLdouble SeitenLaenge)
  */
-SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLBaseTex *volumeTex):SGLRechtEck(breite,hoehe)
+SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,boost::shared_ptr<SGLBaseTex> volumeTex):SGLRechtEck(breite,hoehe)
 {
 	if(volumeTex)
 	{

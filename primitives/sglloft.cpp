@@ -10,12 +10,12 @@
 
 SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,SGLMaterial *Material,unsigned short mode):SGLPolygonObj(Material)
 {
-	int ecken=BasisFl.EckVektoren.Cnt;
+	int ecken=BasisFl.EckVektoren.size();
 
 	SGLVektor	SeitenVekt[4],*BodenVekt= new SGLVektor[ecken],*DeckVekt= new SGLVektor[ecken];
 	SGLPolygon	*Flaechen= new SGLPolygon[ecken+1];
 
-	SGLVektor oldOben,oldUnten,b=*BasisFl.EckVektoren.Vekt[0];
+	SGLVektor oldOben,oldUnten,b=*BasisFl.EckVektoren[0];
 
 	DeckVekt[0]=b+(loft*.5);
 	BodenVekt[ecken-1]=b-(loft*.5);
@@ -25,7 +25,7 @@ SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,SGLMaterial *Material,unsign
 		oldOben=b+(loft*.5);
 		oldUnten=b-(loft*.5);
 
-		b=*BasisFl.EckVektoren.Vekt[i];
+		b=*BasisFl.EckVektoren[i];
 
 		DeckVekt[i]=b+(loft*.5);
 		BodenVekt[ecken-i-1]=b-(loft*.5);
@@ -36,7 +36,7 @@ SGLLoft::SGLLoft(SGLPolygon &BasisFl,SGLVektor loft,SGLMaterial *Material,unsign
 
 	oldOben=b+(loft*.5);
 	oldUnten=b-(loft*.5);
-	b=*BasisFl.EckVektoren.Vekt[0];
+	b=*BasisFl.EckVektoren[0];
 
 	SGLVektor nSeitenVekt[]={oldUnten,BodenVekt[ecken-1],DeckVekt[0],oldOben};//M$ ist soooo scheisse
 	Flaechen[0]= SGLPolygon(nSeitenVekt,4);
