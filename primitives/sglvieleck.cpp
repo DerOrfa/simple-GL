@@ -410,7 +410,15 @@ bool SGLPolygon::canSee(SGLVektor aim)
 /*!
     \fn SGL3DPlane::SGL3DPlane(GLdouble SeitenLaenge)
  */
-SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe):SGLRechtEck(breite,hoehe){}
+SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLTextur *volumeTex):SGLRechtEck(breite,hoehe)
+{
+	if(!volumeTex->TexType!=GL_TEXTURE_3D)
+	{SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");}
+	this->Mat->SetTex(volumeTex);
+	
+	depth=0;
+	resetTexKoord(0);
+}
 
 void SGL3DPlane::resetTexKoord(GLfloat depth)
 {
@@ -419,4 +427,11 @@ void SGL3DPlane::resetTexKoord(GLfloat depth)
 	setTexKoord(2,1,1,depth);
 	setTexKoord(3,1,0,depth);
 	setTexKoord(-1,.5,.5,depth);
+}
+
+void SGL3DPlane::setHigh(SGLObjBase *plane,SDL_Event event)
+{
+	if(event.key.keysym.sym==SDLK_SPACE)((SGL3DPlane*)plane)->depth+=.01;
+	((SGL3DPlane*)plane)->resetTexKoord(((SGL3DPlane*)plane)->depth);
+	((SGL3DPlane*)plane)->compileNextTime();
 }

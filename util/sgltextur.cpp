@@ -53,10 +53,9 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 		ilBindImage(ImageId);
 		if(IL_FALSE!=ilLoadImage(imageFile))ID=ilutGLBindMipmaps();
 	}
-	else ID = ilutGLLoadImage(imageFile);
+	else ID = ilutGLLoadImage(imageFile);//@todo in der openil-Doku steht nix über Fehler-Return *grml*
 
-	if(ID)SetParams();
-	else
+	if(!ID)
 	{
 		ILenum Error;
 		while ((Error = ilGetError()) != IL_NO_ERROR)
@@ -72,7 +71,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 
 bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 {
-	this->MipMap=MipMap;
+	this->MipMap=false;
 	if(glIsTexture(ID))glDeleteTextures(1,&ID);ID=-1;
 	TexType=GL_TEXTURE_3D;
 
@@ -82,9 +81,9 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 		for(int y=0;y<32;y++)
 			for(int z=0;z<32;z++)
 			{
-				pixels[x][y][z][0]=x* (256./32.);
-				pixels[x][y][z][1]=y* (256./32.);
-				pixels[x][y][z][2]=z* (256./32.);
+				pixels[x][y][z][0]=x/32.;
+				pixels[x][y][z][1]=y/32.;
+				pixels[x][y][z][2]=z/32.;
 			}
 
 	glGenTextures(1, &ID);
@@ -93,8 +92,7 @@ bool SGLTextur::Load3DImage(char *imageFile, bool MipMap)
 	glTexImage3D(GL_TEXTURE_3D,0,3,32,32,32,0,GL_RGB,GL_FLOAT,pixels);
 
 	GLuint gluerr = glGetError();
-	if(!gluerr)SetParams();
-	else
+	if(gluerr)
 	{
 		SGLprintError("%s [GLerror]",gluErrorString(gluerr));
 		return GL_FALSE;
@@ -115,6 +113,7 @@ bool SGLTextur::loadTex()
 		}
 		glEnable(TexType);
 		glBindTexture(TexType,ID);
+		SetParams();
 		SGLTextur::TexLoaded=dim;
 
 		if(!glAreTexturesResident(1,&ID,&ret))
@@ -141,8 +140,6 @@ bool SGLTextur::unloadTex()
 /** No descriptions */
 void SGLTextur::SetParams()
 {
-	glBindTexture(TexType, ID);
-
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
