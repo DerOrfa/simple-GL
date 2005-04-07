@@ -1,7 +1,7 @@
 export CC=icc
 export CXX=icc
 export MAKEFILE = Makefile
-export CXXFLAGS= -xB -vec_report0
+export CXXFLAGS= -O2 -xB -vec_report0
 export CFLAGS=$(CXXFLAGS)
 
 
