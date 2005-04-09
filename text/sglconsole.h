@@ -26,7 +26,7 @@ public:
 	void print(string text);
 	void setConsDim(GLdouble breite, GLdouble hoehe);
 	void clear();
-    SGLVektor getCenter();
+	SGLVektor getCenter()const;
 
 private:
 	int buffer_width, buffer_height;
@@ -41,7 +41,7 @@ class SGLConsole : public SGLMetaObj
 public:
 	SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[]="");
 	~SGLConsole();
-	SGLVektor getCenter();
+	SGLVektor getCenter()const;
 	SGLQuader *background;
 	SGLConsoleText *text;
 

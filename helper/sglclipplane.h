@@ -27,15 +27,15 @@ class SGLClipPlane : public SGLObj
 {
 public: 
 	SGLClipPlane(short int PlaneID=-1,GLdouble A=0,GLdouble B=0,GLdouble C=0,GLdouble D=0);
-  void generate();
+	void generate();
 	~SGLClipPlane();
 
-  GLboolean Activate(bool Activate=true);
-  GLboolean IsActive();
-  GLenum ClippingPlaneID;
-  GLdouble PlaneParam[4];
+	GLboolean Activate(bool Activate=true);
+	GLboolean IsActive();
+	GLenum ClippingPlaneID;
+	GLdouble PlaneParam[4];
 
-    public: SGLVektor getCenter();
+	SGLVektor getCenter()const;
 };
 
 #endif

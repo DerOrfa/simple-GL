@@ -35,7 +35,7 @@ public:
 	void validateText(string &text);
 	bool loadFont(char fontname[]);
 	static void backendInit();
-	bool isReady();
+	bool isReady()const;
     void generate_3DText(
 		GLdouble tiefe,
 		string myText,
@@ -49,14 +49,14 @@ public:
 		GLdouble breite,
 		GLdouble hoehe
 		);
-	void getDim(
+	virtual void getDim(
 		string myText,
 		GLdouble *width=NULL,
 		GLdouble *height=NULL,
 		GLdouble *depth=NULL,
 		SGLVektor *mitte=NULL,
 		SGLText::TextAlign align=SGLText::left
-		);
+		)const;
 	void consoleClear();
 };
 

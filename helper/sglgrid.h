@@ -32,8 +32,8 @@ public:
 	virtual void generate();
 	short Type;
 	GLint Size;
-    public: SGLVektor getCenter();
-    void setSize(GLuint size);
+	SGLVektor getCenter()const;
+	void setSize(GLuint size);
 };
 
 #endif

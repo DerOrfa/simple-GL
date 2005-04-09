@@ -110,7 +110,7 @@ void SGLGrid::generate()
 /*!
     \fn SGLGrid::getCenter()
  */
-SGLVektor SGLGrid::getCenter()
+SGLVektor SGLGrid::getCenter()const
 {
 // @todo "not really implemented yet!!"
 	return SGLVektor(0,0,0);

@@ -20,22 +20,22 @@
 class SGL3DText : public SGLText
 {
 public:
-    SGL3DText(const char Text[]="", char fontname[]="",MaterialPtr Material=MaterialPtr (),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
-    ~SGL3DText();
+	SGL3DText(const char Text[]="", char fontname[]="",MaterialPtr Material=MaterialPtr (),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	~SGL3DText();
 
 	GLdouble tiefe;
 	void getBounds(SGLQuader *BoundingQuader);
 
-	GLdouble getHeight();
-	GLdouble getDepth();
-	GLdouble getWidth();
-	SGLVektor getCenter();
+	GLdouble getHeight()const;
+	GLdouble getDepth()const;
+	GLdouble getWidth()const;
+	SGLVektor getCenter()const;
 // 	@todo void ResetMaterial(SGLMaterial *NewMaterial=0);
 
-	void getDim(GLdouble *width=NULL,GLdouble *height=NULL,GLdouble *depth=NULL,SGLVektor *center=NULL);
+	void getDim(GLdouble *width=NULL,GLdouble *height=NULL,GLdouble *depth=NULL,SGLVektor *center=NULL)const;
 	TextAlign align;
 
-    void generate();
+	void generate();
 	void DrahtGitter(bool DO=true);
 };
 

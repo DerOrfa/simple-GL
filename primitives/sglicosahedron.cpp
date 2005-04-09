@@ -99,7 +99,7 @@ long int SGLIcosahedron::subdivide(SGLVektor v1,SGLVektor v2, SGLVektor v3,unsig
 /*!
     \fn SGLIcosahedron::getCenter()
  */
-SGLVektor SGLIcosahedron::getCenter()
+SGLVektor SGLIcosahedron::getCenter()const
 {
 // @todo "not really implemented yet!!"
 	return SGLVektor(0,0,0);

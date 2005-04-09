@@ -195,7 +195,7 @@ SGLLensFlare::~SGLLensFlare()
 //@todo unlink ist outdated
 }
 
-SGLVektor SGLLensFlare::getCenter()
+SGLVektor SGLLensFlare::getCenter()const
 {
     return SGLVektor(0,0,0); // @todo not really implemented yet
 }

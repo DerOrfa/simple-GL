@@ -43,7 +43,7 @@ bool SGLTextBackend_glf::loadFont(char fontname[])
   else return true;
 }
 
-bool  SGLTextBackend_glf::isReady()
+bool  SGLTextBackend_glf::isReady()const
 {
 	if(!glf_inited || myFontID==-1)
 	{
@@ -170,7 +170,7 @@ void SGLTextBackend_glf::generate_consoleText(
 /*!
     \fn SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *mitte,SGLText::TextAlign align)
  */
-void SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *mitte,SGLText::TextAlign align)
+void SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *mitte,SGLText::TextAlign align)const
 {
 	if(!isReady())return;
 	float minx, miny, maxx, maxy;

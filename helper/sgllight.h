@@ -55,11 +55,11 @@ public:
 	{GLfloat Linear,Quadratisch;}Abnahme;
 	bool IsSpot;
 
-    SGLVektor getCenter();
-    bool isVisible();
-    void setVisible(bool visible=true);
-    LichtFarbe getFarbeAt(SGLVektor vekt);
-    void SetColor(GLfloat r,GLfloat g,GLfloat b);
+	SGLVektor getCenter()const;
+	bool isVisible();
+	void setVisible(bool visible=true);
+	LichtFarbe getFarbeAt(SGLVektor vekt);
+	void SetColor(GLfloat r,GLfloat g,GLfloat b);
 	bool visible;
 };
 

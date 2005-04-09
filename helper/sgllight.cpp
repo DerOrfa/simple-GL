@@ -116,7 +116,7 @@ void SGLLight::SetUp()
 /*!
     \fn SGLLight::getCenter()
  */
-SGLVektor SGLLight::getCenter()
+SGLVektor SGLLight::getCenter()const
 {
 // @todo "not really implemented yet!!"
 	return SGLVektor(0,0,0);

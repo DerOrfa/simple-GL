@@ -85,7 +85,7 @@ public:
 	SGLLensFlare(SGLCamera *Camera,SGLLight  *Light);
 	~SGLLensFlare();
 
-	virtual SGLVektor getCenter();
+	virtual SGLVektor getCenter()const;
 	virtual void generate();
 	Flare set_flare(int type, float location, float scale, GLfloat color[3], float colorScale);
 	void init_flares();

@@ -19,6 +19,7 @@
 #define SGLOBJ_H
 
 #include "sglobjbase.h"
+#include <boost/smart_ptr.hpp>
 
 /**
   *@author Enrico Reimer
@@ -37,16 +38,15 @@ class SGLStrecke:public SGLObj
 {
 	bool myPunkte;
 public:
-	SGLVektor *punkt1,*punkt2;
-	SGLStrecke(SGLVektor *Vekt1,SGLVektor *Vekt2);
+	boost::shared_ptr<SGLVektor> punkt1,punkt2;
+	SGLStrecke(boost::shared_ptr<SGLVektor> Vekt1,boost::shared_ptr<SGLVektor> Vekt2);
 	SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2=SGLVektor(0,0,0));
 	SGLStrecke();
-	~SGLStrecke();
 
 	GLdouble Len();
 
 	void generate();
-	SGLVektor getCenter();
+	SGLVektor getCenter()const;
 };
 #endif
 

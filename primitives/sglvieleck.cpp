@@ -157,7 +157,7 @@ SGLQuadrat::SGLQuadrat(GLdouble SeitenLaenge):SGLRechtEck(SeitenLaenge,SeitenLae
 /*!
     \fn SGLPolygon::getCenter()
  */
-SGLVektor SGLPolygon::getCenter()
+SGLVektor SGLPolygon::getCenter()const
 {
 	SGLVektor ret;
 	for(int i=EckVektoren.size();i;i--)

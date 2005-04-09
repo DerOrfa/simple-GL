@@ -33,7 +33,7 @@ public:
 	void SetFl(const SGLPolygon Flaechen[],short int FlCnt);
 	void generate();
 
-    public: SGLVektor getCenter();
+	SGLVektor getCenter()const;
 };
 
 #endif

@@ -65,38 +65,25 @@ GLuint SGLObj::Compile(bool draw,bool free)
 }
 
 
-SGLStrecke::SGLStrecke(SGLVektor *Vekt1,SGLVektor *Vekt2)
+SGLStrecke::SGLStrecke(boost::shared_ptr<SGLVektor> Vekt1,boost::shared_ptr<SGLVektor> Vekt2)
 {
-	myPunkte=false;
 	punkt1=Vekt1;
 	punkt2=Vekt2;
 }
 
 SGLStrecke::SGLStrecke()
 {
-	myPunkte=true;
-	punkt1=new SGLVektor(0,0,0);
-	punkt2=new SGLVektor(0,0,0);
+	punkt1=boost::shared_ptr<SGLVektor> (new SGLVektor(0,0,0));
+	punkt2=boost::shared_ptr<SGLVektor> (new SGLVektor(0,0,0));
 }
 
 SGLStrecke::SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2)
 {
-	myPunkte=true;
-	punkt1=new SGLVektor(Vekt1);
-	punkt2=new SGLVektor(Vekt2);
+	punkt1=boost::shared_ptr<SGLVektor> (new SGLVektor(Vekt1));
+	punkt2=boost::shared_ptr<SGLVektor> (new SGLVektor(Vekt2));
 }
 
 GLdouble SGLStrecke::Len(){return (*punkt1 - *punkt2).Len();}
-
-SGLStrecke::~SGLStrecke()
-{
-	if(myPunkte)
-	{
-//		delete punkt1;
-//		delete punkt2;
-//@todo mit smart pointers lösen
-	}
-}
 
 void SGLStrecke::generate()
 {
@@ -106,7 +93,7 @@ void SGLStrecke::generate()
 	glEnd();
 }
 
-SGLVektor SGLStrecke::getCenter()
+SGLVektor SGLStrecke::getCenter()const
 {
 	return SGLVektor(*punkt1 + *punkt2)/2.;
 }

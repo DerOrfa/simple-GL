@@ -45,7 +45,7 @@ public:
 		GLdouble *depth=NULL,
 		SGLVektor *mitte=NULL,
 		SGLText::TextAlign align=SGLText::left
-		)=0;
+		)const=0;
 	virtual void consoleClear()=0;
 
 };

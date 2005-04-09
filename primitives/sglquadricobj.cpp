@@ -11,7 +11,7 @@ SGLQuadricObj::~SGLQuadricObj()
 	gluDeleteQuadric(quadric);
 }
 
-SGLVektor SGLQuadricObj::getCenter()
+SGLVektor SGLQuadricObj::getCenter()const
 {return SGLVektor(0,0,0);}
 
 

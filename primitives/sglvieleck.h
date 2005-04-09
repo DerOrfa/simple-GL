@@ -40,13 +40,13 @@ public:
 
 	VektorList EckVektoren;
 
-	SGLVektor getCenter();
+	SGLVektor getCenter()const;
 	void setTexKoord(int eckNr,GLfloat x,GLfloat y);
 	void setTexKoord(int eckNr,GLfloat x,GLfloat y,GLfloat z);
-    void generateWithNormales();
-    void generateWithoutNormales();
+	void generateWithNormales();
+	void generateWithoutNormales();
 	GLdouble spat(SGLVektor aim);
-    bool canSee(SGLVektor aim);
+	bool canSee(SGLVektor aim);
 	SGLVektor Center;
 	bool useCenter;
 };

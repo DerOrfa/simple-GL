@@ -79,14 +79,14 @@ public:
 	void ReCalcUpVect(bool PosIsOnNull=false,double deg=0);
 	void ResetUpVect(double rotdeg=0);
 
-    SGLVektor getCenter();
-    void recalcEcken();
+	SGLVektor getCenter()const;
+	void recalcEcken();
 	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
 	SGLVektor getLookVektor();
 	void setLookVektor(SGLVektor Vekt);
 	void recalcAngle(GLdouble height);
 	void recalcPos(GLdouble height);
-    bool showCross,move_cam_with_aim;
+	bool showCross,move_cam_with_aim;
 	bool lockRoll,lockGierCam,lockKippCam;
 	bool lockGierAim,lockKippAim;
 	bool lockMoveZoom,lockOptZoom,loaded;

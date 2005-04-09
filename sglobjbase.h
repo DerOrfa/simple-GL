@@ -58,7 +58,7 @@ public:
 	SGLVektor* FaceAt;
 	void metaGenerate();
 
-	virtual SGLVektor getCenter() = 0;
+	virtual SGLVektor getCenter()const = 0;
 
 	SGLVektor getCenterInSpace();
 	SGLVektor getMyPos();

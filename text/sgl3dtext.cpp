@@ -25,7 +25,7 @@ SGL3DText::~SGL3DText()
 
 void SGL3DText::generate()
 {
-	Backend->generate_3DText(tiefe,myText,VisMode,align);
+	Backend->generate_3DText(getDepth(),myText,VisMode,align);
 }
 
 /*!
@@ -55,7 +55,7 @@ void SGL3DText::getBounds(SGLQuader *BoundingQuader)
 /*!
     \fn SGL3DText::getHeight()
  */
-GLdouble SGL3DText::getHeight()
+GLdouble SGL3DText::getHeight()const
 {
 	GLdouble temp;
 	getDim(NULL,&temp);
@@ -65,7 +65,7 @@ GLdouble SGL3DText::getHeight()
 /*!
     \fn SGL3DText::getDepth()
  */
-GLdouble SGL3DText::getDepth()
+GLdouble SGL3DText::getDepth()const
 {
 	GLdouble temp;
 	getDim(NULL,NULL,&temp);
@@ -75,7 +75,7 @@ GLdouble SGL3DText::getDepth()
 /*!
     \fn SGL3DText::getWidth()
  */
-GLdouble SGL3DText::getWidth()
+GLdouble SGL3DText::getWidth()const
 {
 	GLdouble temp;
 	getDim(&temp);
@@ -85,7 +85,7 @@ GLdouble SGL3DText::getWidth()
 /*!
     \fn SGL3DText::getCenter()
  */
-SGLVektor SGL3DText::getCenter()
+SGLVektor SGL3DText::getCenter()const
 {
 	SGLVektor temp;
 	GLdouble width=getWidth();
@@ -111,8 +111,7 @@ void SGL3DText::DrahtGitter(bool DO)
 /*!
     \fn SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)
  */
-void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)
+void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
 {
-	Backend->getDim(myText,width,height,&tiefe,center,align);
-	if(depth)*depth=tiefe;
+	Backend->getDim(myText,width,height,depth,center,align);
 }

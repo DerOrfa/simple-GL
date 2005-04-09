@@ -32,7 +32,7 @@ SGLConsole::~SGLConsole()
 /*!
     \fn SGLConsoleText::getCenter()
  */
-SGLVektor SGLConsole::getCenter()
+SGLVektor SGLConsole::getCenter()const
 {
 	return background->getCenter();
 }
@@ -121,7 +121,7 @@ void SGLConsole::clear()
 /*!
     \fn SGLConsoleText::getCenter()
  */
-SGLVektor SGLConsoleText::getCenter()
+SGLVektor SGLConsoleText::getCenter()const
 {
     //Dummy for overloading true Virtual of parent (never used)
 	return SGLVektor(0,0,0);

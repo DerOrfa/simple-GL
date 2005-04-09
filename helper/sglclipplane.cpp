@@ -57,7 +57,7 @@ GLboolean SGLClipPlane::Activate(bool Activate)
 /*!
     \fn SGLClipPlane::getCenter()
  */
-SGLVektor SGLClipPlane::getCenter()
+SGLVektor SGLClipPlane::getCenter()const
 {
 // @todo "not really implemented yet!!"
 	return SGLVektor(0,0,0);

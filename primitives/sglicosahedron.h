@@ -34,7 +34,7 @@ public:
 	long int subdivide(SGLVektor v1,SGLVektor v2, SGLVektor v3,unsigned int depth);
 	GLdouble X,Z;
 
-    public: SGLVektor getCenter();
+	SGLVektor getCenter()const;
 };
 
 #endif

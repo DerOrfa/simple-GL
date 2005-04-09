@@ -296,7 +296,7 @@ void SGLBaseCam::MoveCamTo(SGLVektor to)
 /*!
     \fn SGLCamera::getCenter()
  */
-SGLVektor SGLBaseCam::getCenter()
+SGLVektor SGLBaseCam::getCenter()const
 {
 	return Pos;
 }

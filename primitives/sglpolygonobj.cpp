@@ -52,7 +52,7 @@ void SGLPolygonObj::generate()
 /*!
     \fn SGLPolygonObj::getCenter()
  */
-SGLVektor SGLPolygonObj::getCenter()
+SGLVektor SGLPolygonObj::getCenter()const
 {
 	SGLVektor ret;
 	for(int i=0;i<Fl.Cnt;i++)
