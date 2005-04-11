@@ -114,6 +114,7 @@ SGLSpace::SGLSpace(const SGLSpace &src):reDraw(NULL)
 {
 	*this = src;
 	reDraw.myspace=this;//*hehe* dirty
+	localConf.aimMoveSpeed=localConf.aimRotSpeed=localConf.camRotSpeed=99;
 }
 
 SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this)
@@ -241,8 +242,8 @@ void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, 
 
 void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
-	double Xval=(RelX-MouseInfo.OldX);
-	double Yval=(RelY-MouseInfo.OldY);
+	double Xval=(RelX-MouseInfo.OldX)*.001*localConf.aimRotSpeed;
+	double Yval=(RelY-MouseInfo.OldY)*.001*localConf.aimRotSpeed;
 	Cam.RotateAim(Xval*20,-Yval*20);
 	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,Xval,Yval);
 }
@@ -253,7 +254,7 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 	double Yval=(RelY-MouseInfo.OldY);
 	SGLVektor V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
 	SGLVektor V2=Cam.UpVect*Yval;
-	SGLVektor V = (V1+V2)*-10;
+	SGLVektor V = (V1+V2)*-.01*localConf.aimMoveSpeed;
 	Cam.MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
@@ -267,8 +268,8 @@ void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVe
 {
 	double XRollFact=SIN(RelY*90),XRotateFact=COS(XRollFact*90);
 	double YRollFact=SIN(RelX*90),YRotateFact=COS(YRollFact*90);
-	double XRot=(RelX-MouseInfo.OldX);
-	double YRot=(RelY-MouseInfo.OldY);
+	double XRot=(RelX-MouseInfo.OldX)*.001*localConf.camRotSpeed;
+	double YRot=(RelY-MouseInfo.OldY)*.001*localConf.camRotSpeed;
 
 	Camera->RotateCamAround(-XRot*XRotateFact*40,-YRot*YRotateFact*40,around);
 	Camera->Roll(XRot*30*XRollFact-YRot*30*YRollFact);
@@ -540,3 +541,6 @@ void SGLSpace::redrawSlot::operator()()
 {
 	myspace->callUpdate();
 }
+
+
+SGLSpace::spaceConfig SGLSpace::globalConf = {99,99,99};

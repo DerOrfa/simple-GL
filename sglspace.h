@@ -126,9 +126,15 @@ public:
 	static bool globalColorAktive;
 	SGLConsole	*mainConsole;
 	void defaultCam(boost::shared_ptr<SGLBaseCam> cam);
+	struct spaceConfig{
+		double camRotSpeed,aimRotSpeed,aimMoveSpeed;
+	}localConf;
+	static spaceConfig globalConf;
 	struct {unsigned int x,y;}Size;
 	SGLBaseCam::ViewModi resizeMode;
     void setGridsSize(GLuint size);
+	
+	SGLSignal<void(int)> gotFocus,lostFocus;
 
 protected:
 	void callHelper(int stage=1);
