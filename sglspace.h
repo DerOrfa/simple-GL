@@ -128,6 +128,7 @@ public:
 	void defaultCam(boost::shared_ptr<SGLBaseCam> cam);
 	struct spaceConfig{
 		double camRotSpeed,aimRotSpeed,aimMoveSpeed;
+		spaceConfig():camRotSpeed(99),aimRotSpeed(99),aimMoveSpeed(99){}
 	}localConf;
 	static spaceConfig globalConf;
 	struct {unsigned int x,y;}Size;

@@ -53,7 +53,10 @@ class SGLSignal : public boost::signal<Signature>
 	}fwd;
 public:
 	SGLSignal():fwd(*this){};
-    const SGLSignal & operator=( const SGLSignal & ){SGLprintDebug("Signale werden nicht kopiert");return *this;}
+    const SGLSignal & operator=( const SGLSignal & ){
+		SGLprintDebug("Signale werden nicht kopiert");
+		return *this;
+	}
 	template<typename T> SGLConnection forward(SGLSignal<T> &src){//@todo geht forwarden einer anderen Signatur ?!
 		return src.connect(fwd);
 	}
