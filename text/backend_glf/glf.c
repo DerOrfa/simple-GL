@@ -422,7 +422,7 @@ static void DrawString(char *s, void (*funct) (char s))
 {
 	int i;
 	float sda, sdb;
-	float distance;
+	float distance=0;
 
 	if (!s) return;
 	if (!*s) return;
@@ -748,7 +748,7 @@ void glfDraw3DWiredStringF(int font_descriptor, char *s)
 void glfDraw3DSolidSymbol(char s)
 {
 	int i, j, cur_line, flag;
-	float x, y, bx, by;
+	float x, y, bx=0, by=0;
 	unsigned char *b; /* Face pointer   */
 	float *vp;        /* Vertex pointer */
 	float *tvp;       /* temp vertex pointer */

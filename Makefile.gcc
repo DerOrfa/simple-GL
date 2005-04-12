@@ -1,10 +1,10 @@
 export CC=gcc
 export CXX=g++
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -I/opt/prog/eclasses/eclasses2 -fPIC  -O2 -DDATA_DIR="\"./data\"" -DGL_GLEXT_PROTOTYPES -pthread
+export CXXFLAGS= -Wall -O3 
 export CFLAGS=$(CXXFLAGS)
 
 
 %:
-	${MAKE} $@ -f Makefile.manual
+	${MAKE} $@ 
 
