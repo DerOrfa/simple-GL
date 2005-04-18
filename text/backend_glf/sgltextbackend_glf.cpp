@@ -187,6 +187,7 @@ void SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,G
 
 	if(width)*width=fabs(int_width);
 	if(height)*height=fabs(int_height);
+	if(depth)
 	if(mitte)
 	{
 		mitte->SGLV_Y=int_height/2+miny;

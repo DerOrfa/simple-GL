@@ -25,7 +25,7 @@ SGL3DText::~SGL3DText()
 
 void SGL3DText::generate()
 {
-	Backend->generate_3DText(getDepth(),myText,VisMode,align);
+	Backend->generate_3DText(tiefe,myText,VisMode,align);
 }
 
 /*!
@@ -112,6 +112,6 @@ void SGL3DText::DrahtGitter(bool DO)
     \fn SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)
  */
 void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
-{
+{//@todo da stimmt was nich - wer o. was bestimmt depth ??
 	Backend->getDim(myText,width,height,depth,center,align);
 }
