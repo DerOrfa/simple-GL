@@ -41,6 +41,9 @@
 #include <map>
 #include "sglsignal.h"
 
+#define SGL_FOLLOW_MOUSE_FLOAT 0x7fff
+#define SGL_FOLLOW_MOUSE_REAL 0xbfff
+
 
 /**Basisklasse für alle SGL- Raumklassen
   *@author Enrico Reimer
