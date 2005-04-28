@@ -114,6 +114,8 @@ public:
 		return ret;
 	}
     void setView(unsigned int width,unsigned int height);
+    unsigned int getViewWidth()const;
+    unsigned int getViewHeight()const;
 };
 
 class SGLCamera: public SGLBaseCam

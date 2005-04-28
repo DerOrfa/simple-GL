@@ -36,6 +36,9 @@ class SGLSlot:public trackable
 {
 public:
     const SGLSlot & operator=( const SGLSlot & ){
+#ifndef _OPTIMIZE
+		abort();
+#endif
 		SGLprintDebug("Achtung, kopiere Slot. Wenn der kopierte Slot einen Zeiger hält kann das seeeehr unangenehm werden.");
 		return *this;
 	}
@@ -54,6 +57,7 @@ class SGLSignal : public boost::signal<Signature>
 public:
 	SGLSignal():fwd(*this){};
     const SGLSignal & operator=( const SGLSignal & ){
+		abort();
 		SGLprintDebug("Signale werden nicht kopiert");
 		return *this;
 	}

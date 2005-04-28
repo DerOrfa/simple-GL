@@ -420,6 +420,16 @@ void SGLBaseCam::setView(unsigned int width,unsigned int height)
 	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand - auﬂerdem ‰ndert sich das nur, wenn das fenster ge‰ndert wird
 }
 
+unsigned int SGLBaseCam::getViewWidth()const
+{
+	return ViewMatr.view[2];
+}
+
+unsigned int SGLBaseCam::getViewHeight()const
+{
+	return ViewMatr.view[3];
+}
+
 void SGLBaseCam::confirmViewMat()
 {
 	if(ViewMatr.outDated)
