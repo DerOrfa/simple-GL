@@ -208,9 +208,9 @@ void SGLBaseTex::SetParams()
 	}
 
 	glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR,envColor);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
-	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP);
-	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP);
-	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
+	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
 
 	if(MipMap)	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
 	else		glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
@@ -226,19 +226,47 @@ void SGLBaseTex::SetParams()
     \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
  */
 
+void SGLBaseTex::genValidSize_nocheck(GLsizei size[],unsigned short sizeCnt)
+{
+#define FORALL_SIZE(IT)	for(unsigned short IT=0;IT<sizeCnt;IT++)
+
+	GLsizei *newSize=new GLsizei[sizeCnt];
+	FORALL_SIZE(i)newSize[i]=4;
+	bool sizeEnought=false;
+	unsigned short grown=0;
+	for(;;)
+	{
+		newSize[grown]>>=1;
+		if(sizeEnought)break;
+		else for(;grown<sizeCnt;grown++)
+		{
+			if(newSize[grown]<size[grown]){newSize[grown]<<=1;break;}
+			else if(grown==sizeCnt-1)sizeEnought=true;
+		}
+	}
+	
+	FORALL_SIZE(i)size[i]=newSize[i];
+	delete[] newSize;
+#undef FORALL_SIZE
+}
+
 bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short sizeCnt, GLenum format,GLenum type,bool border)
 {
 	#define FORALL_SIZE(IT)	for(unsigned short IT=0;IT<sizeCnt;IT++)
 
 	if(!glIsTexture(ID)){SGLprintError("OpenGL kennt die Textur \"%d\" nicht",ID);}
 	GLsizei *newSize=new GLsizei[sizeCnt];
-	GLsizei tmpSize=4;
-	FORALL_SIZE(i)newSize[i]=4;
+	GLsizei tmpSize=8;
+	FORALL_SIZE(i)newSize[i]=8;
 	GLenum proxyType;
 	bool sizeEnought=false;
 	unsigned short grown=0;
 	for(;;)
 	{
+		unsigned short newGrown;
+		for(newGrown=0;newGrown<sizeCnt && newSize[(grown+newGrown)%sizeCnt]>=size[(grown+newGrown)%sizeCnt];newGrown++);
+		if(newGrown>=sizeCnt)sizeEnought=true;
+		else newSize[(grown+newGrown)%sizeCnt]<<=1;
 		switch(sizeCnt)
 		{
 		case 1:
@@ -259,15 +287,10 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 		{
 			sizeOK=false;
 			newSize[grown]>>=1;
+			break;
 		}
-		if(sizeEnought)break;
-		else for(;grown<sizeCnt;grown++)
-		{
-			if(newSize[grown]<size[grown]){newSize[grown]<<=1;break;}
-			else if(grown==sizeCnt-1)sizeEnought=true;
-		}
-		
-		if (!sizeOK) break;
+		else if(sizeEnought)break;
+		else grown= (grown<sizeCnt-1) ? grown+1:0;
 	}
 	
 	GLuint err = glGetError();
@@ -284,7 +307,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 		formatStr[0]=0;
 		FORALL_SIZE(i)
 			sprintf(formatStr+strlen(formatStr),"%d%s",newSize[i],i<sizeCnt-1 ? "x":"");
-		SGLprintError("Der Texturspeicher der Grafikkarte ist zu klein. Sie lässt höchstens eine %s-Textur zu",formatStr);
+		SGLprintError("Der 3D-Texturspeicher der Grafikkarte ist zu klein. Sie lässt höchstens eine %s-Textur zu",formatStr);
 		err=true;
 		delete formatStr;
 	}
@@ -292,7 +315,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 	FORALL_SIZE(i)size[i]=newSize[i];
 	delete[] newSize;
 	return !err;
-	#undef FORALL_SIZE
+#undef FORALL_SIZE
 }
 
 short SGLBaseTex::TexLoaded=0;

@@ -51,6 +51,7 @@ public:
 	bool unloadTex();
 	virtual void SetParams();
 	bool genValidSize(GLint internalFormat,GLsizei size[],unsigned short sizeCnt, GLenum format,GLenum type,bool border);
+	void genValidSize_nocheck(GLsizei size[],unsigned short sizeCnt);
 	
 	static short TexLoaded;
 	static short def2dim(GLenum def);

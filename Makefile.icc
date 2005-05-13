@@ -1,5 +1,5 @@
 export CC=icc
-export CXX=icc
+export CXX=icpc
 export MAKEFILE = Makefile
 export CXXFLAGS= -O3 -xB
 export CFLAGS=$(CXXFLAGS)
