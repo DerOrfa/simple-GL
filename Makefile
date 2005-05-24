@@ -1,5 +1,5 @@
 
-CFLAGS += -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -pthread 
+CFLAGS += -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -pthread 
 CXXFLAGS = $(CFLAGS)
 
 

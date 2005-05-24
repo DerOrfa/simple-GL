@@ -74,6 +74,7 @@
 extern "C" {
 #endif
 
+void debugSig();
 void _SGLprintError(const char text[], ...);
 void _SGLprintWarning(const char text[], ...);
 void _SGLprintInfo(const char text[], ...);
@@ -94,7 +95,7 @@ inline GLdouble sglGetd(GLenum pname)
 	if(rendering)
 	{
 		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		abort();
+		debugSig();
 	}
 	glGetDoublev( pname, &ret);
 	return ret;
@@ -106,7 +107,7 @@ inline GLfloat sglGetf(GLenum pname)
 	if(rendering)
 	{
 		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		abort();
+		debugSig();
 	}
 	glGetFloatv( pname, &ret);
 	return ret;
@@ -118,11 +119,12 @@ inline GLint sglGeti(GLenum pname)
 	if(rendering)
 	{
 		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		abort();
+		debugSig();
 	}
 	glGetIntegerv( pname, &ret);
 	return ret;
 }
+
 
 #ifdef __cplusplus
 };

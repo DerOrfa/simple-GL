@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <GL/glu.h>
+#include <signal.h>
 
 short SGLshowInfos=1;
 short SGLshowWarnings=1;
@@ -107,4 +108,18 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 		return 0;
 	}
 	else return -1;
+}
+
+void debugSig()
+{
+#ifndef _OPTIMIZE
+    char *sig=getenv("DEBUG");
+    if(sig)
+    {
+        unsigned short isig=atoi(sig);
+	if(sig==0)isig=SIGINT;
+	SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",sig);
+	kill(getpid(),isig);
+    }
+#endif
 }
