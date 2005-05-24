@@ -44,7 +44,6 @@ public:
 	void saveMatrix(GLenum type,GLdouble dst[16]=NULL);
 	void saveAktMatrix(GLdouble dst[16]=NULL);
 	virtual const char* guesType();
-
 protected:
 	GLdouble MyTransformMatrix[16];
 	GLenum MatrMode;

@@ -110,7 +110,7 @@ void SGLSpace::show_status()
 	if(mainConsole && !mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
 
-SGLSpace::SGLSpace(const SGLSpace &src):reDraw(NULL)
+SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
 {
 	*this = src;
 	reDraw.myspace=this;//*hehe* dirty
@@ -538,8 +538,12 @@ void SGLSpace::draw()
 SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
 void SGLSpace::redrawSlot::operator()() 
 {
-	myspace->callUpdate();
+	if(myspace)myspace->callUpdate();
+	else{SGLprintError("redrawSlot 0x%X hat keinen Space, löse nicht aus",this);}
 }
-
+void SGLSpace::redrawSlot::operator=(redrawSlot &Slot)
+{
+	myspace=NULL;
+}
 
 SGLSpace::spaceConfig SGLSpace::globalConf;

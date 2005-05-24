@@ -33,7 +33,7 @@ public:
 		{
 			MemConsumer::sigCreate.connect(*((realClass*)this));
 		}
-		virtual void operator()(const MemConsumer &newob) const =NULL;
+		virtual void operator()(const MemConsumer &newob)const =0;
 		virtual ~NotifyCreateSlot(){}
 	};
 	template<class realClass> class NotifyDeleteSlot :public SGLSlot{
@@ -42,7 +42,7 @@ public:
 		{
 			MemConsumer::sigDelete.connect(*((realClass*)this));
 		}
-		virtual void operator()(const MemConsumer &newob) const =NULL;
+		virtual void operator()(const MemConsumer &newob)const =0;
 		virtual ~NotifyDeleteSlot(){}
 	};
 
