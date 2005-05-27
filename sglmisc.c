@@ -38,6 +38,7 @@ void _SGLprintError(const char text[], ...)
       vwriteOut(stderr,text, argList);
 
       va_end(argList);
+	  debugSig();
     }
 }
 
@@ -51,6 +52,7 @@ void _SGLprintWarning(const char text[], ...)
       vwriteOut(stdout,text, argList);
 
       va_end(argList);
+	  debugSig();
     }
 }
 
@@ -116,10 +118,10 @@ void debugSig()
     char *sig=getenv("DEBUG");
     if(sig)
     {
-        unsigned short isig=atoi(sig);
-	if(sig==0)isig=SIGINT;
-	SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",sig);
-	kill(getpid(),isig);
+		unsigned short isig=atoi(sig);
+		if(sig==0)isig=SIGINT;
+		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",sig);
+		kill(getpid(),isig);
     }
 #endif
 }
