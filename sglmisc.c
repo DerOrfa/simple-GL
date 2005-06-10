@@ -119,7 +119,7 @@ void debugSig()
     if(sig)
     {
 		unsigned short isig=atoi(sig);
-		if(sig==0)isig=SIGINT;
+		if(!isig)isig=SIGINT;
 		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",sig);
 		kill(getpid(),isig);
     }

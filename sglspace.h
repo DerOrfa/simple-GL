@@ -44,7 +44,6 @@
 #define SGL_FOLLOW_MOUSE_FLOAT 0x7fff
 #define SGL_FOLLOW_MOUSE_REAL 0xbfff
 
-
 /**Basisklasse für alle SGL- Raumklassen
   *@author Enrico Reimer
   */
@@ -92,7 +91,7 @@ public:
 	}reDraw;
 
 	SGLClipPlane	*ClipPlanes[5];
-	boost::shared_ptr<SGLBaseCam> Camera;
+	SGLshPtr<SGLBaseCam> Camera;
 	SGLLight		*StdLight;
 
 	SGLObjList ObjLst;
@@ -119,9 +118,37 @@ public:
 	void draw();
 	bool reCompileIntObs(bool redraw=true);
 	void SetRaumLicht(GLfloat R=0,GLfloat G=0, GLfloat B=0);
-	void registerObj(shared_obj Obj);
-	void unregisterObj(shared_obj Obj);
-    void registerDynamicTex(SGLBaseTex &tex);
+  
+	template<class T> void registerObj(SGLshPtr<T> Obj)
+	{
+ 		SGLshPtr<SGLObjBase>  ob;Obj.scast(ob);
+ 		SGLshPtr<SGLFlObj> fl_ob;   
+ 		if(Obj.dcast(fl_ob,false))
+ 		{
+ 			if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+ 			{
+ 				TranspObjLst.AddOb(ob);
+ 				return;
+ 			}
+ 		}
+ 		ObjLst.AddOb(ob);
+	}
+	template<class T> void unregisterObj(SGLshPtr<T> Obj)
+	{
+ 		SGLshPtr<SGLObjBase>  ob;Obj.scast(ob);
+		SGLshPtr<SGLFlObj> fl_ob;
+		if(Obj.dcast(fl_ob,false))
+		{
+			if(fl_ob->Mat && fl_ob->Mat->Transparenz)
+			{
+				TranspObjLst.removeOb(Obj);
+				return;
+			}
+		}
+		ObjLst.removeOb(Obj);
+	}
+
+	void registerDynamicTex(SGLBaseTex &tex);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
@@ -129,7 +156,7 @@ public:
 	void sglInit(unsigned int w=100,unsigned int h=100);
 	static bool globalColorAktive;
 	SGLConsole	*mainConsole;
-	void defaultCam(boost::shared_ptr<SGLBaseCam> cam);
+	void defaultCam(SGLshPtr<SGLBaseCam> cam);
 	struct spaceConfig{
 		double camRotSpeed,aimRotSpeed,aimMoveSpeed;
 		spaceConfig():camRotSpeed(99),aimRotSpeed(99),aimMoveSpeed(99){}

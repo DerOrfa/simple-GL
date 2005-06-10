@@ -13,7 +13,6 @@
 #define MEMCONSUMER_H
 
 #include <list>
-#include <boost/shared_ptr.hpp>
 #include "../sglsignal.h"
 
 /**
@@ -23,9 +22,9 @@ class MemConsumer
 {
 	static SGLSignal<void (const MemConsumer&)> sigCreate,sigDelete;
 	//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber
-	//1: auto-löschen von shared_ptr geht nat nich, wenn das obj selbst einen shared_ptr hält (deshalb auch eine shared_ptr in "list")
-	//2: wenn destruktor durch shared_ptr ausgelöst wird, und selbst einen shared_ptr erz, haben wir nen shred_ptr auf ein nicht mehr ex. obj => KABUM
-	//3: Obj selbst kann keinen shared_ptr von sich erz, wenn der seinen Kontext verlässt hat sich das Ob damit selbst gekillt
+	//1: auto-löschen von SGLshPtr geht nat nich, wenn das obj selbst einen SGLshPtr hält (deshalb auch ein "echter Ptr" in "list")
+	//2: wenn destruktor durch SGLshPtr ausgelöst wird, und selbst einen SGLshPtr erz, haben wir nen SGLshPtr auf ein nicht mehr ex. obj => KABUM
+	//3: Obj selbst kann keinen SGLshPtr von sich erz, wenn der seinen Kontext verlässt hat sich das Ob damit selbst gekillt
 public:
 	template<class realClass> class NotifyCreateSlot :public SGLSlot{
 	public:

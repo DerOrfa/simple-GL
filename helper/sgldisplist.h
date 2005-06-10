@@ -21,6 +21,8 @@
 #endif
 
 #include "../sglobjbase.h"
+#include "../sglshptr.h"
+
 
 #include <list>
 

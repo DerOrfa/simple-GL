@@ -28,9 +28,7 @@
 #endif
 
 #include "sgltextur.h"
-#include <boost/shared_ptr.hpp>
-
-using namespace boost;
+#include "../sglshptr.h"
 
 /**
   *@author Enrico Reimer
@@ -46,13 +44,13 @@ public:
 	void unloadMat();
 	void SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face=GL_FRONT_AND_BACK,bool selbstLeuchtend=false);
 	bool SetTex(const char *imageFile);
-	bool SetTex(shared_ptr<SGLBaseTex> TexPtr);
+	bool SetTex(SGLshPtr<SGLBaseTex> TexPtr);
 	struct faerbung
 	{
 		struct{GLfloat Glanz[3],Glow[3],Difus[3],Umgebung[3];}Farbe;
 		GLfloat	GlanzFaktor;
 	}Innen,Aussen;
-	shared_ptr<SGLBaseTex> tex;
+	SGLshPtr<SGLBaseTex> tex;
 	GLfloat Transparenz;
 	bool InnenGleichAussen,UmgebGleichDifus;
 	void MergeColor(int r, int g, int b, bool doGlanz=false);
@@ -63,6 +61,6 @@ public:
 	void SetMat(GLfloat col[3],GLfloat Transp,GLenum Face=GL_FRONT,GLenum ColorID=GL_SHININESS);
 };
 
-typedef	shared_ptr<SGLMaterial> MaterialPtr;
+typedef	SGLshPtr<SGLMaterial> MaterialPtr;
 
 #endif

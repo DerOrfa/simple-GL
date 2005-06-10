@@ -437,9 +437,9 @@ SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
 void SGLBaseTex::updateSlot::operator()() const{mytex->changed();}
 
 
-void SGLBaseTex::replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
+void SGLBaseTex::replaceMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed)
 {
-	boost::shared_ptr<SGLBaseTex> &mtex=multitex;
+	SGLshPtr<SGLBaseTex> &mtex=multitex;
 	while(mtex)
 	{
 		if(mtex==before)mtex=tex;
@@ -448,13 +448,13 @@ void SGLBaseTex::replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr
 	}
 }
 
-void SGLBaseTex::addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
+void SGLBaseTex::addMTexEnd(SGLshPtr<SGLBaseTex> tex,bool call_changed)
 {
-	addMTex(tex,boost::shared_ptr<SGLBaseTex>(),call_changed);
+	addMTex(tex,SGLshPtr<SGLBaseTex>(),call_changed);
 }
-void SGLBaseTex::addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed)
+void SGLBaseTex::addMTexBegin(SGLshPtr<SGLBaseTex> tex,bool call_changed)
 {
-	boost::shared_ptr<SGLBaseTex> org(multitex);
+	SGLshPtr<SGLBaseTex> org(multitex);
 	multitex=tex;
 	if(org)
 	{
@@ -464,12 +464,12 @@ void SGLBaseTex::addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_change
 	}
 	if(call_changed)changed();
 }
-void SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed)
+void SGLBaseTex::addMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed)
 {
 	assert(tex);
 	if(multitex)
 	{
-		boost::shared_ptr<SGLBaseTex> mtex=multitex;
+		SGLshPtr<SGLBaseTex> mtex=multitex;
 		while(mtex->multitex)
 			if(mtex->multitex==before)break;
 			else mtex=mtex->multitex;
@@ -483,7 +483,7 @@ void SGLBaseTex::addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGL
 
 void SGLBaseTex::delMTexEnd(bool call_changed)
 {
-	boost::shared_ptr<SGLBaseTex> mtex=multitex;
+	SGLshPtr<SGLBaseTex> mtex=multitex;
 	if(mtex->multitex)
 	{	while(mtex->multitex->multitex)
 			mtex=mtex->multitex;
@@ -500,12 +500,12 @@ void SGLBaseTex::delMTexBegin(bool call_changed)
 	}
 	else{SGLprintDebug("Die Textur 0x%x (%s) hat keine Subtextur",this,guesType());}
 }
-void SGLBaseTex::delMTex(boost::shared_ptr<SGLBaseTex> delTex,bool call_changed)
+void SGLBaseTex::delMTex(SGLshPtr<SGLBaseTex> delTex,bool call_changed)
 {
 	if(multitex==delTex)delMTexBegin(call_changed);
 	else
 	{
-		boost::shared_ptr<SGLBaseTex> mtex=multitex;
+		SGLshPtr<SGLBaseTex> mtex=multitex;
 		while(mtex->multitex)
 			if(mtex->multitex==delTex){mtex->delMTexBegin(call_changed);break;}
 			else mtex=mtex->multitex;

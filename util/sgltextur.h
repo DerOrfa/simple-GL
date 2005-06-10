@@ -44,7 +44,7 @@ public:
 	SGLSignal<void()> changed;
 	SGLBaseTex();
 	virtual ~SGLBaseTex();
-	boost::shared_ptr<SGLBaseTex> multitex;
+	SGLshPtr<SGLBaseTex> multitex;
 	GLuint	ID;
 	GLenum TexType;
 	bool loadTex();
@@ -62,11 +62,11 @@ public:
 	GLint renderMode;
 	void freeTexture();
 	static bool checkForMultiText(unsigned short cnt);
-	void replaceMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed);
-    void addMTex(boost::shared_ptr<SGLBaseTex> tex,boost::shared_ptr<SGLBaseTex> before,bool call_changed);
-	void addMTexBegin(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
-	void addMTexEnd(boost::shared_ptr<SGLBaseTex> tex,bool call_changed);
-	void delMTex(boost::shared_ptr<SGLBaseTex> delTex,bool call_changed);
+	void replaceMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed);
+    void addMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed);
+	void addMTexBegin(SGLshPtr<SGLBaseTex> tex,bool call_changed);
+	void addMTexEnd(SGLshPtr<SGLBaseTex> tex,bool call_changed);
+	void delMTex(SGLshPtr<SGLBaseTex> delTex,bool call_changed);
 	void delMTexEnd(bool call_changed);
 	void delMTexBegin(bool call_changed);
 	bool weich,repeat,shouldBeLoaded;

@@ -24,7 +24,7 @@
 
 #include <eclasses/evektor.h>
 #include "sglmisc.h"
-#include <boost/shared_ptr.hpp>
+#include "sglshptr.h"
 
 #define	SGLV_X	operator[](0)
 #define	SGLV_Y	operator[](1)
@@ -73,7 +73,7 @@ public:
 	void DrawPkt(double size=.1);
 };
 
-typedef boost::shared_ptr<SGLVektor> VektorPtr;
+typedef SGLshPtr<SGLVektor> VektorPtr;
 typedef vector<VektorPtr> VektorList;
 
 #define SET_VEKTPTR_VAL(VEKT,NEW_VAL)									\

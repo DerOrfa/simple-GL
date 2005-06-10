@@ -19,9 +19,6 @@
 #include "sglvieleck.h"
 #include "../sglmisc.h"
 
-using namespace boost;
-
-
 SGLQuader::SGLQuader(MaterialPtr Material,GLdouble breite,GLdouble hoehe,GLdouble tiefe,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 {
@@ -35,17 +32,17 @@ SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 	
 	for(int i=0;i<6;i++)
 	{
-		Fl.Fl[i]= shared_ptr<SGLVierEck>(new SGLVierEck);	
+		SGLshPtr<SGLVierEck>(new SGLVierEck).scast(Fl.Fl[i]);	
 	}
 
 	Fl.Cnt=6;
 
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[0])->Link(EckPunkte[0][0],EckPunkte[0][1],EckPunkte[0][2],EckPunkte[0][3]);//Front
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[1])->Link(EckPunkte[1][3],EckPunkte[1][2],EckPunkte[1][1],EckPunkte[1][0]);//Hinten
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[2])->Link(EckPunkte[0][0],EckPunkte[0][3],EckPunkte[1][3],EckPunkte[1][0]);//links
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[3])->Link(EckPunkte[0][1],EckPunkte[1][1],EckPunkte[1][2],EckPunkte[0][2]);//rechts
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[4])->Link(EckPunkte[0][3],EckPunkte[0][2],EckPunkte[1][2],EckPunkte[1][3]);//deckel
-	dynamic_pointer_cast<SGLVierEck>(Fl.Fl[5])->Link(EckPunkte[1][0],EckPunkte[1][1],EckPunkte[0][1],EckPunkte[0][0]);//boden
+	dcast<SGLVierEck>(Fl.Fl[0])->Link(EckPunkte[0][0],EckPunkte[0][1],EckPunkte[0][2],EckPunkte[0][3]);//Front
+	dcast<SGLVierEck>(Fl.Fl[1])->Link(EckPunkte[1][3],EckPunkte[1][2],EckPunkte[1][1],EckPunkte[1][0]);//Hinten
+	dcast<SGLVierEck>(Fl.Fl[2])->Link(EckPunkte[0][0],EckPunkte[0][3],EckPunkte[1][3],EckPunkte[1][0]);//links
+	dcast<SGLVierEck>(Fl.Fl[3])->Link(EckPunkte[0][1],EckPunkte[1][1],EckPunkte[1][2],EckPunkte[0][2]);//rechts
+	dcast<SGLVierEck>(Fl.Fl[4])->Link(EckPunkte[0][3],EckPunkte[0][2],EckPunkte[1][2],EckPunkte[1][3]);//deckel
+	dcast<SGLVierEck>(Fl.Fl[5])->Link(EckPunkte[1][0],EckPunkte[1][1],EckPunkte[0][1],EckPunkte[0][0]);//boden
 
 	recalcEdges(false);
 	resetTexKoord();
@@ -115,7 +112,7 @@ void SGLQuader::recalcEdges(bool compile)
 	SET_VEKTPTR_VAL(EckPunkte[1][3],SGLVektor(-breite/2, hoehe/2,-tiefe/2));
 
 	for(int i=0;i<this->Fl.Cnt;i++)
-		dynamic_pointer_cast<SGLVierEck>(Fl.Fl[i])->setupCenter();
+		dcast<SGLVierEck>(Fl.Fl[i])->setupCenter();
 
 	if(compile)Compile();
 }

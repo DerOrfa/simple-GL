@@ -112,7 +112,7 @@ public:
 class SGL3DPlane : public SGLRechtEck
 {
 public:
-	SGL3DPlane(GLdouble breite,GLdouble hoehe,boost::shared_ptr<SGLBaseTex> volumeTex);
+	SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLshPtr<SGLBaseTex> volumeTex);
 	void resetTexKoord();
 };
 

@@ -14,6 +14,7 @@
 #include <list>
 #include "sglsignal.h"
 
+
 class SGLObjList;
 
 /**
@@ -72,8 +73,7 @@ public:
 	short should_compile;
 	SGLObjList* myList;
 };
-
-typedef boost::shared_ptr<SGLObjBase> shared_obj;
+typedef SGLshPtr<SGLObjBase> shared_obj;
 
 #include "helper/sgldisplist.h"
 

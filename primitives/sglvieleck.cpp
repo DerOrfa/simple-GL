@@ -346,7 +346,7 @@ bool SGLPolygon::canSee(SGLVektor aim)
 /*!
     \fn SGL3DPlane::SGL3DPlane(GLdouble SeitenLaenge)
  */
-SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,boost::shared_ptr<SGLBaseTex> volumeTex):SGLRechtEck(breite,hoehe)
+SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLshPtr<SGLBaseTex> volumeTex):SGLRechtEck(breite,hoehe)
 {
 	if(volumeTex)
 	{

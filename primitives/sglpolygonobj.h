@@ -29,7 +29,7 @@ public:
 	SGLPolygonObj(MaterialPtr Material,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	SGLPolygonObj(const SGLPolygon Flaechen[],short int FlCnt,MaterialPtr Material,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	
-	struct {boost::shared_ptr<SGLPolygon> Fl[50];short int Cnt;}Fl;
+	struct {SGLshPtr<SGLPolygon> Fl[50];short int Cnt;}Fl;
 	void SetFl(const SGLPolygon Flaechen[],short int FlCnt);
 	void generate();
 

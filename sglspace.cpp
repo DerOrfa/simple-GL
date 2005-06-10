@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "sglspace.h"
+#include "sglshptr.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -302,33 +303,6 @@ void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SGLSpace::registerObj(shared_obj Obj)
-{
-	shared_ptr<SGLFlObj> fl_ob=dynamic_pointer_cast<SGLFlObj>(Obj);
-	if(fl_ob)
-	{
-		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
-		{
-			TranspObjLst.AddOb(fl_ob);
-			return;
-		}
-	}
-	ObjLst.AddOb(Obj);
-	
-}
-void SGLSpace::unregisterObj(shared_obj Obj)
-{
-	shared_ptr<SGLFlObj> fl_ob=dynamic_pointer_cast<SGLFlObj>(Obj);
-	if(fl_ob)
-	{
-		if(fl_ob->Mat && fl_ob->Mat->Transparenz)
-		{
-			TranspObjLst.removeOb(Obj);
-			return;
-		}
-	}
-	ObjLst.removeOb(Obj);
-}
 void SGLSpace::CompileIntObs()
 {
 	if(StatusInfo.glServerReady)
@@ -442,7 +416,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[1]=Grids.Y->Compile(true,true);
 	Grids.Beschr[2]=Grids.Z->Compile(true,true);
 
-	defaultCam(boost::shared_ptr<SGLBaseCam>(new SGLCamera()));
+	defaultCam(SGLshPtr<SGLBaseCam>(new SGLCamera()));
 
 	Grids.doGrid=1;
 
@@ -461,7 +435,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
 
-void SGLSpace::defaultCam(boost::shared_ptr<SGLBaseCam> cam)
+void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 {
 	assert(cam);
 	unregisterObj(Camera);

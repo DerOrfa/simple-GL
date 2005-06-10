@@ -35,7 +35,7 @@ void SGLPolygonObj::SetFl(const SGLPolygon Flaechen[],short int FlCnt)
 {
 	Fl.Cnt=FlCnt;
 	for(int i=0;i<FlCnt;i++)
-		Fl.Fl[i]=boost::shared_ptr<SGLPolygon>(new SGLPolygon(Flaechen[i]));
+		Fl.Fl[i]=SGLshPtr<SGLPolygon>(new SGLPolygon(Flaechen[i]));
 }
 /** No descriptions */
 void SGLPolygonObj::generate()
