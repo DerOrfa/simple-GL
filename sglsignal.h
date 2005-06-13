@@ -35,9 +35,10 @@ using namespace boost::signals;
 class SGLSlot:public trackable
 {
 public:
-    virtual void operator=( const SGLSlot & ){
+	virtual const SGLSlot& operator=( const SGLSlot & ){
 		SGLprintDebug("Achtung, kopiere Slot. Wenn der kopierte Slot einen Zeiger hält kann das seeeehr unangenehm werden.");
 		debugSig();
+		return *this;
 	}
 	virtual ~SGLSlot(){};
 };
@@ -54,7 +55,7 @@ class SGLSignal : public boost::signal<Signature>
 	}fwd;
 public:
 	SGLSignal():fwd(*this){};
-    const SGLSignal & operator=( const SGLSignal & ){
+	const SGLSignal & operator=( const SGLSignal & ){
 		SGLprintDebug("Signale werden nicht kopiert");
 		debugSig();
 		return *this;

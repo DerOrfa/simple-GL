@@ -22,7 +22,6 @@
 
 #include "../sglobj.h"
 #include "../util/sglmaterial.h"
-#include <boost/shared_ptr.hpp>
 
 /**
   *@author Enrico Reimer
@@ -40,11 +39,11 @@ public:
 	virtual void generate()=0;
 	void DrahtGitter(bool DO=true);
 	void resetMaterial(MaterialPtr NewMaterial=MaterialPtr());
-    virtual void resetTexKoord();
+	virtual void resetTexKoord();
 	
 	GLenum VisMode;
 	MaterialPtr Mat;
-    bool twoSideRender;
+	bool twoSideRender;
 };
 
 #endif
