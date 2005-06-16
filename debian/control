@@ -5,25 +5,14 @@ Maintainer: Enrico Reimer <reimer@cbs.mpg.de>
 Build-Depends: debhelper (>= 4.0.0) libeclasses-dev
 Standards-Version: 3.6.1
 
-#Package: sgl
-#Architecture: i386
-#Depends: ${shlibs:Depends}, ${misc:Depends}
-#Description: <insert up to 60 chars description>
-# <insert long description, indented with spaces>
-
-#Package: sgl-doc
-#Architecture: i386
-#Description: Documentation for sgl
-# <insert long description, indented with spaces>
-
 Package: libsgl
-Architecture: i386
+Architecture: i386, amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, libeclasses
 Description: Libraries for sgl
  <insert long description, indented with spaces>
 
 Package: libsgl-dev
-Architecture: i386
+Architecture: i386, amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, libsgl, libeclasses-dev
 Description: Development files for sgl
   <insert long description, indented with spaces>
