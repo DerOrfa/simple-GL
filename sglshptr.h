@@ -38,14 +38,29 @@ public:
 	}
 };
 
-template<class D,class T> static SGLshPtr<D> dcast(const SGLshPtr<T> &src,const bool check=true)
+template<class T> SGLshPtr<T> SGLshPtr_new()
+{
+	return SGLshPtr<T>(new T);
+}
+
+template<class T,typename param1> SGLshPtr<T> SGLshPtr_new(param1 p1)
+{
+	return SGLshPtr<T>(new T(p1));
+}
+
+template<class T,typename param1,typename param2> SGLshPtr<T> SGLshPtr_new(param1 p1,param2 p2)
+{
+	return SGLshPtr<T>(new T(p2));
+}
+
+template<class D,class T> SGLshPtr<D> dcast(const SGLshPtr<T> &src,const bool check=true)
 {
 	SGLshPtr<D> ret;
 	boost::dynamic_pointer_cast<D>(src).swap(ret);
 	if(check && !ret){SGLprintWarning("SGLshPtr: dynamic_cast von %s nach %s gescheitert",typeid(T).name(),typeid(D).name());}
 	return ret;
 }
-template<class D,class T> static SGLshPtr<D> scast(const SGLshPtr<T> &src)
+template<class D,class T> SGLshPtr<D> scast(const SGLshPtr<T> &src)
 {
 	SGLshPtr<D> ret;
 	boost::static_pointer_cast<D>(src).swap(ret);

@@ -20,20 +20,16 @@
 
 #include "../sglobj.h"
 
-/**
-  *@author Enrico Reimer
-  */
 struct LichtFarbe{GLfloat Umgebung[4],Difus[4],Glanz[4];};
 
 /**
-  *@author Enrico Reimer
-  */
+ *@author Enrico Reimer
+ */
 class SGLLight : public SGLObj
 {
 public:
 	SGLLight(int LID=-1,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	GLenum LightID;
-	~SGLLight();
 	bool On(bool on=true);
 	bool IsOn();
 	void generate();

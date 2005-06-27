@@ -348,14 +348,7 @@ bool SGLPolygon::canSee(SGLVektor aim)
  */
 SGL3DPlane::SGL3DPlane(GLdouble breite,GLdouble hoehe,SGLshPtr<SGLBaseTex> volumeTex):SGLRechtEck(breite,hoehe)
 {
-	if(volumeTex)
-	{
-		if(volumeTex->TexType!=GL_TEXTURE_3D)
-		{
-			SGLprintError("Die Volumentextur ist kein Dreidimensionaler Datensatz");
-		}
-		Mat->SetTex(volumeTex);
-	}
+	if(volumeTex)Mat->SetTex(volumeTex);
 }
 
 void SGL3DPlane::resetTexKoord()

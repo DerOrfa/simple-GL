@@ -1,7 +1,7 @@
 export CC=gcc
 export CXX=g++
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -Wall -O3 
+export CXXFLAGS= -Wall -g3 
 export CFLAGS=$(CXXFLAGS)
 
 

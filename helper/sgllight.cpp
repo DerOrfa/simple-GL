@@ -17,6 +17,15 @@
 
 #include "sgllight.h"
 
+/**
+ * Konstruktor
+ * @param LID 
+ * @param PosX 
+ * @param PosY 
+ * @param PosZ 
+ * @param SizeFact 
+ * @return 
+ */
 SGLLight::SGLLight(int LID,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
 {
 	IsSpot=false;
@@ -43,10 +52,6 @@ SGLLight::SGLLight(int LID,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble Si
 	Spot.Winkel=30;
 	Abnahme.Linear=0;
 	Abnahme.Quadratisch=.05;
-}
-
-SGLLight::~SGLLight()
-{
 }
 
 bool SGLLight::On(bool on)

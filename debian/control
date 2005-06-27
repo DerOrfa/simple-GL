@@ -6,13 +6,13 @@ Build-Depends: debhelper (>= 4.0.0) libeclasses-dev
 Standards-Version: 3.6.1
 
 Package: libsgl
-Architecture: i386, amd64
+Architecture: i386 amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, libeclasses
 Description: Libraries for sgl
  <insert long description, indented with spaces>
 
 Package: libsgl-dev
-Architecture: i386, amd64
+Architecture: i386 amd64
 Depends: ${shlibs:Depends}, ${misc:Depends}, libsgl, libeclasses-dev
 Description: Development files for sgl
   <insert long description, indented with spaces>

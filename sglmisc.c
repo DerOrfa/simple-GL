@@ -44,16 +44,16 @@ void _SGLprintError(const char text[], ...)
 
 void _SGLprintWarning(const char text[], ...)
 {
-  if(SGLshowWarnings)
-    {
-      va_list argList;
-      va_start(argList,text);
-
-      vwriteOut(stdout,text, argList);
-
-      va_end(argList);
-	  debugSig();
-    }
+	if(SGLshowWarnings)
+	{
+		va_list argList;
+		va_start(argList,text);
+	
+		vwriteOut(stdout,text, argList);
+	
+		va_end(argList);
+		debugSig();
+	}
 }
 
 void _SGLprintInfo(const char text[], ...)
