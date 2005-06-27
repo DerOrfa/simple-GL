@@ -1,6 +1,6 @@
-
 CFLAGS += -fPIC -DDATA_DIR="\"/usr/share/libsgl\"" -ffast-math -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -pthread 
 CXXFLAGS = $(CFLAGS)
+LFLAGS = -lm -lGL -lGLU -lboost_signals -leclasses2
 
 
 CORE_DIR=
@@ -92,7 +92,7 @@ libsgl.a:	core helper primitives util text sample_classes
 libsgl.so:	core helper primitives util text sample_classes
 	-rm -f libsgl.so
 	@echo "===========Linking libsgl.so========"
-	$(CXX) -shared -o libsgl.so -Wl,-soname,libsgl.so $(ALL_OBJ_FILES) 
+	$(CXX) -shared -o $@ -Wl,-soname,$@ $(LFLAGS) $(ALL_OBJ_FILES) 
 
 libs:	libsgl.a libsgl.so
 

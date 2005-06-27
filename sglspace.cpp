@@ -397,8 +397,6 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
 	GLuint	error=0;
-	if(!initVis(w,h))exit(1);
-	setFlags(false);
 
 	for(int i=0;i<5;i++)ClipPlanes[i]=new SGLClipPlane(GL_CLIP_PLANE0+i);
 
@@ -417,6 +415,8 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[2]=Grids.Z->Compile(true,true);
 
 	defaultCam(SGLshPtr<SGLBaseCam>(new SGLCamera()));
+	if(!initVis(w,h))exit(1);
+	setFlags(false);
 
 	Grids.doGrid=1;
 
