@@ -111,12 +111,28 @@ void SGLSpace::show_status()
 	if(mainConsole && !mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
 
+
+/**
+ * Kopierkonstruktor.
+ * Kopiert src. Dabei wird auch sein reDraw-Slot kopiert. 
+ * Folglich wird die entsprechende Debug-Warnung zur Laufzeit ausgegeben.
+ * Der interne Zeiger des Slot wird jedoch reinitialisiert, die Warnung kann also in diesem Fall ignoriert werden.
+ * @param src Der Space von dem ein Kopie erstellt werden soll. 
+ */
 SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
 {
 	*this = src;
 	reDraw.myspace=this;//*hehe* dirty
 }
 
+/**
+ * Standardkonstruktor.
+ * @param XSize Die Breite des GL-Views bei der Initialisierung.
+ * @param YSize Die Höhe des GL-Views bei der Initialisierung.
+ * @param R Der Rotanteil der Hintergrundfarbe
+ * @param G Der Grünanteil der Hintergrundfarbe
+ * @param B Der Blauanteil der Hintergrundfarbe
+ */
 SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this)
 {
 	Grids.BeschrMat=MaterialPtr(new  SGLMaterial);
@@ -148,6 +164,11 @@ SGLSpace::~SGLSpace()
 	}
 }
 
+/**
+ * Ereignissbehandlung für Änderung der Größe des GL-Views.
+ * @param width die neue Breite
+ * @param height die neue Höhe
+ */
 void SGLSpace::OnResize(int width, int height)
 {
 	StatusInfo.WindowWidth=width,StatusInfo.WindowHeight=height;
@@ -178,6 +199,10 @@ void SGLSpace::OnResize(int width, int height)
 }
 
 
+/**
+ * Setzt einige Parameter des Renderers auf "Standard"-Werte
+ * @param reCompile wenn true wird der komplette Raum nach Setzen der Parameter neu generiert
+ */
 void SGLSpace::setFlags(bool reCompile)
 {
 	glEnable(GL_CULL_FACE);
@@ -208,14 +233,20 @@ void SGLSpace::setFlags(bool reCompile)
 	glDisable(GL_TEXTURE_3D);
 
 	if(reCompile)
-	  {
+	{
 		CompileIntObs();
 		ObjLst.Compile(true);
 		TranspObjLst.Compile(true);
-	  }
+	}
 	printErrors();
 }
 
+
+/**
+ * Gibt Text auf der mainConsole aus. 
+ * Wird ignoriert, wenn (noch) keine mainConsole existiert.
+ * @param String 
+ */
 void SGLSpace::PrintOnScreen(char* String)
 {
 	if(mainConsole)
@@ -227,6 +258,15 @@ void SGLSpace::PrintOnScreen(char* String)
 	{SGLprintWarning("Es gibt keine Hauptkonsole");}*///@todo das nervt
 }
 
+/**
+ * Setzt eine Clipping-Plane.
+ * Die entsprechnde Plane wird initialisiert und positioniert. Außerdem wird zweiseitiges Rendering aktiviert.
+ * @param PlaneNr die Nummer der zu aktivierenden Plane. ( 0 <= PlaneNr \< GL_MAX_CLIP_PLANES)
+ * @param Ax 
+ * @param By 
+ * @param Cz 
+ * @param D 
+ */
 void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, GLdouble Cz,GLdouble D)
 {
 	ClipPlanes[PlaneNr-1]->PlaneParam[0]=Ax;
@@ -240,6 +280,12 @@ void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, 
 	TwoSided();
 }
 
+/**
+ * Rotiert den Blickpunkt der angegeben Camera um diese.
+ * @param RelX Roatation nach rechts/links aus Sicht des Betrachters
+ * @param RelY Roatation nach oben/unten aus Sicht des Betrachters
+ * @param Cam Die Camera deren Blickpunkt rotieren soll
+ */
 void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX)*.01*localConf.aimRotSpeed;
@@ -248,6 +294,12 @@ void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 	sprintf(StatusInfo.StatusString,"%sZiel rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,Xval,Yval);
 }
 
+/**
+ * Verschiebt den Blickpunkt der 
+ * @param RelX Verschieben nach rechts/links aus Sicht des Betrachters
+ * @param RelY Verschieben nach oben/unten aus Sicht des Betrachters
+ * @param Cam Die Camera deren Blickpunkt verschoben werden soll
+ */
 void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX);
@@ -259,6 +311,12 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
 
+/**
+ * Rotiert die angegebe Camera um ihren Blickpunkt.
+ * @param RelX Roatation nach rechts/links aus Sicht des Betrachters
+ * @param RelY Roatation nach oben/unten aus Sicht des Betrachters
+ * @param Cam Die Camera die rotieren soll
+ */
 void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	RotateCamAround(RelX,RelY,Cam,Cam.LookAt);
