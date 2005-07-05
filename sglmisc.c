@@ -84,29 +84,20 @@ void _SGLprintState(const char text[], ...)
 
 void vwriteOut(FILE *file,const char text[], va_list argList)
 {
-/*	if(lastMsg)
-	{
-		if(strcmp(lastMsg,text)==0)return;
-		free(lastMsg);
-	}
-	lastMsg=malloc((strlen(text)+1)*sizeof(char));
-	strcpy(lastMsg,text);*/ //@todo Das geht so nich (es wird voher noch printf gemacht)
-	
 	vfprintf(file,text,argList);
 	fprintf(file,"\n");
 }
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
-	//@todo mal prüfen, ob das auch so tut, wie es soll
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
 		if(vital>1)
-			_SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		else if(vital)
-			_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		else 
-			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht.\n%s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		return 0;
 	}
 	else return -1;

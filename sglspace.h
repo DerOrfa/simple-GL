@@ -29,6 +29,9 @@
 #endif
 
 #include <time.h>
+#include <string>
+#include <boost/logic/tribool.hpp>
+
 #include "helper/sglgrid.h"
 #include "helper/sglcamera.h"
 #include "helper/sglclipplane.h"
@@ -50,6 +53,7 @@
 
 class SGLSpace
 {
+	static map<std::string, bool> extProxy;
 public:
 	struct
 	{
@@ -164,7 +168,8 @@ public:
 	static spaceConfig globalConf;
 	struct {unsigned int x,y;}Size;
 	SGLBaseCam::ViewModi resizeMode;
-    void setGridsSize(GLuint size);
+	void setGridsSize(GLuint size);
+	static bool extAvail(const std::string &ext,const std::string &msg,unsigned short vital=2);
 	
 	SGLSignal<void(int)> gotFocus,lostFocus;
 

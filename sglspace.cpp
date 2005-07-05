@@ -144,7 +144,9 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	MouseInfo.OldX=MouseInfo.OldY=0;
 	MouseInfo.FollowMouse=true;
 	resizeMode=SGLBaseCam::scaleView;
-	StatusInfo.Processing=StatusInfo.glServerReady=StatusInfo.running=false;
+	StatusInfo.Processing=false;
+	StatusInfo.glServerReady=false;
+	StatusInfo.running=false;
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
 	cloned=false;
@@ -472,6 +474,8 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	Grids.Beschr[1]=Grids.Y->Compile(true,true);
 	Grids.Beschr[2]=Grids.Z->Compile(true,true);
 
+	StatusInfo.WindowHeight=h;
+	StatusInfo.WindowWidth=w;
 	defaultCam(SGLshPtr<SGLBaseCam>(new SGLCamera()));
 	if(!initVis(w,h))exit(1);
 	setFlags(false);
@@ -579,3 +583,23 @@ void SGLSpace::redrawSlot::operator=(redrawSlot &Slot)
 }
 
 SGLSpace::spaceConfig SGLSpace::globalConf;
+map<std::string, bool> SGLSpace::extProxy;
+
+
+/**
+ * Proxy-GL-Extension Check.
+ * Prüft, ob eine Erweiterung verfügbar ist.
+ * Wurde genau diese Prüfung (ext+msg) schoneinmal vorgenommen, wird das vorherige Ergebniss geliefert.
+ * Sonst wird das Ergebinss mittles sglChkExt(ext,msg,vital) ermittelt
+ * @param ext die GL-Extension, nach der gesucht wird
+ * @param msg die Meldung, die beim ersten Mal ausgegeben werden soll, wenn ext nicht verfügbar ist
+ * @param vital das Loglevel für die Fehlermeldung (default 2)
+ * @return 
+ */
+bool SGLSpace::extAvail(const std::string &ext,const std::string &msg,unsigned short vital)
+{
+	map<std::string, bool>::const_iterator i=extProxy.find(ext+msg);
+	if(i==extProxy.end())
+		return (extProxy[ext+msg]=sglChkExt(ext.c_str(),msg.c_str(),vital)); //wenn noch nicht im Proxy, Renderer fragen
+	else return i->second;//sonst gef. Wert verwenden
+}
