@@ -324,6 +324,13 @@ void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 	RotateCamAround(RelX,RelY,Cam,Cam.LookAt);
 }
 
+/**
+ * Rotiert die angegebe Camera um einen gegeben Punkt im Raum.
+ * @param RelX Roatation nach rechts/links aus Sicht des Betrachters
+ * @param RelY Roatation nach oben/unten aus Sicht des Betrachters
+ * @param Cam Die Camera die rotieren soll
+ * @param around der Raumpunkt, um den rotiert werden soll.
+ */
 void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVektor &around)
 {
 	double XRollFact=SIN(RelY*90),XRotateFact=COS(XRollFact*90);
@@ -339,10 +346,13 @@ void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVe
 }
 
 /*
-Schaltet den Default für zweiseitiges Rendering um.
-Danach mssen alle PolygonObjekte neu Compiliert werden.
-(Für die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
 */
+/**
+ * Schaltet den Default für zweiseitiges Rendering um.
+ * Danach mssen alle PolygonObjekte neu Compiliert werden.
+ * (Für die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
+ * @param TwoSideRendering wenn true, wird zweiseitiges Rendering aktiviert. Bei false wird es deaktiviert.
+ */
 void SGLSpace::TwoSided(bool TwoSideRendering)
 {
 	assert(StatusInfo.glServerReady);
@@ -353,6 +363,13 @@ void SGLSpace::TwoSided(bool TwoSideRendering)
 	if(StatusInfo.glServerReady)CompileIntObs();
 }
 
+/**
+ * Legt die diffuse Beleuchtung fest.
+ * Es wird die Helligkeit und Farbe der globalen Lichtquelle festgelegt. Diese Lichtquelle leuchtet aus allen Richtungen und wirft keine Schatten.
+ * @param R die Farbe der Lichtquelle
+ * @param G 
+ * @param B 
+ */
 void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 {
 //	ASSERT(StatusInfo.glServerReady);
@@ -381,6 +398,11 @@ bool SGLSpace::reCompileIntObs(bool redraw)
 	return true;
 }
 
+/**
+ * Stellt die rendering-Qualität ein .
+ * Zur Zeit sind nur die Qualitäten 0 und 1 möglich, wobei 0 den Renderer auf höchste Geschwindigkeit und 1 ihn auf höchste Qualität stellt.
+ * @param qual 
+ */
 void SGLSpace::SetQuality(unsigned short int qual)
 {
 	switch(qual)
@@ -404,6 +426,10 @@ void SGLSpace::SetQuality(unsigned short int qual)
 	}
 }
 
+/**
+ * Stellt einen Informationsstring über den Renderer zusammen.
+ * @param str[] der char-Puffer in dem der String abgelegt wird. Er wird nicht auf ausreichende Länge geprüft.
+ */
 void SGLSpace::GetGlInfoString(char str[])
 {
 	str[0]=0;
@@ -421,6 +447,11 @@ void SGLSpace::GetGlInfoString(char str[])
 	else sprintf(str,"%sFarb- Index- Modus\n",str);
 }
 
+
+/**
+ * Gibt Fehlermeldungen des Renderers aus.
+ * Es wird der Fehlertext aller Rendererfehler seit dem letzten Aufruf dieser Funktion ermittelt und als SGLError ausfegeben.
+ */
 void SGLSpace::printErrors()
 {
 	GLuint error=0;
@@ -429,8 +460,13 @@ void SGLSpace::printErrors()
 }
 
 
-/*!
-    \fn SGLSpace::initVis()
+/**
+ * Initialisiert den Renderer.
+ * Ruft setup_video() und gegebenenfalls noch die Initialisierungen weiterer Module auf.
+ * Schlägt die Initialisierung fehl, wird ein SGLError ausgegeben.
+ * @param XSize die Breite der View in Bildschirmkoordinaten
+ * @param YSize die Höhe der View in Bildschirmkoordinaten
+ * @return true wenn der Renderer erfolgreich initialisiert werden konnte, ansonsten false.
  */
 bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 {
@@ -450,9 +486,12 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 	}
 }
 
-
-/*!
-    \fn SGLSpace::sglInit(unsigned int w,unsigned int h)
+/**
+ * Zentrahle Initialisierung des Space.
+ * Es werden alle Hilfsobjekte erzeugt und eine Standardkamera eingerichtet.
+ * Außerdem werden Framework- bzw. Plattformspezifische Initialisierungen aufgerufen.
+ * @param w die Breite der View in Bildschirmkoordinaten
+ * @param h die Höhe der View in Bildschirmkoordinaten
  */
 void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
@@ -497,6 +536,14 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
 }
 
+/**
+ * Setzt die angegebene Kamera als View-Kamera des Spaces.
+ * Die Parameter der Kamera werden dabei entsprechend der Parameter der View gesetzt.
+ * Ein SGLSpace setzt bei seiner Erzeugung automatisch eine Standardkamera.
+ * Diese Funktion muss daher nur aufgerufen werden, wenn eine andere Kamera verwendet werden soll.
+ * Die aktuelle Kamera wird dabei automatisch gelöscht, wenn sie nicht mehr verwendet wird.
+ * @param cam 
+ */
 void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 {
 	assert(cam);
@@ -517,9 +564,9 @@ void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 }
 
 
-
-/*!
-    \fn SGLSpace::setGridsSize(GLuint size)
+/**
+ * Setzt die Größe des im Space angezeigten Koordinatensystems.
+ * @param size die Größe in Raum-Einheiten.
  */
 void SGLSpace::setGridsSize(GLuint size)
 {
@@ -541,14 +588,22 @@ void SGLSpace::setGridsSize(GLuint size)
 }
 
 
-/*!
-    \fn SGLSpace::registerDynamicTex(const SGLBaseTex &tex)
+/**
+ * Registriert die angegeben Textur als dynamische Textur.
+ * Sendet diese Textur zur Laufzeit changed(), wird in dem Space reDraw() ausgelöst.
+ * @param tex eine Referenz auf die veränderliche Textur.
  */
 void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 {
 	tex.changed.connect(reDraw);
 }
 
+/**
+ * Interne Zeichen-Prozedur
+ * Es wird StatusInfo.Processing true gesetzt. Danach werden nacheinander die internen Hilfsobjekte gezeichnet, 
+ * die normalen (registrierten) Objekte gezeichnet und gegebenfalls Statusinformationen angezeigt.
+ * Danach wird glFinish() ausgeführt, und StatusInfo.Processing false gesetzt.
+ */
 void SGLSpace::draw()
 {
 	if(!StatusInfo.Processing)
@@ -572,12 +627,24 @@ void SGLSpace::draw()
 }
 
 SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
+
+/**
+ * Signalbehandlung des redraw-Slots.
+ * Besitzt der Slot einen gültigen SGLSpace-Zeiger, wird callUpdate() für diesen Space ausgelöst.
+ */
 void SGLSpace::redrawSlot::operator()() 
 {
 	if(myspace)myspace->callUpdate();
 	else{SGLprintError("redrawSlot 0x%X hat keinen Space, löse nicht aus",this);}
 }
-void SGLSpace::redrawSlot::operator=(redrawSlot &Slot)
+
+/**
+ * Kopieroperator des redraw-Slots.
+ * Dieser Operator überlädt den "="-Operator der SGLSlot-Klasse und unterbindet so die standardmäßige Zeigerwarung.
+ * Der interne SGLSpace-Zeiger wird auf NULL gesetzt.
+ * @param Slot der zu kopierende Slot
+ */
+void SGLSpace::redrawSlot::operator=(const redrawSlot &Slot)
 {
 	myspace=NULL;
 }

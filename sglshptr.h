@@ -15,6 +15,7 @@
 #include <boost/shared_ptr.hpp>
 
 /**
+@file sglshptr.h
 @author Enrico Reimer,,,
 */
 template<class T> class SGLshPtr : public boost::shared_ptr<T>
@@ -24,13 +25,13 @@ public:
 	/**
 	 * Defaultkonstruktor
 	 * Erzeugt leeren Zeiger. 
-	 * Als bool interpretiert [if(*this)] wird er false sein, bis ihm eine neue Adresse zugewiesen wird
+	 * Als bool interpretiert [ \code if(*this) \endcode ] wird er false sein, bis ihm eine neue Adresse zugewiesen wird
 	 */
 	SGLshPtr():boost::shared_ptr<T>(){}
 	/**
 	 * Allgemeiner Konstruktor.
 	 * Erzeugt Zeiger auf durch angegebenen C-Zeiger referenziertes Objekt vom Typ T.
-	 * Sollte idR. als SGLshPtr\<typ\>(new typ()) verwendet werden.
+	 * Sollte idR. als \code SGLshPtr<typ>(new typ()) \endcode verwendet werden.
 	 * @param ob C-Zeiger auf ein Objekt vom Typ T. Dieser Zeiger sollte nur hier verwedet werden.
 	 */
 	SGLshPtr(T *ob):boost::shared_ptr<T>(ob){}
@@ -70,16 +71,39 @@ public:
 	}
 };
 
+/**
+ * \defgroup shPtr_new SGLshPtr_new
+ * SGLshPtr_new(...) ist eine Abkürzung für \code SGLshPtr<Type>(new Type,..) \endcode
+ */
+/*@{*/
+/**
+ * Objektkonstruktor für Objekte deren Konstruktor 0 Parameter erwartet
+ */
 template<class T> SGLshPtr<T> SGLshPtr_new(){return SGLshPtr<T>(new T);}
+/**
+ * Objektkonstruktor für Objekte deren Konstruktor 1 Parameter erwartet
+ * @param p1 erster Parameter des Kostruktors
+ */
 template<class T,typename param1> SGLshPtr<T> SGLshPtr_new(param1 p1){return SGLshPtr<T>(new T(p1));}
+/**
+ * Objektkonstruktor für Objekte deren Konstruktor 1 Parameter erwartet
+ * @param p1 erster Parameter des Kostruktors
+ * @param p2 zweiter Parameter des Kostruktors
+ */
 template<class T,typename param1,typename param2> SGLshPtr<T> SGLshPtr_new(param1 p1,param2 p2){return SGLshPtr<T>(new T(p1,p2));}
+/*@}*/
 
+/**
+ * \defgroup global_cast Globale Cast-Operatoren
+ * SGLshPtr_new(...) ist eine Abkürzung für \code SGLshPtr\<Type\>(new Type,..) \endcode
+ */
+/*@{*/
 /**
  * Explizites dynamisches Cast. (Laufzeit-Cast)
  * Versucht den Zeiger in einen neuen Zeiger mit anderem angegebenem Typ zu casten.
  * @param src der Zeiger vom dem gecastet werden soll.
  * @param check wenn true, wird überprüft ob der cast erfolgreich war und gegebenenfalls eine Warnung ausgegeben.
- * @return das Ergebniss des Casts (Ein Zeiger SGLshPtr\<D\>, der an die selbe Adresse wie src zeigt), oder ein leerer Zeiger.
+ * @return das Ergebniss des Casts (Ein Zeiger \code SGLshPtr<D> \endcode, der an die selbe Adresse wie src zeigt), oder ein leerer Zeiger.
  */
 template<class D,class T> SGLshPtr<D> dcast(const SGLshPtr<T> &src,const bool check=true)
 {
@@ -92,7 +116,7 @@ template<class D,class T> SGLshPtr<D> dcast(const SGLshPtr<T> &src,const bool ch
  * Explizites statisches Cast. (Kompilezeit-Cast)
  * Versucht den Zeiger in einen neuen Zeiger mit anderem angegebenem Typ zu casten.
  * @param src der Zeiger vom dem gecastet werden soll.
- * @return das Ergebniss des Casts, (Ein Zeiger SGLshPtr\<D\>, der an die selbe Adresse wie src zeigt)
+ * @return das Ergebniss des Casts, (Ein Zeiger \code SGLshPtr<D> \endcode, der an die selbe Adresse wie src zeigt)
  */
 template<class D,class T> SGLshPtr<D> scast(const SGLshPtr<T> &src)
 {
@@ -100,5 +124,5 @@ template<class D,class T> SGLshPtr<D> scast(const SGLshPtr<T> &src)
 	boost::static_pointer_cast<D>(src).swap(ret);
 	return ret;
 }
-
+/*@}*/
 #endif

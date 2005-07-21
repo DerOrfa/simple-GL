@@ -12,6 +12,13 @@
 #include <typeinfo> 
 #include <GL/glu.h>
 
+/**
+ * Kopierkonstruktor.
+ * Alle Parameter bis auf is_free und shared werden kopiert.
+ * Das kopierte Objekt ist nocht nicht im Renderercache und gehört zu keiner Liste.
+ * Sein compileNextTime-Slot muss noch an ein Signal gebunden werden.
+ * @param src Das zu kopierende Objekt
+ */
 SGLObjBase::SGLObjBase(const SGLObjBase &src):
 SGLMatrixObj(GL_MODELVIEW),
 compileNextTime(this)
@@ -28,6 +35,14 @@ compileNextTime(this)
 	is_free=shared=false;
 }
 
+/**
+ * Standardkonstruktor.
+ * Erzeugt ein Objekt an den gegebenen Raumkoordinaten.
+ * @param PosX die Raumkoordinaten, an denen das Objekt erz. wird
+ * @param PosY 
+ * @param PosZ 
+ * @param SizeFact Die Grundskalierung, mit der das Objekt erzeugt wird.
+ */
 SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLMatrixObj(GL_MODELVIEW),
 compileNextTime(this)
@@ -43,9 +58,16 @@ compileNextTime(this)
 	should_compile=1;
 	shared=false;
 }
+
+
+/**
+ * Destruktor.
+ * Sollte nicht explizit ausgelöst werden.
+ * Das Objekt wird automatisch gelöscht, wenn es nicht mehr verwedet wird.
+ * Ist das gelöschte Objekt noch in einer Objektliste eingetragen, wird eine Warnung ausgegeben.
+ */
 SGLObjBase::~SGLObjBase()
 {
-
 	if(myList)
 	{
 		cout << myList->Objects.size() << endl;
@@ -58,6 +80,13 @@ SGLObjBase::~SGLObjBase()
 }
 
 
+/**
+ * Bestimmt die Normale auf der durch zwei Vektoren bestimmten Ebene.
+ * Die Ebene schneidet den Koordinatenursprung.
+ * @param Vekt1 die zwei Vektoren zur beschreibung der Ebene
+ * @param Vekt2 
+ * @return einen Vektor, der senkrecht auf der Ebene steht
+ */
 SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
 {
 	SGLVektor ret=Vekt1.kreuzprod(Vekt2);
@@ -65,11 +94,19 @@ SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
 	return ret;
 }
 
+/**
+ * Bestimmt die Normale auf der durch zwei Vektoren und einen Stützvektor bestimmten Ebene.
+ * Die Ebene schneidet den durch den Stützvektor gegebenen Punkt im Raum.
+ * @param Pkt1 @param Pkt2 die zwei Vektoren zur beschreibung der Ebene
+ * @param Pkt3 der Stützvektor der Ebene
+ * @return 
+ */
 SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 {return Normale(SGLVektor(Pkt2-Pkt1),SGLVektor(Pkt3-Pkt1));}
 
-/*!
-    \fn SGLObjBase::metaGenerate()
+/**
+ * Basis-Zeichenfunktion.
+ * Lädt die Transformationsmatrix des Objektes, richtet es danach gegebenfalls nach dem FaceAt-Punkt aus und ruft generate() auf.
  */
 void SGLObjBase::metaGenerate()
 {
@@ -93,8 +130,9 @@ void SGLObjBase::metaGenerate()
 	notifyChange();
 }
 
-/*!
-    \fn SGLObjBase::getCenterInSpace()
+/**
+ * Wendet die Transformationen des Objektes auf das Ergebniss von getCenter() an und gibt das Ergebniss zurück.
+ * @return die Position des Objektzentrums im Raum.
  */
 SGLVektor SGLObjBase::getCenterInSpace()
 {
@@ -109,8 +147,9 @@ SGLVektor SGLObjBase::getCenterInSpace()
 }
 
 
-/*!
-    \fn SGLObjBase::getMyPos()
+/**
+ * Wendet die Transformationen des Objektes auf einen Nullvektor an und gibt das Ergebniss zurück.
+ * @return die Position des Objektes im Raum.
  */
 SGLVektor SGLObjBase::getMyPos()
 {
@@ -125,10 +164,13 @@ SGLVektor SGLObjBase::getMyPos()
 }
 
 
-/*!
-	Stellt sicher, das eine CallListe für dieses Objekt in der OpenGL-Pipeline
-	vorliegt, und liefert sie. ES WIRD ABER NICHT GEZEICHNET
-    \fn SGLObjBase::metaCompile(bool force_compile=false)
+/**
+ * Stellt sicher, das dieses Objekt im Renderer-Cache vorliegt und liefert seine ID. 
+ * Wenn force_compile war ist, das Objekt noch nicht in der OpenGL-Pipeline vorliegt 
+ * oder wenn es neu berechnet werden muss, wird Compile() aufgerufen.
+ * Das Objekt wird dabei jedoch nicht gezeichnet.
+ * @param force_compile wenn true wird das Objekt in jedem Fall neu generiert.
+ * @return die ID, die das Objekt im Cache des Renderers hat. Diese ID ist innerhalb eines Renderers eindeutig.
  */
 GLuint SGLObjBase::metaCompile(bool force_compile)
 {
@@ -141,19 +183,35 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 	return ret;
 }
 
-/*!
-    \fn SGLObjBase::link(SGLObjBase *obj)
+/**
+ * Bindet das Objekt an ein Anderes.
+ * Löst dieses Objekt das Signal notifyChange aus, wird das gebundene Objekt bei nächster Gelegenheit neu berechnet.
+ * Da beim Generieren notifyChange nicht ausgelöst wird, ist auch gegenseitiges Binden möglich.
+ * \code 
+ * objA.link(objB);
+ * objB.link(objA); 
+ * \endcode
+ * @param obj das Zeilobjekt an das bei notifyChange neu berechnet werden soll.
+ * @return 
  */
 SGLConnection SGLObjBase::link(SGLObjBase &obj)
 {
 	return notifyChange.connect(obj.compileNextTime);
 }
 
-void SGLObjBase::unlink(connection conn)
+
+void SGLObjBase::unlink(SGLConnection conn)
 {
 	conn.disconnect();
 }
 
+
+/**
+ * Bereitet den Renderercache für das Objekt vor.
+ * Hat das Objekt noch keine ID, wird ihm eine zugewiesen.
+ * @param draw Wenn true, wird gleichzeitig in den Renderercache geschrieben und das Objekt gezeichnet.
+ * @return die ID des Objektes.
+ */
 GLint SGLObjBase::beginList(bool draw)
 {
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
@@ -162,6 +220,11 @@ GLint SGLObjBase::beginList(bool draw)
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
 	return ID;
 }
+
+/**
+ * Schließt den Renderercache für das Objekt ab.
+ * Alle GL-Zeichenoperationen müssen zwischen beginList() und endList aufgerufen werden.
+ */
 void SGLObjBase::endList()
 {
 	glEndList();
@@ -171,9 +234,8 @@ void SGLObjBase::endList()
 
 SGLObjBase::CompilerMerker::CompilerMerker(SGLObjBase *obj){this->obj=obj;}
 
-/*!
-	Stellt sicher, daß das Objekt bei nächster Gelegenheit Kompiliert wird
-    \fn SGLObjBase::notifyChange()
+/**
+ * Stellt sicher, daß das Objekt bei nächster Gelegenheit neu berechnet wird
  */
 void SGLObjBase::CompilerMerker::operator()() const
 {

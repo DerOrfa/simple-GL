@@ -118,6 +118,10 @@ public:
 	void TwoSided(bool TwoSideRendering=true);
 
 	void CompileIntObs();
+	
+	/**
+	 * Loopback um das frameworkspezifische Neuzeichnen von "innen" auszulösen.
+	 */
 	virtual void callUpdate()=0;
 	void draw();
 	bool reCompileIntObs(bool redraw=true);
@@ -156,6 +160,12 @@ public:
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
 	void printErrors();
+	/**
+	 * Führt frameworkspezifische Operationen zum Initialisieren der aus.
+	 * @param w Breite der View bei der Initialisierung
+	 * @param h Höhe der View bei der Initialisierung
+	 * @return true wenn die View erfolgreich initialisiert wurde, sonst false
+	 */
 	virtual bool setup_video(int w,int h)=0;
 	void sglInit(unsigned int w=100,unsigned int h=100);
 	static bool globalColorAktive;
