@@ -91,7 +91,7 @@ public:
 		redrawSlot(SGLSpace *myspace);
 		SGLSpace *myspace;
 		void operator()();
-		virtual void operator=(redrawSlot &Slot);
+		virtual void operator=(const redrawSlot &Slot);
 	}reDraw;
 
 	SGLClipPlane	*ClipPlanes[5];

@@ -14,6 +14,11 @@
 #include <stdio.h>
 
 
+/**
+ * Standartkonstruktor.
+ * Initialsiert die Objketarrays Objects_CW und Objects_CCW für den Anfang auf leere Arrays mit 5 freien Zellen.
+ * @param transp flag, ob diese Liste Transparente Objekte beinhaltet (muss anders gerendert werden)
+ */
 SGLObjList::SGLObjList(bool transp)
 {
 	Objects_CW=Objects_CCW=NULL;
@@ -31,6 +36,11 @@ SGLObjList::SGLObjList(const SGLObjList &src)
 	operator=(src);
 }
 
+/**
+ * Destruktor.
+ * Trägt alle Objekte aus der Liste aus. Sie gehören daher danach keiner Liste mehr an.
+ * Wenn sie noch an anderer Stelle (z.B. von anderen Spaces) verwendet werden werden diese Waisen noch nicht automatisch gelöscht.
+ */
 SGLObjList::~SGLObjList()
 {
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
@@ -38,8 +48,16 @@ SGLObjList::~SGLObjList()
 		if(*i){if((*i)->myList==this)(*i)->myList=NULL;}//Alle Objekte trennen
 		else{SGLprintError("Huch, da is ein Ungültiges Objekt in der Liste an Stelle %d von %d",distance(i, Objects.begin()),Objects.size());}
 	}
+	//@todo was passiert mit den getrennten - bringt das irgendwen durcheinander, wenn Obs zu keiner Liste gehören ? - und was is mit "obj->is_free"
 }
 
+/**
+ * Kopierkonstruktor.
+ * Es werden alle Objektlisten samt Inhalt kopiert. 
+ * Die Objekte bleiben jedoch trotzdem im Besitz des Originals.
+ * @param src die Liste, die kopiert werden soll.
+ * @return eine Referenz auf die Kopie
+ */
 SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 {
 	Objects_CW=Objects_CCW=NULL;
@@ -59,6 +77,11 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 	return *this;
 }
 
+/**
+ * Löst das Zeichnen aller Objekte der Liste aus.
+ * Wenn nötig wird Compile() ausgeführt. 
+ * Es werden alle CW- und CCW- Objekte entsprechend ihrer Priorität aus dem Renderercache gezeichnet.
+ */
 void SGLObjList::CallAllLists()
 {
 	if(Objects.empty())return;
@@ -87,8 +110,14 @@ void SGLObjList::CallAllLists()
 }
 
 
-/*!
-    \fn SGLObjList::AddOb(SGLObjBase* obj)
+/**
+ * Trägt ein neues Objekt in der Liste ein.
+ * Ist das Objekt schon Teil der Liste. wird es vor dem erneuten Eintragen entfernt.
+ * Das Flag is_free des Objektes wird false gesetzt und die Liste wird als Besitzer des Objektes im Objekt vermerkt.
+ * Hat das Objekt schon einen Besitzer wird stattdessen im Objekt das Flag shared true gesetzt.
+ * Es wird außerdem vermerkt, daß die Liste beim nächsten Aufruf von CallAllLists() Compile() ausführen und ihre Sortierung prüfen muss.
+ * @param obj das Objekt, das in die Liste aufgenommen werden soll.
+ * @return true wenn das Objekt aufgenommen wrude, sonst false.
  */
 bool SGLObjList::AddOb(shared_obj obj)
 {
@@ -145,6 +174,12 @@ bool SGLObjList::AddOb(GLuint ListID,GLenum Face)
 bool SGLObjList::removeOb(GLuint ListID)
 {return (removeOb_CW(ListID) || removeOb_CCW(ListID));}
 
+/**
+ * Entfernt ein Objekt aus der Liste.
+ * Es wird außerdem vermerkt, daß die Liste beim nächsten Aufruf von CallAllLists() Compile() ausführen und ihre Sortierung prüfen muss.
+ * @param obj das zu entfernende Objekt.
+ * @return false, wenn das Objekt nicht gefunden wurde, sonst true wenn es entfernt wurde.
+ */
 bool SGLObjList::removeOb(shared_obj obj)
 {
 	if(Objects.empty())return false;
@@ -199,9 +234,6 @@ void SGLObjList::Clear()
 	ObjCnt_CW=ObjCnt_CCW=0;
 }
 
-/*!
-    \fn template<class T> bool SGLObjList::grow(T *&liste,unsigned int &cnt,unsigned int newsize)
- */
 template<class T> bool SGLObjList::grow(T *&liste,unsigned short &oldsize,unsigned short newsize)
 {
 	if(oldsize>=newsize){SGLprintWarning("kein Resize nötig");return false;}
@@ -216,9 +248,11 @@ template<class T> bool SGLObjList::grow(T *&liste,unsigned short &oldsize,unsign
 	return true;
 }
 
-/*!
-
-    \fn SGLObjList::Compile(bool force=false)
+/**
+ * Ruft für alle Objekte in der Liste SGLObjBase::metaCompile() entsprechend ihrer Priorität auf.
+ * Die Operation setzt bei ihrer Ausführung das Flag check_recompile auf false.
+ * Hat die Liste daher einmal Compile() ausgeführt, wird dies erst wieder tun, wenn das entsprechende Flag von außen neu auf true gesetzt wurde.
+ * @param force wenn true, wird für alle Objekte der Renderercache neu generiert. Unabhängig davon, ob sie geändert wurden.
  */
 void SGLObjList::Compile(bool force)
 {
@@ -241,7 +275,8 @@ void SGLObjList::Compile(bool force)
  */
 void SGLObjList::ListInfo()
 {
-	if(SGLshowInfos)
+	//@todo gaaanz böse, chrasht immer auf xf86 ... ???
+/*	if(SGLshowInfos)
 	{
 		char *elemente=(char*)malloc(sizeof(char));elemente[0]=0;
 		unsigned int size=0;
@@ -261,14 +296,19 @@ void SGLObjList::ListInfo()
 			}
 			sprintf(elemente+oldlen,FormatStr,cnt,ob->guesType(),ob->priority,ob->ID);
 		}
-		SGLprintInfo("Liste 0x%X:%s\n",this,elemente);
+		SGLprintInfo("Liste 0x%X:%s\n",this,elemente);*/
 		//@todo valgrind sagt hier was von "invalid write of size 1"
 		//@todo und das realloc passt ihm auch nich (im 2+n ten durchlauf)
 		//@todo und es hat recht, wenn das hier aktiv is, fällt alles Folgende auseinander
-	}
+//	}
 }
 
 
+/**
+ * Sucht in der Liste nach einen bestimmnten Objekt.
+ * @param obj das Objekt, nach dem gesucht werden soll
+ * @return 0 wenn das Objekt nicht gefunden wurde, sonst die Anzahl der derzeitigen Verwendungen
+ */
 unsigned short SGLObjList::isThere(SGLObjBase *obj)
 {
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)

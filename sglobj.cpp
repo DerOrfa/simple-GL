@@ -65,6 +65,12 @@ GLuint SGLObj::Compile(bool draw,bool free)
 }
 
 
+/**
+ * Standardkonstruktor.
+ * Erzeugt eine Strecke, die von Vekt1 nach Vekt2 geht.
+ * @param Vekt1 Anfangspunkt der Strecke
+ * @param Vekt2 Endpunkt der Strecke
+ */
 SGLStrecke::SGLStrecke(SGLshPtr<SGLVektor> Vekt1,SGLshPtr<SGLVektor> Vekt2)
 {
 	punkt1=Vekt1;
@@ -83,6 +89,10 @@ SGLStrecke::SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2)
 	punkt2=SGLshPtr<SGLVektor> (new SGLVektor(Vekt2));
 }
 
+/**
+ * Die Länge der Strecke.
+ * @return der Abstand zwischen den beiden Endpunkten der Strecke
+ */
 GLdouble SGLStrecke::Len(){return (*punkt1 - *punkt2).Len();}
 
 void SGLStrecke::generate()

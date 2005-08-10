@@ -17,19 +17,6 @@
 
 class SGLObjList;
 
-/**
-@author Enrico Reimer
-*/
-template<class T> struct CompObj : public unary_function<T&, void>
-{
-	CompObj(vector<GLint> *targetList) {Objs=targetList;}
-	void operator() (T &x) 
-	{
-		Objs->push_back(x.Compile()); 
-	}
-	vector<GLint> *Objs;
-};
-
 /** Basisklasse für Zeichenobjekte.
   * @author Enrico Reimer
   */

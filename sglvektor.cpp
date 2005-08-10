@@ -21,6 +21,12 @@
 #include	"util/sgltextur.h"
 #include	"util/sglmaterial.h"
 
+/**
+ * Konstruktor für einzelne Koordinaten.
+ * @param X X-Position des Vektors
+ * @param Y Y-Position des Vektors
+ * @param Z Z-Position des Vektors
+ */
 SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):EVektor<GLdouble>(3)
 {
 	SGLV_X= X;
@@ -28,6 +34,12 @@ SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):EVektor<GLdouble>(3)
 	SGLV_Z= Z;
 	SGLV_R=SGLV_G=SGLV_B=-1;
 }
+
+/**
+ * Konstruktor für Koordinaten aus Array.
+ * @param Array[] dreistelliges Array mit den X-, Y- und Z- Koordinaten.
+ * @return 
+ */
 SGLVektor::SGLVektor(GLdouble Array[3]):EVektor<GLdouble>(3)
 {
 	SGLV_X= Array[0];
@@ -44,11 +56,19 @@ SGLVektor::SGLVektor(GLfloat Array[3]):EVektor<GLdouble>(3)
 	SGLV_R=SGLV_G=SGLV_B=-1;
 }
 
+/**
+ * Kopierkonstrukor zur Erzeugung aus EVektor\<GLdouble\> 
+ * @param src der EVektor, der kopiert werden soll.
+ */
 SGLVektor::SGLVektor(const EVektor<GLdouble> &src):EVektor<GLdouble>(src)
 {
 	SGLV_R=SGLV_G=SGLV_B=-1;
 }
 
+/**
+ * Kopierkonstrukor zur Erzeugung aus SGLVektor 
+ * @param src der SGLVektor, der kopiert werden soll.
+ */
 SGLVektor::SGLVektor(const SGLVektor &src):EVektor<GLdouble>(src)
 {
 	SGLV_R=src.SGLV_R;
@@ -56,9 +76,7 @@ SGLVektor::SGLVektor(const SGLVektor &src):EVektor<GLdouble>(src)
 	SGLV_B=src.SGLV_B;
 }
 
-
-SGLVektor::~SGLVektor(){}
-
+//@todo erst checken, dann dokumentieren
 SGLVektor SGLVektor::Rotate(GLdouble Yrot, GLdouble Xrot, GLdouble Zrot)
 {
 	return SGLVektor(	COS(Yrot)*SGLV_X+COS(Zrot+90)*SGLV_Y+COS(Yrot+90)*SGLV_Z,
@@ -67,6 +85,13 @@ SGLVektor SGLVektor::Rotate(GLdouble Yrot, GLdouble Xrot, GLdouble Zrot)
 					);
 }
 
+/**
+ * Rotiert den Vektor um die angegebe Achse.
+ * Dabei wird nicht der eigentliche Vektor, sondern eine Kopie rotiert, die zurückgegeben wird.
+ * @param RotVekt der Richtungsvektor der Rotationsachse
+ * @param Amount der Winkel, um den rotiert werden soll (in Grad)
+ * @return der rotierte Vektor
+ */
 SGLVektor SGLVektor::Rotate(SGLVektor RotVekt, GLdouble Amount)
 {
 	RotVekt.Normalize();
@@ -90,7 +115,10 @@ SGLVektor SGLVektor::Rotate(SGLVektor RotVekt, GLdouble Amount)
 	return SGLVektor(RotMat * (*this));
 }
 
-//Der Winkel zu Z-Achse bei Rotation um Y-achse
+/**
+ * Der Winkel zur Z-Achse bei Rotation um Y-Achse
+ * @return der Winkel, um den der Vektor um die Y-Achse rotiert werden müsste, um zur Z-Achse koliniar zu sein.
+ */
 GLdouble SGLVektor::Ywink()
 {
 	GLdouble teiler=sqrt(SGLV_X*SGLV_X+SGLV_Z*SGLV_Z);
@@ -106,7 +134,10 @@ GLdouble SGLVektor::Ywink()
 	}
 }
 
-//Der Winkel zu Z-Achse bei Rotation um X-achse
+/**
+ * Der Winkel zu Z-Achse bei Rotation um X-Achse
+ * @return der Winkel, um den der Vektor um die X-Achse rotiert werden müsste, um zur Z-Achse koliniar zu sein.
+ */
 GLdouble SGLVektor::Xwink()
 {
 	GLdouble teiler=sqrt(SGLV_Z*SGLV_Z+SGLV_Y*SGLV_Y);
@@ -129,6 +160,12 @@ SGLVektor SGLVektor::operator =(EVektor<GLdouble> &VektPtr)
 	return *this;
 }
 
+/**
+ * Ruft glVertex mit den Eigenschaften dieses Vektors auf.
+ * Wenn Normale definiert ist, wird sie gesetzt.
+ * Danach DrawVertex() aufgerufen.
+ * @param Normale die Normale die für diesen Vektor angenommen werden soll.
+ */
 void SGLVektor::DrawVertex(SGLVektor* Normale)
 {
 	if(Normale)Normale->SetNormale();
@@ -137,11 +174,14 @@ void SGLVektor::DrawVertex(SGLVektor* Normale)
 }
 
 /**
-Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis zu  GL_TEXTURE0_ARB herunter.
-(Aber immer nur die Selben)
-*/
+ * Zeichnet einen Vertex (glVertex) mit Texturkoordinaten und gegebenfalls Farbinformationen aber ohne Normale.
+ */
 void SGLVektor::DrawVertex()
 {
+/*
+	Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis zu  GL_TEXTURE0_ARB herunter.
+	(Aber immer nur die Selben)
+ */
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
 	bool texOK=false;
 	if(SGLTextur::TexLoaded)
@@ -179,6 +219,10 @@ void SGLVektor::DrawVertex()
 	DrawPureVertex();
 }
 
+/**
+ * Setzt die Zeichenfarbe des Vektors in Fließkommaformat.
+ * Werte zwischen 0 und 1 sind zulässig.
+ */
 void SGLVektor::SetColor(GLdouble R, GLdouble G, GLdouble B)
 {
 	SGLV_R=R;
@@ -186,6 +230,11 @@ void SGLVektor::SetColor(GLdouble R, GLdouble G, GLdouble B)
 	SGLV_B=B;
 }
 
+/**
+ * Setzt die Zeichenfarbe des Vektors in Ganzzahligen Werten.
+ * Negative Werte werden invertiert.
+ * Werte über 255 werden auf 255 gekürzt.
+ */
 void SGLVektor::SetColor(int R, int G, int B)
 {
 	R=abs(R);
@@ -197,11 +246,18 @@ void SGLVektor::SetColor(int R, int G, int B)
 	SetColor((unsigned char)R,(unsigned char)G,(unsigned char)B);
 }
 
+/**
+ * Setzt die Zeichenfarbe des Vektors in Ganzzahligen Werten.
+ * Die Parameter werden nicht geprüft oder angepasst bevor sie gesetzt werden.
+ */
 void SGLVektor::SetColor(unsigned char R,unsigned char G,unsigned char B)
 {SetColor(GLdouble(R)/GLdouble(255),GLdouble(G)/GLdouble(255),GLdouble(B)/GLdouble(255));}
 
-/*!
-    \fn SGLVektor::toWink(GLdouble &ebene__wink,GLdouble &steigung__wink)
+/**
+ * Bestimmt Rotationswinkel und Anstieg des Vektors im Verhältniss zu dem Koordinatenebenen.
+ * @param ebene_wink Puffer für den Roatationswinkel der Projektion des Vektors auf die X-Y-Ebene zur X-Achse
+ * @param steigung_wink Puffer für den Anstiegswinkel des Vektos
+ * @return 
  */
 GLdouble SGLVektor::toWink(GLdouble &ebene_wink,GLdouble &steigung_wink)
 {
@@ -212,16 +268,24 @@ GLdouble SGLVektor::toWink(GLdouble &ebene_wink,GLdouble &steigung_wink)
 	return ret;
 }
 
-/*!
-    \fn SGLVektor::translateTo()
+/**
+ * Erzeugt im Renderer eine Transformation an die Position des Vektors
+ * Das folgende Beispiel zeichnet einen Punkt an der Position \<5,5,5\>
+ * \code 
+ * SGLVektor(5,5,5).translateTo();
+ * SGLVektor(0,0,0).DrawPkt(1);
+ * \endcode
  */
 void SGLVektor::translateTo()
 {
 	glTranslated(SGLV_X,SGLV_Y,SGLV_Z);
 }
 
-/*!
-    \fn SGLVektor::DrawVektor(SGLVektor from)
+/**
+ * Zeichnet den Vektor.
+ * Zeichnet einen Strahl von den angegeben Koordinaten zum Vektor.
+ * Dabei geht die Farbe des Strahls von weiß in die des Vektors über.
+ * @param from der Ursprung des Strahls
  */
 void SGLVektor::DrawVektor(SGLVektor from)
 {
@@ -247,17 +311,22 @@ void SGLVektor::DrawVektor(SGLVektor from)
 */
 }
 
-
-/*!
-    \fn SGLVektor::DrawVektorAt(SGLVektor At)
+/**
+ * Zechnet den Vektor mit At als Stützvektor.
+ * Es wird eine Strecke von At nach this+At gezeichnet.
+ * @param At der Stützvektor des zu zeichnenden Vektors.
  */
 void SGLVektor::DrawVektorAt(SGLVektor At)
 {
-	SGLVektor DrawV=*this;//Um alle Attribute (z.B. Farbe in DrawV zu bertr.)
+	SGLVektor DrawV=*this;//Um alle Attribute (z.B. Farbe in DrawV zu übertr.)
 	DrawV +=(At);
 	DrawV.DrawVektor(At);
 }
 
+/**
+ * Zeichnet ein dreidimensionales Kreuz an den Positionskoordinaten des Vektors.
+ * @param size die Große des Kreuzes.
+ */
 void SGLVektor::DrawPkt(double size)
 {
 	glBegin(GL_LINES);

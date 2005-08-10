@@ -41,6 +41,10 @@
 
 bool SGLSpace::globalColorAktive=false;
 
+/**
+ * Versetzt den Renderer in definierte Zustände.
+ * @param mode der Modus in den der Renderer versetzt werden soll. 
+ */
 void SGLSpace::resetView(short mode)
 {
 	glClearDepth(1);
@@ -68,6 +72,13 @@ void SGLSpace::resetView(short mode)
 	}
 }
 
+/**
+ * Zeichnet Hilfsobjekte aus den Renderercache.
+ * Es werden gegebenenfalls das Koordinatensystem und Schnittflächen gezeichnet.
+ * Die Kamera wird hier nich gezeichnet, sie ist ein normales Zeichenobjekt und wird von defaultCam im Space registiert.
+ * Es können nicht alle Helper zum gleichen Zeitpunkt gezeichnet werden, daher wird diese Funktion mehrfach mit verschiedenen Stages aufgerufen.
+ * @param stage Typ von Helpern der gezeichnet werden soll (1 zeichnet die Linien des Koordinatensystems und die Schnittflächen, 2 die Beschriftungen des Koordinatensystems)
+ */
 void SGLSpace::callHelper(int stage)
 {
 	switch(stage)
@@ -152,6 +163,10 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	cloned=false;
 }
 
+/**
+ * Destruktor.
+ * Es werden alle Hilfsobjekte und die Objektlisten gelöscht.
+ */
 SGLSpace::~SGLSpace()
 {
 	if(!cloned)//@todo Dieses cloned wird nicht automatisch gesetzt
@@ -661,7 +676,7 @@ map<std::string, bool> SGLSpace::extProxy;
  * @param ext die GL-Extension, nach der gesucht wird
  * @param msg die Meldung, die beim ersten Mal ausgegeben werden soll, wenn ext nicht verfügbar ist
  * @param vital das Loglevel für die Fehlermeldung (default 2)
- * @return 
+ * @return true wenn der Renderer die extension unterstützt
  */
 bool SGLSpace::extAvail(const std::string &ext,const std::string &msg,unsigned short vital)
 {

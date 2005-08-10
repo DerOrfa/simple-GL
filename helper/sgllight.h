@@ -23,12 +23,16 @@
 struct LichtFarbe{GLfloat Umgebung[4],Difus[4],Glanz[4];};
 
 /**
+ * Klasse für Lichtquellen.
+ * Lichtquellen werden wie andere Objekte registriert, und damit in die Objektlisten der Spaces aufgenommen.
+ * Auch sie verwenden den Renderercache um gezeichnet zu werden und werden zusammen mit den anderen Objekten über die Objektlisten aufgerufen.
+ * 
  *@author Enrico Reimer
  */
 class SGLLight : public SGLObj
 {
 public:
-	SGLLight(int LID=-1,GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLLight(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,const int LID=-1);
 	GLenum LightID;
 	bool On(bool on=true);
 	bool IsOn();

@@ -235,7 +235,7 @@ void SGLObjBase::endList()
 SGLObjBase::CompilerMerker::CompilerMerker(SGLObjBase *obj){this->obj=obj;}
 
 /**
- * Stellt sicher, daﬂ das Objekt bei n‰chster Gelegenheit neu berechnet wird
+ * Stellt sicher, daﬂ der Renderercache dieses Objektes bei n‰chster Gelegenheit neu berechnet wird
  */
 void SGLObjBase::CompilerMerker::operator()() const
 {

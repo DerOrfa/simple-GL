@@ -35,6 +35,8 @@
 #define	SGLV_B	Color[2]
 
 /**
+ * Auf EVektor\<GLdouble\> basierender Positionsvektor.
+ * Dieser Vektor bietet einige zusätzliche Operationen zum Zeichnen und zur Transformation.
   *@author Enrico Reimer
   */
 
@@ -48,7 +50,6 @@ public:
 	SGLVektor(GLdouble X=0,GLdouble Y=0,GLdouble Z=0);
 	SGLVektor(const EVektor<GLdouble> &src);
 	SGLVektor(const SGLVektor &src);
-	~SGLVektor();
 	SGLVektor Rotate(GLdouble Yrot, GLdouble Xrot, GLdouble Zrot);
 	SGLVektor Rotate(SGLVektor VektPtr, GLdouble Xrot);
 	GLdouble Xwink();

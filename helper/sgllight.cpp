@@ -18,18 +18,16 @@
 #include "sgllight.h"
 
 /**
- * Konstruktor
- * @param LID 
- * @param PosX 
- * @param PosY 
- * @param PosZ 
- * @param SizeFact 
+ * Konstruktor.
+ * Erzeugt eine neue Lichtquelle an der angebenen Position.
+ * Die Lichtquelle ist anfangs "an".
+ * @param LID die ID der Lichtquelle. Wenn kleiner als GL_LIGHT0 wird automatisch eine freie ID für die Lichtquelle ermittelt.
  * @return 
  */
-SGLLight::SGLLight(int LID,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):SGLObj(PosX,PosY,PosZ,SizeFact)
+SGLLight::SGLLight(GLdouble PosX,GLdouble PosY,GLdouble PosZ,const int LID):SGLObj(PosX,PosY,PosZ,1)
 {
 	IsSpot=false;
-	if(LID>=0)LightID=GLenum(LID);
+	if(LID>=GL_LIGHT0)LightID=GLenum(LID);
 	else
 	{
 		GLint MaxLights;
@@ -54,6 +52,11 @@ SGLLight::SGLLight(int LID,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble Si
 	Abnahme.Quadratisch=.05;
 }
 
+/**
+ * Schaltet die Lichtquelle an/aus.
+ * @param on wenn true wird die Lichtquelle aktiviert, ansonsten deaktiviert.
+ * @return true, wenn die Lichtquelle vorher an war, sonst false.
+ */
 bool SGLLight::On(bool on)
 {
 	bool ret=IsOn();
@@ -61,6 +64,10 @@ bool SGLLight::On(bool on)
 	else if(ret && !on)glDisable(LightID);
 	return ret;
 }
+/**
+ * Ermittelt, ob die Lichtquelle aktiv ist.
+ * @return true, wenn die Lichtquelle an ist, sonst false.
+ */
 bool SGLLight::IsOn(){return glIsEnabled(LightID);}
 
 void SGLLight::generate()
@@ -73,6 +80,12 @@ void SGLLight::generate()
 	}
 }
 
+/**
+ * Wandelt die Lichtquelle in ein Kameralicht um.
+ * Kameralichter ändern nie ihre Position relativ zur Kamera, daher müssen sie nie neu gezeichnet werden.
+ * Aus diesem Grund löscht diese Funktion den Renderercache des Objektes.
+ * Die Lichtquelle wird in eine kegelförmige Lichquelle mit 30° Innenwinkel umgewandelt und jegliche Transformationen werden gelöscht.
+ */
 void SGLLight::CamLight()
 {
 	beginList(false);
@@ -99,6 +112,9 @@ void SGLLight::SetParam(GLenum pname,GLfloat param)
 void SGLLight::SetParam(GLenum pname,const GLfloat *params)
 {glLightfv(LightID,pname,params);}
 
+/**
+ * Initialisiert die Lichtquelle mit Standardwerten.
+ */
 void SGLLight::SetUp()
 {
 	const GLfloat Richt[3]={Spot.Richtung.SGLV_X,Spot.Richtung.SGLV_Y,Spot.Richtung.SGLV_Z};
