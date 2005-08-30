@@ -63,7 +63,7 @@ public:
 	void freeTexture();
 	static bool checkForMultiText(unsigned short cnt);
 	void replaceMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed);
-    void addMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed);
+	void addMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bool call_changed);
 	void addMTexBegin(SGLshPtr<SGLBaseTex> tex,bool call_changed);
 	void addMTexEnd(SGLshPtr<SGLBaseTex> tex,bool call_changed);
 	void delMTex(SGLshPtr<SGLBaseTex> delTex,bool call_changed);
