@@ -209,8 +209,8 @@ void SGLBaseCam::OptZoom(GLdouble fact)
 double SGLBaseCam::ViewLength()
 {
 	SGLVektor tVek(Pos-LookAt);
-	return tVek.Len();
 	ViewMatr.outDated=true;
+	return tVek.Len();
 }
 
 void SGLBaseCam::ResetView()

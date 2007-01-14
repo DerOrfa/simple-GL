@@ -29,7 +29,7 @@
 class SGLMatrixObj
 {
 public:
-    SGLMatrixObj(GLenum type);
+	SGLMatrixObj(GLenum type);
 	void Scale(GLdouble xfact,GLdouble yfact, GLdouble zfact);
 	void Scale(GLdouble fact);
 	void ScaleTo(GLdouble fact);
@@ -44,6 +44,7 @@ public:
 	void saveMatrix(GLenum type,GLdouble dst[16]=NULL);
 	void saveAktMatrix(GLdouble dst[16]=NULL);
 	virtual const char* guesType();
+	virtual ~SGLMatrixObj();
 protected:
 	GLdouble MyTransformMatrix[16];
 	GLenum MatrMode;

@@ -128,3 +128,4 @@ const char*  SGLMatrixObj::guesType()
 #endif
 }
 
+SGLMatrixObj::~SGLMatrixObj(){}
