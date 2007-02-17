@@ -1,9 +1,9 @@
 export CC=gcc
 export CXX=g++
 export MAKEFILE = Makefile.manual
-export CXXFLAGS= -Wall -O2
+export CXXFLAGS= -Wall -O2 -ffast-math -march=$(machine) -ftree-vectorize
 export CFLAGS=$(CXXFLAGS)
-
+#
 
 %:
 	${MAKE} $@ 
