@@ -1,6 +1,10 @@
 #libsgl master cmake-file
-
+PROJECT(libsgl)
 INCLUDE(FindOpenGL)
+
+SET(TARGET_VERSION_MAJOR 0)
+SET(TARGET_VERSION_MINOR 9)
+
 
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 FIND_LIBRARY(ECLASSES2_LIB eclasses2)
