@@ -215,7 +215,10 @@ void SGLObjBase::unlink(SGLConnection conn)
 GLint SGLObjBase::beginList(bool draw)
 {
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
-	{SGLprintError("Konnte Zeichencache für das %s-Objekt nicht erzeugen. Wurde openGL vielleicht noch nicht initialisiert?",guesType());}
+	{
+	    GLuint error=glGetError();
+	    SGLprintError("Konnte Zeichencache für das %s-Objekt nicht erzeugen. (%s) Wurde openGL vielleicht noch nicht initialisiert?",guesType(),gluErrorString(GLenum(error)));
+	}
 	rendering=true;
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
 	return ID;
