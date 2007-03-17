@@ -9,7 +9,7 @@ SET(TARGET_VERSION_MINOR 9)
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 FIND_LIBRARY(ECLASSES2_LIB eclasses2)
 
-SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "systems dir for data")
+SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share/libsgl" CACHE PATH "systems dir for data")
 #SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h")
 
 SET(CORE_DIR ./)

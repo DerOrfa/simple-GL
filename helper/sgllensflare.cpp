@@ -171,7 +171,7 @@ unsigned char *SGLLensFlare::load_luminance(char *name, int *width, int *height,
 
 /////////////////////////////////////////////////////
 
-SGLLensFlare::SGLLensFlare(SGLCamera *Camera,SGLLight  *Light)
+SGLLensFlare::SGLLensFlare(SGLshPtr<SGLBaseCam> Camera,SGLshPtr<SGLLight> Light)
 {
 	red[0]=1;red[1]=red[2]=0;
 	green[1] = 1;green[0]=green[2]=0;
@@ -259,7 +259,7 @@ void SGLLensFlare::init_flares()
   num_flares = 12;
 }
 
-void SGLLensFlare::DoFlares(SGLCamera *cam, GLfloat near_clip)
+void SGLLensFlare::DoFlares(SGLshPtr<SGLBaseCam> cam, GLfloat near_clip)
 {
 	GLfloat dot;
 	int i;
@@ -402,9 +402,9 @@ void SGLLensFlare::load_textures(void)
 
 
 /*!
-    \fn SGLLensFlare::isVisible(SGLCamera *cam)
+    \fn SGLLensFlare::isVisible(SGLBaseCam *cam)
  */
-bool SGLLensFlare::isVisible(SGLCamera *cam)
+bool SGLLensFlare::isVisible(SGLshPtr<SGLBaseCam> cam)
 {
 	if(!Light->IsOn())return false;//Wenn's Licht aus is gibts kein Flare
 

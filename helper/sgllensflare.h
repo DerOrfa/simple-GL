@@ -65,8 +65,8 @@ private:
 	GLfloat green[3];
 	GLfloat blue[3];
 	GLuint flareTex[6], shineTex[10];
-	SGLCamera *Camera;
-	SGLLight  *Light;
+	SGLshPtr<SGLBaseCam> Camera;
+	SGLshPtr<SGLLight> Light;
 
 
 	Flare flare[20];
@@ -82,17 +82,17 @@ private:
 	unsigned char *load_luminance(char *name, int *width, int *height, int *components);
 
 public:
-	SGLLensFlare(SGLCamera *Camera,SGLLight  *Light);
+	SGLLensFlare(SGLshPtr<SGLBaseCam> Camera,SGLshPtr<SGLLight> Light);
 	~SGLLensFlare();
 
 	virtual SGLVektor getCenter()const;
 	virtual void generate();
 	Flare set_flare(int type, float location, float scale, GLfloat color[3], float colorScale);
 	void init_flares();
-	void DoFlares(SGLCamera *cam, GLfloat near_clip);
+	void DoFlares(SGLshPtr<SGLBaseCam> cam, GLfloat near_clip);
 	void setup_texture(char *filename, GLuint texobj, GLenum minFilter, GLenum maxFilter);
 	void load_textures();
-    bool isVisible(SGLCamera *cam);
+	bool isVisible(SGLshPtr<SGLBaseCam> cam);
 };
 
 #endif
