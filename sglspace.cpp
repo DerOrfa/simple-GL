@@ -32,6 +32,7 @@
 	#include <gl\glu.h>
 	#include <gl\glaux.h>
 #else
+	#include <GL/glx.h>
 	#include <GL/gl.h>
 #endif
 
@@ -511,6 +512,8 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
 	GLuint	error=0;
+	glXWaitGL();
+	glXWaitX();
 
 	for(int i=0;i<5;i++)ClipPlanes[i]=new SGLClipPlane(GL_CLIP_PLANE0+i);
 

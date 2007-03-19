@@ -109,9 +109,9 @@ void debugSig()
     char *sig=getenv("DEBUG");
     if(sig)
     {
-		unsigned short isig=atoi(sig);
+		int isig=atoi(sig);
 		if(!isig)isig=SIGINT;
-		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",sig);
+		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",isig);
 		kill(getpid(),isig);
     }
 #endif
