@@ -491,6 +491,7 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 	#ifdef USE_DEVIL
 	  ilInit();
 	  iluInit();
+	  ilutInit();
 	  ilutRenderer(ILUT_OPENGL);
 	#endif
 	  return true;
