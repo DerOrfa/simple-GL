@@ -13,22 +13,28 @@
 #define SGLBASESHADER_H
 
 #include <string>
+#include <GL/gl.h>
 
 /**
 @author 
 */
 class SGLBaseShader{
+	struct {unsigned int shader,program;}ID;
+	bool compiled;
 public:
 	SGLBaseShader(std::string _program);
 	
 	virtual ~SGLBaseShader();
 	virtual bool unloadShader() = 0;
 	virtual bool loadShader() = 0;
-	unsigned int setup_shader(const char *fname);	
-	void set_uniform1f(unsigned int prog, const char *name, float val);
-	void set_uniform2f(unsigned int prog, const char *name, float v1, float v2);
-	void set_uniform1i(unsigned int prog, const char *name, int val);
-
+	unsigned int compile();	
+	template<class T> void set_uniform(std::string name, const T val1,const T val2,const T val3,const T val4)
+	{
+		const T vals[]={val1,val2,val3,val4};
+		set_uniformv(name,vals,4);
+	}
+	bool set_uniformv(std::string name,const GLint values[],GLsizei cnt);
+	bool set_uniformv(std::string name,const GLfloat values[],GLsizei cnt);
 public:
 	std::string program;
 };

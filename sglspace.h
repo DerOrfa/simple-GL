@@ -159,7 +159,7 @@ public:
 	void registerDynamicTex(SGLBaseTex &tex);
 	void SetQuality(unsigned short int qual=1);
 	void GetGlInfoString(char str[]);
-	void printErrors();
+	static bool printErrors();
 	/**
 	 * Führt frameworkspezifische Operationen zum Initialisieren der aus.
 	 * @param w Breite der View bei der Initialisierung

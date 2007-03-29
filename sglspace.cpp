@@ -468,11 +468,12 @@ void SGLSpace::GetGlInfoString(char str[])
  * Gibt Fehlermeldungen des Renderers aus.
  * Es wird der Fehlertext aller Rendererfehler seit dem letzten Aufruf dieser Funktion ermittelt und als SGLError ausfegeben.
  */
-void SGLSpace::printErrors()
+bool SGLSpace::printErrors()
 {
-	GLuint error=0;
-	while((error=glGetError()))
+	GLuint error;
+	while((error=glGetError())!=GL_NO_ERROR)
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
+	return error==GL_NO_ERROR;
 }
 
 

@@ -11,25 +11,29 @@
 //
 #include "sglbaseshader.h"
 
-SGLBaseShader::SGLBaseShader(std::string _program):program(_program)
+SGLBaseShader::SGLBaseShader(GLenum type,std::string _program):program(_program),compiled(false)
 {
+	ID.program = glCreateShader(type);
+	ID.shader = glCreateShader(type);
+	if(ID.shader==0)SGLprintError("Shader konnte nicht angelegt werden");
+	if(ID.program==0)SGLprintError("Programmobjekt konnte nicht angelegt werden");
+	SGLSpace::printErrors();
 }
 
 
-SGLBaseShader::~SGLBaseShader()
-{
-}
+SGLBaseShader::~SGLBaseShader(){}
 
-unsigned int SGLBaseShader::setup_shader() 
+unsigned int SGLBaseShader::compile() 
 {
-	sdr = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
-	glShaderSourceARB(sdr, 1, (const char**)&src_buf, 0);
-	free(src_buf);
-
-	glCompileShaderARB(sdr);
-	glGetObjectParameterivARB(sdr, GL_OBJECT_COMPILE_STATUS_ARB, &success);
+	assert(ID);
+	const char* src=program.c_ptr();
+	
+	glShaderSource(ID, 1, &src, 0);
+	glCompileShader(ID);
+	
+	glGetObjectParameteriv(ID, GL_OBJECT_COMPILE_STATUS_ARB, &success);
 	if(!success) {
-		fprintf(stderr, "shader compilation failed\n");
+		SGLprintError("shader compilation failed\n");
 		return 0;
 	}
 
@@ -38,7 +42,7 @@ unsigned int SGLBaseShader::setup_shader()
 	glLinkProgramARB(prog);
 	glGetObjectParameterivARB(prog, GL_OBJECT_LINK_STATUS_ARB, &linked);
 	if(!linked) {
-		fprintf(stderr, "shader linking failed\n");
+		SGLprintError("shader linking failed\n");
 		return 0;
 	}
 
@@ -46,23 +50,46 @@ unsigned int SGLBaseShader::setup_shader()
 	return prog;
 }
 
-void set_uniform1f(unsigned int prog, const char *name, float val) {
-	int loc = glGetUniformLocationARB(prog, name);
-	if(loc != -1) {
-		glUniform1f(loc, val);
+
+
+bool SGLBaseShader::set_uniformv(std::string name,const GLfloat values[],GLsizei cnt)
+{
+	int loc = glGetUniformLocationARB(prog, name.c_str());
+	if(loc != -1) switch(cnt)
+	{
+		case 1:glUniform1fv(loc, cnt,values);break;
+		case 2:glUniform2fv(loc, cnt,values);break;
+		case 3:glUniform3fv(loc, cnt,values);break;
+		case 4:glUniform4fv(loc, cnt,values);break;
+		default:
+			SGLprintError("Ungültige Dimension %d für die Uniforme %s",cnt,name.c_str());
+			return false;
 	}
+	else 
+	{
+		SGLprintError("Die Uniforme %s ist nicht verfügbar",name.c_str());
+		return false;
+	}
+	return SGLSpace::printErrors();
 }
 
-void set_uniform2f(unsigned int prog, const char *name, float v1, float v2) {
-	int loc = glGetUniformLocationARB(prog, name);
-	if(loc != -1) {
-		glUniform2f(loc, v1, v2);
+bool SGLBaseShader::set_uniformv(std::string name,const GLint values[],GLsizei cnt)
+{
+	int loc = glGetUniformLocationARB(prog, name.c_str());
+	if(loc != -1) switch(cnt)
+	{
+		case 1:glUniform1iv(loc, cnt,values);break;
+		case 2:glUniform2iv(loc, cnt,values);break;
+		case 3:glUniform3iv(loc, cnt,values);break;
+		case 4:glUniform4iv(loc, cnt,values);break;
+		default:
+			SGLprintError("Ungültige Dimension %d für die Uniforme %s",cnt,name.c_str());
+			return false;
 	}
-}
-
-void set_uniform1i(unsigned int prog, const char *name, int val) {
-	int loc = glGetUniformLocationARB(prog, name);
-	if(loc != -1) {
-		glUniform1i(loc, val);
+	else 
+	{
+		SGLprintError("Die Uniforme %s ist nicht verfügbar",name.c_str());
+		return false;
 	}
+	return SGLSpace::printErrors();
 }
