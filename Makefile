@@ -222,20 +222,16 @@ util/readtex.o:
 	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/readtex.o
 
 # target for object file
-util/sglbaseshader.o:
-	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/sglbaseshader.o
-
-# target for object file
-util/sglfragmentshader.o:
-	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/sglfragmentshader.o
-
-# target for object file
 util/sglimagefile.o:
 	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/sglimagefile.o
 
 # target for object file
 util/sglmaterial.o:
 	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/sglmaterial.o
+
+# target for object file
+util/sglshader.o:
+	$(MAKE) -f CMakeFiles/sgl.dir/build.make CMakeFiles/sgl.dir/util/sglshader.o
 
 # target for object file
 util/sgltextur.o:
@@ -282,10 +278,9 @@ help::
 	@echo "... text/sgltextbackend.o"
 	@echo "... util/memconsumer.o"
 	@echo "... util/readtex.o"
-	@echo "... util/sglbaseshader.o"
-	@echo "... util/sglfragmentshader.o"
 	@echo "... util/sglimagefile.o"
 	@echo "... util/sglmaterial.o"
+	@echo "... util/sglshader.o"
 	@echo "... util/sgltextur.o"
 
 
