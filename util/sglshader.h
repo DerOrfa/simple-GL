@@ -59,6 +59,8 @@ public:
 	*/
 	bool set_uniformv(std::string name,const GLint values[],GLsizei cnt);
 	bool set_uniformv(std::string name,const GLfloat values[],GLsizei cnt);
+    bool loadShader();
+    bool unloadShader();
 /**
  * Protected stuff
  */

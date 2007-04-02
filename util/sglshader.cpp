@@ -83,7 +83,7 @@ bool SGLShaderProgram::compile ()
 	glLinkProgram(ID);
 	glGetProgramiv(ID,GL_LINK_STATUS,&stat);
 	SGLSpace::printErrors();
-	return stat==GL_TRUE;
+	return ready=(stat==GL_TRUE);
 }
 bool SGLShaderProgram::set_uniformv(std::string name,const GLfloat values[],GLsizei cnt)
 {
@@ -108,7 +108,7 @@ bool SGLShaderProgram::set_uniformv(std::string name,const GLfloat values[],GLsi
 
 bool SGLShaderProgram::set_uniformv(std::string name,const GLint values[],GLsizei cnt)
 {
-	int loc = glGetUniformLocationARB(ID, name.c_str());
+	int loc = glGetUniformLocation(ID, name.c_str());
 	if(loc != -1) switch(cnt)
 	{
 		case 1:glUniform1iv(loc, cnt,values);break;
@@ -144,23 +144,64 @@ SGLShaderProgram::shader::shader(std::string _src):src(_src){}
  */
 bool SGLShaderProgram::compileShader(GLuint id)
 {
-	return compileShader(id,shaders.find(id)->second);
+	if(!glIsShader(id))
+	{
+		SGLprintError("Es gibt keinen shader mit der ID %d");
+		return false;
+	}
+	std::map<GLuint ,shader >::iterator i=shaders.find(id);
+	if(i==shaders.end())
+	{
+		SGLprintError("Der shader ID %d ist diesem Shaderprogramm nicht bekannt");
+		return false;
+	}	
+	return compileShader(id,i->second);
 }
 bool SGLShaderProgram::compileShader(GLuint id,shader sh)
 {
-	GLint stat;
+	GLint stat,len;
 	const char* csrc=sh.src.c_str();
 	glShaderSource(id, 1, &csrc, 0);
 	glCompileShader(id);
+	
 	glGetShaderiv(id,GL_COMPILE_STATUS,&stat);
+	glGetShaderiv(id,GL_INFO_LOG_LENGTH,&len);
+	GLchar *log=(GLchar *)malloc(len+1);
+	glGetShaderInfoLog(id,stat+1,NULL,log);
+	sh.compileLog=std::string(log);
+	
 	if(stat!=GL_TRUE)
 	{
 		SGLprintError("Der Shader %d konnte nicht kompiliert werden");
+		SGLprintWarning("compile-log:\n%s",log);
 		return false;
 	}
-	glGetShaderiv(id,GL_INFO_LOG_LENGTH,&stat);
-	GLchar *log=(GLchar *)malloc(stat+1);
-	glGetShaderInfoLog(id,stat+1,NULL,log);
-	sh.compileLog=std::string(log);
+	return true;
+}
+
+
+
+/*!
+    \fn SGLShaderProgram::loadShader()
+ */
+bool SGLShaderProgram::loadShader()
+{
+	if(!valid)
+	{
+		GLint stat;
+		glValidateProgram(ID);
+		getStatus(GL_VALIDATE_STATUS,&stat);
+		if(stat==GL_FALSE)
+		{
+			SGLprintError("Shader %d ist nicht verfügbar");
+			return false;
+		}
+	}
+	glUseProgram(ID);
+}
+
+bool SGLShaderProgram::unloadShader()
+{
+	glUseProgram(0);
 	return true;
 }

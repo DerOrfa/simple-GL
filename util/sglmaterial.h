@@ -28,6 +28,7 @@
 #endif
 
 #include "sgltextur.h"
+#include "sglshader.h"
 #include "../sglshptr.h"
 
 /**
@@ -45,12 +46,14 @@ public:
 	void SetColor(GLfloat R,GLfloat G, GLfloat B,GLenum Face=GL_FRONT_AND_BACK,bool selbstLeuchtend=false);
 	bool SetTex(const char *imageFile);
 	bool SetTex(SGLshPtr<SGLBaseTex> TexPtr);
+	bool SetShader(SGLshPtr<SGLShaderProgram> ShPtr);
 	struct faerbung
 	{
 		struct{GLfloat Glanz[3],Glow[3],Difus[3],Umgebung[3];}Farbe;
 		GLfloat	GlanzFaktor;
 	}Innen,Aussen;
 	SGLshPtr<SGLBaseTex> tex;
+	SGLshPtr<SGLShaderProgram> shader;
 	GLfloat Transparenz;
 	bool InnenGleichAussen,UmgebGleichDifus;
 	void MergeColor(int r, int g, int b, bool doGlanz=false);
