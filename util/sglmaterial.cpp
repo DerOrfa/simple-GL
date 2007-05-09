@@ -56,7 +56,7 @@ void SGLMaterial::loadMat()
 		setMatParams(GL_BACK,Innen);
 	}
 	if(tex)tex->loadTex(); 
-	if(tex)shader->loadShader(); 
+//	if(tex)shader->loadShader(); 
 
 	SGLMaterial::MatLoaded=true;
 }
@@ -139,7 +139,7 @@ bool SGLMaterial::SetTex(SGLshPtr<SGLBaseTex> TexPtr)
 	}
 }
 
-bool SGLMaterial::SetShader(SGLshPtr<SGLShaderProgram> ShPtr)
+/*bool SGLMaterial::SetShader(SGLshPtr<SGLShaderProgram> ShPtr)
 {
 	if(ShPtr)
 	{
@@ -152,7 +152,7 @@ bool SGLMaterial::SetShader(SGLshPtr<SGLShaderProgram> ShPtr)
 		return false;
 	}
 }
-
+*/
 bool SGLMaterial::SetTex(const char *imageFile)
 //Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {

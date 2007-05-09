@@ -53,7 +53,7 @@ SET(UTIL_OBJFILES
   ${UTIL_DIR}readtex.c
   ${UTIL_DIR}sglmaterial.cpp
   ${UTIL_DIR}sgltextur.cpp
-  ${UTIL_DIR}sglshader.cpp
+#  ${UTIL_DIR}sglshader.cpp
   ${UTIL_DIR}sglimagefile.cpp
   ${UTIL_DIR}memconsumer.cpp
 )
