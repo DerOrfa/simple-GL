@@ -23,6 +23,7 @@
 #endif
 
 #include <eclasses/evektor.h>
+#include <boost/array.hpp>
 #include "sglmisc.h"
 #include "sglshptr.h"
 
@@ -42,7 +43,7 @@
 
 using namespace emath;
 
-class SGLVektor : public EVektor<GLdouble>
+class SGLVektor : public EVektor<GLdouble >
 {
 public:
 	SGLVektor(GLdouble Array[3]);

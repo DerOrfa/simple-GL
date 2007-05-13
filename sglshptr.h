@@ -13,6 +13,7 @@
 #define SGLSHOBJ_H
 
 #include <boost/shared_ptr.hpp>
+#include "sglmisc.h"
 
 /**
 @file sglshptr.h
