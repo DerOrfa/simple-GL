@@ -1,6 +1,7 @@
 #libsgl master cmake-file
 PROJECT(libsgl)
 INCLUDE(FindOpenGL)
+INCLUDE(CPack)
 
 SET(TARGET_VERSION_MAJOR 0)
 SET(TARGET_VERSION_MINOR 9)
@@ -9,7 +10,7 @@ SET(TARGET_VERSION_MINOR 9)
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 FIND_LIBRARY(ECLASSES2_LIB eclasses2)
 
-SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share/libsgl" CACHE PATH "systems dir for data")
+SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "systems dir for data")
 #SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h") 
 
 SET(CORE_DIR ./)
@@ -57,6 +58,8 @@ SET(UTIL_OBJFILES
   ${UTIL_DIR}memconsumer.cpp
 )
 
+FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_BINARY_DIR} "*.h")
+
 SET(TEXT_DIR text/)
 SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sgl3dtext.cpp ${TEXT_DIR}sgltextbackend.cpp)
 
@@ -94,9 +97,14 @@ INSTALL(TARGETS sgl sgl_static
   ARCHIVE DESTINATION lib
 )
 
-#INSTALL(DIRECTORY . DESTINATION include PATTERN "*.h")
+FOREACH(inc ${includes})
+  GET_FILENAME_COMPONENT(inc_path ${inc} PATH)
+  INSTALL(FILES ${inc} DESTINATION include/${inc_path})
+ENDFOREACH(inc)
+
+INSTALL(DIRECTORY data/ DESTINATION ${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)
 
 #README
 #rm -rf `svn status|grep ^?|colrm 1 7`
-#cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
-#make
+#CC=distcc CXX="distcc g++" cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
+#DISTCC_HOSTS="localhost timmy" make -j3
