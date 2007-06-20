@@ -10,7 +10,7 @@ FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 FIND_LIBRARY(ECLASSES2_LIB eclasses2)
 
 SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share/libsgl" CACHE PATH "systems dir for data")
-#SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h")
+#SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h") 
 
 SET(CORE_DIR ./)
 SET(CORE_OBJFILES  
@@ -23,7 +23,6 @@ SET(CORE_OBJFILES
   ${CORE_DIR}sglmatrixobj.cpp
 )
 
-#helper 
 SET(HELPER_DIR helper/)
 SET(HELPER_OBJFILES 
   ${HELPER_DIR}sglcamera.cpp 
@@ -53,7 +52,7 @@ SET(UTIL_OBJFILES
   ${UTIL_DIR}readtex.c
   ${UTIL_DIR}sglmaterial.cpp
   ${UTIL_DIR}sgltextur.cpp
-#  ${UTIL_DIR}sglshader.cpp
+#  ${UTIL_DIR}sglshader.cpp #GLSL not fully supported by all current GL implementations - so skip it till we find clean solution
   ${UTIL_DIR}sglimagefile.cpp
   ${UTIL_DIR}memconsumer.cpp
 )
@@ -77,19 +76,27 @@ ADD_LIBRARY(sgl SHARED
   ${TEXT_BACKEND_GLF_OBJFILES} 
 )
 #The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
-#ADD_LIBRARY(ssgl STATIC   ${CORE_OBJFILES} 
-#  ${HELPER_OBJFILES} 
-#  ${PRIMITIVES_OBJFILES} 
-#  ${UTIL_OBJFILES} 
-#  ${TEXT_OBJFILES} 
-#  ${TEXT_BACKEND_GLF_OBJFILES} 
-#)
+
+ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES} 
+  ${HELPER_OBJFILES} 
+  ${PRIMITIVES_OBJFILES} 
+  ${UTIL_OBJFILES} 
+  ${TEXT_OBJFILES} 
+  ${TEXT_BACKEND_GLF_OBJFILES} 
+)
 #The library target "ssgl" has a default OUTPUT_NAME of "ssgl", so change it.
 #SET_TARGET_PROPERTIES(ssgl PROPERTIES OUTPUT_NAME "sgl")
 
-#${OPENGL_LIBRARIES} 
+#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
 TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} ${ECLASSES2_LIB} IL ILU ILUT m)
+INSTALL(TARGETS sgl sgl_static 
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
 
-#INSTALL(TARGETS sgl DESTINATION libs)
+#INSTALL(DIRECTORY . DESTINATION include PATTERN "*.h")
 
-
+#README
+#rm -rf `svn status|grep ^?|colrm 1 7`
+#cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
+#make
