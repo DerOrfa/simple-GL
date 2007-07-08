@@ -87,7 +87,7 @@ ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
   ${TEXT_OBJFILES} 
   ${TEXT_BACKEND_GLF_OBJFILES} 
 )
-#The library target "ssgl" has a default OUTPUT_NAME of "ssgl", so change it.
+#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 #SET_TARGET_PROPERTIES(ssgl PROPERTIES OUTPUT_NAME "sgl")
 
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
@@ -99,7 +99,7 @@ INSTALL(TARGETS sgl sgl_static
 
 FOREACH(inc ${includes})
   GET_FILENAME_COMPONENT(inc_path ${inc} PATH)
-  INSTALL(FILES ${inc} DESTINATION include/${inc_path})
+  INSTALL(FILES ${inc} DESTINATION include/libsgl/${inc_path})
 ENDFOREACH(inc)
 
 INSTALL(DIRECTORY data/ DESTINATION ${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)

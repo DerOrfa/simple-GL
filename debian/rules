@@ -30,7 +30,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-
+	cmake . -DCMAKE_INSTALL_PREFIX=$(CURDIR)/debian/tmp/usr -DCMAKE_BUILD_TYPE=release
 	touch configure-stamp
 
 
@@ -41,7 +41,7 @@ build-arch: build-arch-stamp
 build-arch-stamp: configure-stamp 
 
 	# Add here commands to compile the arch part of the package.
-	$(MAKE) libs
+	$(MAKE) 
 	touch build-arch-stamp
 
 build-indep: build-indep-stamp
@@ -54,11 +54,9 @@ build-indep-stamp: configure-stamp
 clean:
 	dh_testdir
 	dh_testroot
-	#rm -f build-arch-stamp build-indep-stamp #CONFIGURE-STAMP#
-
+	rm -f build-arch-stamp build-indep-stamp configure-stamp
 	# Add here commands to clean up after the build process.
-	-$(MAKE) clean depsclean
-
+	rm -rf CMakeFiles CMakeCache.txt CPackConfig.cmake CPackSourceConfig.cmake
 	dh_clean 
 
 install: install-indep install-arch
@@ -83,7 +81,7 @@ install-arch:
 	# Add here commands to install the arch part of the package into 
 	# debian/tmp.
 	mkdir $(CURDIR)/debian/tmp
-	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	$(MAKE) install 
 
 	dh_install -s
 # Must not depend on anything. This is to be called by
