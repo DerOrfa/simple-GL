@@ -10,7 +10,8 @@ SET(TARGET_VERSION_MINOR 9)
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 FIND_LIBRARY(ECLASSES2_LIB eclasses2)
 
-SET(SYS_DATADIR "${CMAKE_INSTALL_PREFIX}/share" CACHE PATH "systems dir for data")
+SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
+SET(SGL_RUNTIME_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "prefix in which libsgl is going to be installed. In Most cases the same as CMAKE_INSTALL_PREFIX")
 #SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h") 
 
 SET(CORE_DIR ./)
@@ -67,7 +68,7 @@ SET(TEXT_BACKEND_GLF_DIR ${TEXT_DIR}backend_glf/)
 SET(TEXT_BACKEND_GLF_OBJFILES ${TEXT_BACKEND_GLF_DIR}glf.c ${TEXT_BACKEND_GLF_DIR}sgltextbackend_glf.cpp)
 
 
-ADD_DEFINITIONS(-DUSE_DEVIL -DDATA_DIR=\\"${SYS_DATADIR}\\" -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
+ADD_DEFINITIONS(-DUSE_DEVIL -DDATA_DIR=\\"${SGL_RUNTIME_PREFIX}/${SYS_DATADIR}/libsgl\\" -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR})
 
 ADD_LIBRARY(sgl SHARED 
@@ -88,7 +89,7 @@ ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
   ${TEXT_BACKEND_GLF_OBJFILES} 
 )
 #The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
-#SET_TARGET_PROPERTIES(ssgl PROPERTIES OUTPUT_NAME "sgl")
+SET_TARGET_PROPERTIES(sgl_static PROPERTIES OUTPUT_NAME "sgl")
 
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
 TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} ${ECLASSES2_LIB} IL ILU ILUT m)
@@ -102,7 +103,7 @@ FOREACH(inc ${includes})
   INSTALL(FILES ${inc} DESTINATION include/libsgl/${inc_path})
 ENDFOREACH(inc)
 
-INSTALL(DIRECTORY data/ DESTINATION ${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)
+INSTALL(DIRECTORY data/ DESTINATION ${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)
 
 #README
 #rm -rf `svn status|grep ^?|colrm 1 7`

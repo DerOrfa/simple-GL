@@ -24,7 +24,7 @@
 
 SGLTextur::SGLTextur(const char *imageFile)
 {
-	weich=repeat=true;	
+	weich=repeat=true;
 	if(imageFile)Load2DImage(imageFile);
 }
 
@@ -70,7 +70,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 #endif
 }
 
-	
+
 SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE),update(this)
 {
 	ID=0;
@@ -98,7 +98,7 @@ bool SGLBaseTex::loadTex()
 			SGLprintWarning("%dD-Texturen sind schon aktiviert",dim,ID);
 			glDisable(TexType);
 		}
-		
+
 		glEnable(TexType);
 		glBindTexture(TexType,ID);
 		SetParams();
@@ -147,50 +147,50 @@ void SGLBaseTex::SetParams()
 		case SGL_MTEX_MODE_TINT:
 		{
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_ARB);
-	
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_RGB_ARB,GL_MODULATE);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_RGB_ARB,GL_PREVIOUS_ARB);
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE1_RGB_ARB,GL_TEXTURE);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_RGB_ARB,GL_SRC_COLOR);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND1_RGB_ARB,GL_ONE_MINUS_SRC_COLOR);
 		}break;
 		case SGL_MTEX_MODE_COLORMASK:
 		{
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_ARB);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_ALPHA_ARB, GL_REPLACE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA_ARB, GL_PREVIOUS_ARB);
  			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA_ARB,GL_SRC_ALPHA);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_RGB_ARB,GL_INTERPOLATE_ARB);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_RGB_ARB,GL_CONSTANT);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_RGB_ARB,GL_SRC_COLOR);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE1_RGB_ARB,GL_PREVIOUS_ARB);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND1_RGB_ARB,GL_SRC_COLOR);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE2_RGB_ARB, GL_TEXTURE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND2_RGB_ARB,GL_SRC_ALPHA);
 		}break;
 		case SGL_MTEX_MODE_OVERLAY:
 		{
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_COMBINE_ARB);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_ALPHA_ARB, GL_REPLACE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA_ARB, GL_PREVIOUS_ARB);
  			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA_ARB,GL_SRC_ALPHA);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_COMBINE_RGB_ARB,GL_INTERPOLATE_ARB);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE0_RGB_ARB,GL_TEXTURE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND0_RGB_ARB,GL_SRC_COLOR);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE1_RGB_ARB,GL_PREVIOUS);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND1_RGB_ARB,GL_SRC_COLOR);
-			
+
 			glTexEnvf(GL_TEXTURE_ENV,GL_SOURCE2_RGB_ARB, GL_TEXTURE);
 			glTexEnvf(GL_TEXTURE_ENV,GL_OPERAND2_RGB_ARB,GL_SRC_ALPHA);
 		}break;
@@ -210,7 +210,7 @@ void SGLBaseTex::SetParams()
 
 /*!
 	Generiert gültige Werte für Tiefe Breite und Höhe einer Textur.
-	
+
 	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nächstgrößte Zweierpotenz ersetzt.
 	Ist ein Wert zu groß wird er halbiert.
 
@@ -235,7 +235,7 @@ void SGLBaseTex::genValidSize_nocheck(GLsizei size[],unsigned short sizeCnt)
 			else if(grown==sizeCnt-1)sizeEnought=true;
 		}
 	}
-	
+
 	FORALL_SIZE(i)size[i]=newSize[i];
 	delete[] newSize;
 #undef FORALL_SIZE
@@ -283,7 +283,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 		else if(sizeEnought)break;
 		else grown= (grown<sizeCnt-1) ? grown+1:0;
 	}
-	
+
 	GLuint err = glGetError();
 	if(err)
 	{
@@ -334,7 +334,7 @@ GLint SGLBaseTex::getTexInfo(GLenum pname)
 	GLint ret;
 	if(!loaded)//Falls die Text nicht geladen ist
 		loadTex();
-	
+
 	glGetTexLevelParameteriv(TexType,0,pname,&ret);
 	if(unload)unloadTex();
 	return ret;
@@ -351,7 +351,7 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GLint r,g,b,alpha,lum,intens,index;
 	if(!loaded)//Falls die Text nicht geladen ist
 		loadTex();
-	
+
 	GET_CHAN_SIZE(RED,r);
 	GET_CHAN_SIZE(GREEN,g);
 	GET_CHAN_SIZE(BLUE,b);
@@ -378,7 +378,7 @@ GLint SGLBaseTex::getTexByteSize()
 	double fakt=getTexElemBitSize()/8.;
 	if(!loaded)//Falls die Text nicht geladen ist
 		loadTex();
-	
+
 	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_WIDTH,&w);
 	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_DEPTH,&d);
 	glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_HEIGHT,&h);
@@ -402,11 +402,11 @@ void SGLBaseTex::freeTexture()
 	{
 		SGLprintWarning("Versuch die ungültige Textur %d zu löschen",ID);
 	}
-	else 
+	else
 	{
 		glDeleteTextures(1,&ID);
 		ID=0;
-		shouldBeLoaded=false;
+		valid=shouldBeLoaded=false;
 	}
 }
 
@@ -464,7 +464,7 @@ void SGLBaseTex::addMTex(SGLshPtr<SGLBaseTex> tex,SGLshPtr<SGLBaseTex> before,bo
 		while(mtex->multitex)
 			if(mtex->multitex==before)break;
 			else mtex=mtex->multitex;
-		
+
 		if(mtex)mtex->addMTexBegin(tex,false);//Wenn es ein multitex gab ist mtex entwder am ende, oder tex soll vor mtex->multitex eingef werden
 		else addMTexBegin(tex,false);//Wenn es kein multitex gab (mtex von vornherein NULL war)
 		if(call_changed)changed();

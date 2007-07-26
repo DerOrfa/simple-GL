@@ -30,7 +30,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
-	cmake . -DCMAKE_INSTALL_PREFIX=$(CURDIR)/debian/tmp/usr -DCMAKE_BUILD_TYPE=release
+	cmake . -DCMAKE_INSTALL_PREFIX=$(CURDIR)/debian/tmp/usr -DCMAKE_BUILD_TYPE=release -DSGL_RUNTIME_PREFIX=/usr -DCMAKE_COLOR_MAKEFILE=off 
 	touch configure-stamp
 
 
