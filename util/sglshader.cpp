@@ -5,6 +5,8 @@
 /**
  * Constructors/Destructors
  */
+ 
+/* out of order */
 SGLShaderProgram::SGLShaderProgram()
 {
 	ID = glCreateProgram();
