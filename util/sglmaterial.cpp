@@ -134,7 +134,7 @@ bool SGLMaterial::SetTex(SGLshPtr<SGLBaseTex> TexPtr)
 	}
 	else
 	{
-		SGLprintWarning("ignoriere ungültige Textur");
+		SGLprintWarning("ignoriere ungÃ¼ltige Textur");
 		return false;
 	}
 }
@@ -148,13 +148,13 @@ bool SGLMaterial::SetTex(SGLshPtr<SGLBaseTex> TexPtr)
 	}
 	else
 	{
-		SGLprintWarning("ignoriere ungültige Textur");
+		SGLprintWarning("ignoriere ungÃ¼ltige Textur");
 		return false;
 	}
 }
 */
 bool SGLMaterial::SetTex(const char *imageFile)
-//Ungünstig, da das möglicherweise dazugehöreige Objekt nicht wissen kann, daß es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
+//UngÃ¼nstig, da das mÃ¶glicherweise dazugehÃ¶reige Objekt nicht wissen kann, daÃŸ es jetzt eine Textur hat, und deswegen Texturkoordinaten braucht.
 {
 	return SetTex(SGLshPtr<SGLBaseTex>(new SGLTextur(imageFile)));
 }

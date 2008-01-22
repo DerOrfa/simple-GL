@@ -51,7 +51,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	}
 
 	//NVIDIA optimiert Setzoperationen komplett raus aus den Listen, wenn der Wert schon gesetzt ist
-	//Deshalb bringt das vorsorgliche glPolygonMode nix mehr (es kann nicht garantiert werden, daï¿½es
+	//Deshalb bringt das vorsorgliche glPolygonMode nix mehr (es kann nicht garantiert werden, daÃ¯Â¿Â½es
 	//auch in der Liste landet)
 	//Behandle GL_FILL jetzt als Normfall, und alle anderen setzen ihren Modus UND nehmen ihn auch
 	//wieder raus
@@ -77,7 +77,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 		if(Mat)
 		{
 			//Wenn Lightning aus ist, scheint er Material-Settings zu ignorieren
-			if(IgnoreLight)// @todo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
+			if(IgnoreLight)// @todo nochmal Ã¼berlegen wie Textur, Material und Farbe sich untereinander verhalten
 			{
 				
 				if(Mat->tex)Mat->tex->loadTex();
@@ -88,7 +88,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 					Mat->Aussen.Farbe.Glow[1],
 					Mat->Aussen.Farbe.Glow[2],
 					1-Mat->Transparenz);//Wenn Selbstleuchtend, und keine Textur
-					SGLMaterial::MatLoaded=true; //really dirty Hack :-) (sorgt dafür, daß er denkt er hätte ein Mat. -> DrawVertex heult nich rum)
+					SGLMaterial::MatLoaded=true; //really dirty Hack :-) (sorgt dafÃ¼r, daÃŸ er denkt er hÃ¤tte ein Mat. -> DrawVertex heult nich rum)
 				}
 			}
 			else Mat->loadMat();
@@ -140,7 +140,7 @@ void SGLFlObj::resetMaterial(MaterialPtr NewMaterial)
 	Mat= NewMaterial ? NewMaterial : MaterialPtr (new SGLMaterial);
 /*	if(Mat && Mat->tex && Mat->tex->valid)
 		resetTexKoord();*/
-	//nicht mehr nötig, da ALLE Texturkoordinaten haben
+	//nicht mehr nÃ¶tig, da ALLE Texturkoordinaten haben
 }
 
 /*!

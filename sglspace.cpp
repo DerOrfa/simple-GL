@@ -43,7 +43,7 @@
 bool SGLSpace::globalColorAktive=false;
 
 /**
- * Versetzt den Renderer in definierte Zustände.
+ * Versetzt den Renderer in definierte ZustÃ¤nde.
  * @param mode der Modus in den der Renderer versetzt werden soll. 
  */
 void SGLSpace::resetView(short mode)
@@ -62,7 +62,7 @@ void SGLSpace::resetView(short mode)
 	Camera->loadView();break;
 	case 1:
 	//2-Dimensionale Display-Ansicht (HUD z.B.)
-	// @todo Nochmal SAUBER lösen
+	// @todo Nochmal SAUBER lÃ¶sen
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
@@ -75,10 +75,10 @@ void SGLSpace::resetView(short mode)
 
 /**
  * Zeichnet Hilfsobjekte aus den Renderercache.
- * Es werden gegebenenfalls das Koordinatensystem und Schnittflächen gezeichnet.
+ * Es werden gegebenenfalls das Koordinatensystem und SchnittflÃ¤chen gezeichnet.
  * Die Kamera wird hier nich gezeichnet, sie ist ein normales Zeichenobjekt und wird von defaultCam im Space registiert.
- * Es können nicht alle Helper zum gleichen Zeitpunkt gezeichnet werden, daher wird diese Funktion mehrfach mit verschiedenen Stages aufgerufen.
- * @param stage Typ von Helpern der gezeichnet werden soll (1 zeichnet die Linien des Koordinatensystems und die Schnittflächen, 2 die Beschriftungen des Koordinatensystems)
+ * Es kÃ¶nnen nicht alle Helper zum gleichen Zeitpunkt gezeichnet werden, daher wird diese Funktion mehrfach mit verschiedenen Stages aufgerufen.
+ * @param stage Typ von Helpern der gezeichnet werden soll (1 zeichnet die Linien des Koordinatensystems und die SchnittflÃ¤chen, 2 die Beschriftungen des Koordinatensystems)
  */
 void SGLSpace::callHelper(int stage)
 {
@@ -118,7 +118,7 @@ void SGLSpace::DrawExtObjs()
 
 void SGLSpace::show_status()
 {
-//	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps); //@todo Animationen mal anders lösen
+//	if(DoIdle)sprintf(StatusInfo.StatusString,"%sfps: %d",StatusInfo.StatusString,StatusInfo.fps); //@todo Animationen mal anders lÃ¶sen
 	PrintOnScreen(StatusInfo.StatusString);StatusInfo.StatusString[0]=0;
 	if(mainConsole && !mainConsole->empty)glCallList(mainConsole->metaCompile());
 }
@@ -140,9 +140,9 @@ SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
 /**
  * Standardkonstruktor.
  * @param XSize Die Breite des GL-Views bei der Initialisierung.
- * @param YSize Die Höhe des GL-Views bei der Initialisierung.
+ * @param YSize Die HÃ¶he des GL-Views bei der Initialisierung.
  * @param R Der Rotanteil der Hintergrundfarbe
- * @param G Der Grünanteil der Hintergrundfarbe
+ * @param G Der GrÃ¼nanteil der Hintergrundfarbe
  * @param B Der Blauanteil der Hintergrundfarbe
  */
 SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this)
@@ -166,7 +166,7 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 
 /**
  * Destruktor.
- * Es werden alle Hilfsobjekte und die Objektlisten gelöscht.
+ * Es werden alle Hilfsobjekte und die Objektlisten gelÃ¶scht.
  */
 SGLSpace::~SGLSpace()
 {
@@ -183,9 +183,9 @@ SGLSpace::~SGLSpace()
 }
 
 /**
- * Ereignissbehandlung für Änderung der Größe des GL-Views.
+ * Ereignissbehandlung fÃ¼r Ã„nderung der GrÃ¶ÃŸe des GL-Views.
  * @param width die neue Breite
- * @param height die neue Höhe
+ * @param height die neue HÃ¶he
  */
 void SGLSpace::OnResize(int width, int height)
 {
@@ -278,7 +278,7 @@ void SGLSpace::PrintOnScreen(char* String)
 
 /**
  * Setzt eine Clipping-Plane.
- * Die entsprechnde Plane wird initialisiert und positioniert. Außerdem wird zweiseitiges Rendering aktiviert.
+ * Die entsprechnde Plane wird initialisiert und positioniert. AuÃŸerdem wird zweiseitiges Rendering aktiviert.
  * @param PlaneNr die Nummer der zu aktivierenden Plane. ( 0 <= PlaneNr \< GL_MAX_CLIP_PLANES)
  * @param Ax 
  * @param By 
@@ -364,9 +364,9 @@ void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVe
 /*
 */
 /**
- * Schaltet den Default für zweiseitiges Rendering um.
+ * Schaltet den Default fÃ¼r zweiseitiges Rendering um.
  * Danach mssen alle PolygonObjekte neu Compiliert werden.
- * (Für die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
+ * (FÃ¼r die Standartobjekte und die aktuelle Camera wird das automatisch geregelt)
  * @param TwoSideRendering wenn true, wird zweiseitiges Rendering aktiviert. Bei false wird es deaktiviert.
  */
 void SGLSpace::TwoSided(bool TwoSideRendering)
@@ -415,8 +415,8 @@ bool SGLSpace::reCompileIntObs(bool redraw)
 }
 
 /**
- * Stellt die rendering-Qualität ein .
- * Zur Zeit sind nur die Qualitäten 0 und 1 möglich, wobei 0 den Renderer auf höchste Geschwindigkeit und 1 ihn auf höchste Qualität stellt.
+ * Stellt die rendering-QualitÃ¤t ein .
+ * Zur Zeit sind nur die QualitÃ¤ten 0 und 1 mÃ¶glich, wobei 0 den Renderer auf hÃ¶chste Geschwindigkeit und 1 ihn auf hÃ¶chste QualitÃ¤t stellt.
  * @param qual 
  */
 void SGLSpace::SetQuality(unsigned short int qual)
@@ -443,8 +443,8 @@ void SGLSpace::SetQuality(unsigned short int qual)
 }
 
 /**
- * Stellt einen Informationsstring über den Renderer zusammen.
- * @param str[] der char-Puffer in dem der String abgelegt wird. Er wird nicht auf ausreichende Länge geprüft.
+ * Stellt einen Informationsstring Ã¼ber den Renderer zusammen.
+ * @param str[] der char-Puffer in dem der String abgelegt wird. Er wird nicht auf ausreichende LÃ¤nge geprÃ¼ft.
  */
 void SGLSpace::GetGlInfoString(char str[])
 {
@@ -480,9 +480,9 @@ bool SGLSpace::printErrors()
 /**
  * Initialisiert den Renderer.
  * Ruft setup_video() und gegebenenfalls noch die Initialisierungen weiterer Module auf.
- * Schlägt die Initialisierung fehl, wird ein SGLError ausgegeben.
+ * SchlÃ¤gt die Initialisierung fehl, wird ein SGLError ausgegeben.
  * @param XSize die Breite der View in Bildschirmkoordinaten
- * @param YSize die Höhe der View in Bildschirmkoordinaten
+ * @param YSize die HÃ¶he der View in Bildschirmkoordinaten
  * @return true wenn der Renderer erfolgreich initialisiert werden konnte, ansonsten false.
  */
 bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
@@ -507,9 +507,9 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 /**
  * Zentrahle Initialisierung des Space.
  * Es werden alle Hilfsobjekte erzeugt und eine Standardkamera eingerichtet.
- * Außerdem werden Framework- bzw. Plattformspezifische Initialisierungen aufgerufen.
+ * AuÃŸerdem werden Framework- bzw. Plattformspezifische Initialisierungen aufgerufen.
  * @param w die Breite der View in Bildschirmkoordinaten
- * @param h die Höhe der View in Bildschirmkoordinaten
+ * @param h die HÃ¶he der View in Bildschirmkoordinaten
  */
 void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
@@ -561,7 +561,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
  * Die Parameter der Kamera werden dabei entsprechend der Parameter der View gesetzt.
  * Ein SGLSpace setzt bei seiner Erzeugung automatisch eine Standardkamera.
  * Diese Funktion muss daher nur aufgerufen werden, wenn eine andere Kamera verwendet werden soll.
- * Die aktuelle Kamera wird dabei automatisch gelöscht, wenn sie nicht mehr verwendet wird.
+ * Die aktuelle Kamera wird dabei automatisch gelÃ¶scht, wenn sie nicht mehr verwendet wird.
  * @param cam 
  */
 void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
@@ -571,7 +571,7 @@ void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 	registerObj(Camera=cam);
 	if(StatusInfo.WindowHeight>0 && StatusInfo.WindowWidth>0)
 		Camera->setView(StatusInfo.WindowWidth,StatusInfo.WindowHeight);
-	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungültig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}
+	else {SGLprintWarning("Die Bilddimensionen (%d x %d) sind ungÃ¼ltig",StatusInfo.WindowHeight,StatusInfo.WindowWidth);}
 	Camera->Compile();
 
 	Grids.X->FaceAt=&Camera->Pos;
@@ -585,8 +585,8 @@ void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 
 
 /**
- * Setzt die Größe des im Space angezeigten Koordinatensystems.
- * @param size die Größe in Raum-Einheiten.
+ * Setzt die GrÃ¶ÃŸe des im Space angezeigten Koordinatensystems.
+ * @param size die GrÃ¶ÃŸe in Raum-Einheiten.
  */
 void SGLSpace::setGridsSize(GLuint size)
 {
@@ -610,8 +610,8 @@ void SGLSpace::setGridsSize(GLuint size)
 
 /**
  * Registriert die angegeben Textur als dynamische Textur.
- * Sendet diese Textur zur Laufzeit changed(), wird in dem Space reDraw() ausgelöst.
- * @param tex eine Referenz auf die veränderliche Textur.
+ * Sendet diese Textur zur Laufzeit changed(), wird in dem Space reDraw() ausgelÃ¶st.
+ * @param tex eine Referenz auf die verÃ¤nderliche Textur.
  */
 void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 {
@@ -622,7 +622,7 @@ void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
  * Interne Zeichen-Prozedur
  * Es wird StatusInfo.Processing true gesetzt. Danach werden nacheinander die internen Hilfsobjekte gezeichnet, 
  * die normalen (registrierten) Objekte gezeichnet und gegebenfalls Statusinformationen angezeigt.
- * Danach wird glFinish() ausgeführt, und StatusInfo.Processing false gesetzt.
+ * Danach wird glFinish() ausgefÃ¼hrt, und StatusInfo.Processing false gesetzt.
  */
 void SGLSpace::draw()
 {
@@ -650,17 +650,17 @@ SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
 
 /**
  * Signalbehandlung des redraw-Slots.
- * Besitzt der Slot einen gültigen SGLSpace-Zeiger, wird callUpdate() für diesen Space ausgelöst.
+ * Besitzt der Slot einen gÃ¼ltigen SGLSpace-Zeiger, wird callUpdate() fÃ¼r diesen Space ausgelÃ¶st.
  */
 void SGLSpace::redrawSlot::operator()() 
 {
 	if(myspace)myspace->callUpdate();
-	else{SGLprintError("redrawSlot 0x%X hat keinen Space, löse nicht aus",this);}
+	else{SGLprintError("redrawSlot 0x%X hat keinen Space, lÃ¶se nicht aus",this);}
 }
 
 /**
  * Kopieroperator des redraw-Slots.
- * Dieser Operator überlädt den "="-Operator der SGLSlot-Klasse und unterbindet so die standardmäßige Zeigerwarung.
+ * Dieser Operator Ã¼berlÃ¤dt den "="-Operator der SGLSlot-Klasse und unterbindet so die standardmÃ¤ÃŸige Zeigerwarung.
  * Der interne SGLSpace-Zeiger wird auf NULL gesetzt.
  * @param Slot der zu kopierende Slot
  */
@@ -675,13 +675,13 @@ map<std::string, bool> SGLSpace::extProxy;
 
 /**
  * Proxy-GL-Extension Check.
- * Prüft, ob eine Erweiterung verfügbar ist.
- * Wurde genau diese Prüfung (ext+msg) schoneinmal vorgenommen, wird das vorherige Ergebniss geliefert.
+ * PrÃ¼ft, ob eine Erweiterung verfÃ¼gbar ist.
+ * Wurde genau diese PrÃ¼fung (ext+msg) schoneinmal vorgenommen, wird das vorherige Ergebniss geliefert.
  * Sonst wird das Ergebinss mittles sglChkExt(ext,msg,vital) ermittelt
  * @param ext die GL-Extension, nach der gesucht wird
- * @param msg die Meldung, die beim ersten Mal ausgegeben werden soll, wenn ext nicht verfügbar ist
- * @param vital das Loglevel für die Fehlermeldung (default 2)
- * @return true wenn der Renderer die extension unterstützt
+ * @param msg die Meldung, die beim ersten Mal ausgegeben werden soll, wenn ext nicht verfÃ¼gbar ist
+ * @param vital das Loglevel fÃ¼r die Fehlermeldung (default 2)
+ * @return true wenn der Renderer die extension unterstÃ¼tzt
  */
 bool SGLSpace::extAvail(const std::string &ext,const std::string &msg,unsigned short vital)
 {

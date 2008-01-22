@@ -29,7 +29,7 @@ void ViewTrans::update(bool force)
 {
 	if(force || outDated)
 	{
-//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind auﬂer beim Aufruf aus resize falsch 
+//	glGetIntegerv(GL_VIEWPORT,view);//@todo Diese Infos sind au√üer beim Aufruf aus resize falsch 
 		glGetDoublev(GL_MODELVIEW_MATRIX,model);
 		glGetDoublev(GL_PROJECTION_MATRIX,proj);
 	}
@@ -59,7 +59,7 @@ bool ViewTrans::welt2window(const SGLVektor &src,SGLVektor &dst)
 {
 	if(outDated)
 	{
-		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist",this);
+		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher da√ü sie korrekt ist",this);
 		update();
 	}
 	if(gluProject(src.SGLV_X,src.SGLV_Y,src.SGLV_Z,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))
@@ -114,7 +114,7 @@ bool ViewTrans::screen2welt(const unsigned int x,const unsigned int y,GLdouble d
 {
 	if(outDated)
 	{
-		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher daﬂ sie korrekt ist",this);
+		SGLprintWarning("Implizites Aktualisieren der Viewmatrix 0x%x aus dem Renderer, es ist nicht sicher da√ü sie korrekt ist",this);
 		update();
 	}
 	if(gluUnProject(x,view[3] - int(y) ,depth,model,proj,view,&dst.SGLV_X,&dst.SGLV_Y,&dst.SGLV_Z))return true;
@@ -243,7 +243,7 @@ void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull,double rotdeg)
 
 /*
 	Stellt den UpVect neu auf (Senkrecht auf ebene aus X/Z und Pos)
-	Wenn deg angegeben ist, wird UpVect entsprechend nachtr‰glich um Pos rotiert
+	Wenn deg angegeben ist, wird UpVect entsprechend nachtr√§glich um Pos rotiert
 */
 void SGLBaseCam::ResetUpVect(double rotdeg)
 {
@@ -333,7 +333,7 @@ void SGLBaseCam::recalcEcken()
 		SGLVektor PosVektor=getLookVektor();
 		
 		double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
-		double high=TAN(Angle/2)*PosVektor.Len(); //Hˆhe der senkrechten auf dem Horizont berechnen [tan(alpha)=a/b]
+		double high=TAN(Angle/2)*PosVektor.Len(); //H√∂he der senkrechten auf dem Horizont berechnen [tan(alpha)=a/b]
 		double c = high/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte [cos(alpha)=b/c]
 
 		*Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
@@ -347,7 +347,7 @@ void SGLBaseCam::recalcEcken()
 		*Ecken[3]=(*Ecken[3]*c)+LookAt;
 	}break;
 	default:
-		SGLprintError("Ung¸ltiger Modus f¸r die Berechnung der Kameradaten");
+		SGLprintError("Ung√ºltiger Modus f√ºr die Berechnung der Kameradaten");
 		break;
 	}
 	recalcEckenMode=scaleView;
@@ -390,7 +390,7 @@ void SGLBaseCam::unloadView()
 
 /*!
     \fn SGLBaseCam::recalcAngle()
-	Berechnet den Sichtwinkel aus der Hˆhe des Sichtfensters (in Weltkoordinaten) und dem Abstand der Cam zu LookAt neu.
+	Berechnet den Sichtwinkel aus der H√∂he des Sichtfensters (in Weltkoordinaten) und dem Abstand der Cam zu LookAt neu.
 	tan(alpha)=a/b
  */
 void SGLBaseCam::recalcAngle(GLdouble height)
@@ -417,7 +417,7 @@ void SGLBaseCam::setView(unsigned int width,unsigned int height)
 	ViewMatr.view[1]=0;
 	ViewMatr.view[2]=width;
 	ViewMatr.view[3]=height;
-	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand - auﬂerdem ‰ndert sich das nur, wenn das fenster ge‰ndert wird
+	ViewMatr.outDated=true;//@todo glGetIntegerv(GL_VIEWPORT,view); liefert mist, deshalb von hand - au√üerdem √§ndert sich das nur, wenn das fenster ge√§ndert wird
 }
 
 unsigned int SGLBaseCam::getViewWidth()const

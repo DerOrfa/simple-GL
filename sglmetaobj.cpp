@@ -30,8 +30,8 @@ void SGLMetaObj::generate()
 
 	if(TrObjs.size())
 	{
-		//Verhindern, daﬂ das Enable wegoptimiert wird 
-		//gibt Probleme wenn die Liste bei ge‰ndertem Zustand der Maschine aufgerufen wird
+		//Verhindern, da√ü das Enable wegoptimiert wird 
+		//gibt Probleme wenn die Liste bei ge√§ndertem Zustand der Maschine aufgerufen wird
 		glDisable(GL_BLEND);
 		glEnable(GL_BLEND);
 		for(i=TrObjs.size();i;i--)

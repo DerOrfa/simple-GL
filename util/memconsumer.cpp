@@ -26,4 +26,4 @@ MemConsumer::~MemConsumer()
 
 std::list<MemConsumer*> MemConsumer::list;
 SGLSignal<void (const MemConsumer&)> MemConsumer::sigCreate,MemConsumer::sigDelete;
-//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten führen, lassen wir lieber
+//Hat seine eigene referenz nich, soll auch keine neu anlegen - kann beides zu unangenehmen Effekten fÃ¼hren, lassen wir lieber

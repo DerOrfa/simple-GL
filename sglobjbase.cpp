@@ -15,7 +15,7 @@
 /**
  * Kopierkonstruktor.
  * Alle Parameter bis auf is_free und shared werden kopiert.
- * Das kopierte Objekt ist nocht nicht im Renderercache und gehört zu keiner Liste.
+ * Das kopierte Objekt ist nocht nicht im Renderercache und gehÃ¶rt zu keiner Liste.
  * Sein compileNextTime-Slot muss noch an ein Signal gebunden werden.
  * @param src Das zu kopierende Objekt
  */
@@ -62,9 +62,9 @@ compileNextTime(this)
 
 /**
  * Destruktor.
- * Sollte nicht explizit ausgelöst werden.
- * Das Objekt wird automatisch gelöscht, wenn es nicht mehr verwedet wird.
- * Ist das gelöschte Objekt noch in einer Objektliste eingetragen, wird eine Warnung ausgegeben.
+ * Sollte nicht explizit ausgelÃ¶st werden.
+ * Das Objekt wird automatisch gelÃ¶scht, wenn es nicht mehr verwedet wird.
+ * Ist das gelÃ¶schte Objekt noch in einer Objektliste eingetragen, wird eine Warnung ausgegeben.
  */
 SGLObjBase::~SGLObjBase()
 {
@@ -72,11 +72,11 @@ SGLObjBase::~SGLObjBase()
 	{
 		cout << myList->Objects.size() << endl;
 		unsigned int count=myList->isThere(this);
-		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
+		if(count){SGLprintError("lÃ¶sche noch %d mal verwendetes Objekt",count);}
 	}
 	glDeleteLists(ID,1);
 	if(!ID)
-	{SGLprintDebug("Nie generiertes Objekt 0x%x (%s) gelöscht",this,this->guesType());}//@todo prüfen, ob ID=0 immer heißt, daß obj nie gen wurde
+	{SGLprintDebug("Nie generiertes Objekt 0x%x (%s) gelÃ¶scht",this,this->guesType());}//@todo prÃ¼fen, ob ID=0 immer heiÃŸt, daÃŸ obj nie gen wurde
 }
 
 
@@ -95,10 +95,10 @@ SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
 }
 
 /**
- * Bestimmt die Normale auf der durch zwei Vektoren und einen Stützvektor bestimmten Ebene.
- * Die Ebene schneidet den durch den Stützvektor gegebenen Punkt im Raum.
+ * Bestimmt die Normale auf der durch zwei Vektoren und einen StÃ¼tzvektor bestimmten Ebene.
+ * Die Ebene schneidet den durch den StÃ¼tzvektor gegebenen Punkt im Raum.
  * @param Pkt1 @param Pkt2 die zwei Vektoren zur beschreibung der Ebene
- * @param Pkt3 der Stützvektor der Ebene
+ * @param Pkt3 der StÃ¼tzvektor der Ebene
  * @return 
  */
 SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
@@ -106,7 +106,7 @@ SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 
 /**
  * Basis-Zeichenfunktion.
- * Lädt die Transformationsmatrix des Objektes, richtet es danach gegebenfalls nach dem FaceAt-Punkt aus und ruft generate() auf.
+ * LÃ¤dt die Transformationsmatrix des Objektes, richtet es danach gegebenfalls nach dem FaceAt-Punkt aus und ruft generate() auf.
  */
 void SGLObjBase::metaGenerate()
 {
@@ -116,7 +116,7 @@ void SGLObjBase::metaGenerate()
 		GLdouble XZ_wink,XY_wink;
 		SGLVektor tVekt=getCenterInSpace();
 		tVekt.resize(3);
-		//Für toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
+		//FÃ¼r toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
 		tVekt=(*FaceAt)-tVekt;
 		tVekt.toWink(XZ_wink,XY_wink);
 		glRotated(-XZ_wink,0,1,0);
@@ -131,7 +131,7 @@ void SGLObjBase::metaGenerate()
 }
 
 /**
- * Wendet die Transformationen des Objektes auf das Ergebniss von getCenter() an und gibt das Ergebniss zurück.
+ * Wendet die Transformationen des Objektes auf das Ergebniss von getCenter() an und gibt das Ergebniss zurÃ¼ck.
  * @return die Position des Objektzentrums im Raum.
  */
 SGLVektor SGLObjBase::getCenterInSpace()
@@ -148,7 +148,7 @@ SGLVektor SGLObjBase::getCenterInSpace()
 
 
 /**
- * Wendet die Transformationen des Objektes auf einen Nullvektor an und gibt das Ergebniss zurück.
+ * Wendet die Transformationen des Objektes auf einen Nullvektor an und gibt das Ergebniss zurÃ¼ck.
  * @return die Position des Objektes im Raum.
  */
 SGLVektor SGLObjBase::getMyPos()
@@ -185,8 +185,8 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
 
 /**
  * Bindet das Objekt an ein Anderes.
- * Löst dieses Objekt das Signal notifyChange aus, wird das gebundene Objekt bei nächster Gelegenheit neu berechnet.
- * Da beim Generieren notifyChange nicht ausgelöst wird, ist auch gegenseitiges Binden möglich.
+ * LÃ¶st dieses Objekt das Signal notifyChange aus, wird das gebundene Objekt bei nÃ¤chster Gelegenheit neu berechnet.
+ * Da beim Generieren notifyChange nicht ausgelÃ¶st wird, ist auch gegenseitiges Binden mÃ¶glich.
  * \code 
  * objA.link(objB);
  * objB.link(objA); 
@@ -207,7 +207,7 @@ void SGLObjBase::unlink(SGLConnection conn)
 
 
 /**
- * Bereitet den Renderercache für das Objekt vor.
+ * Bereitet den Renderercache fÃ¼r das Objekt vor.
  * Hat das Objekt noch keine ID, wird ihm eine zugewiesen.
  * @param draw Wenn true, wird gleichzeitig in den Renderercache geschrieben und das Objekt gezeichnet.
  * @return die ID des Objektes.
@@ -217,7 +217,7 @@ GLint SGLObjBase::beginList(bool draw)
 	if(!(glIsList(ID) || (ID=glGenLists(1))))
 	{
 	    GLuint error=glGetError();
-	    SGLprintError("Konnte Zeichencache für das %s-Objekt nicht erzeugen. (%s) Wurde openGL vielleicht noch nicht initialisiert?",guesType(),gluErrorString(GLenum(error)));
+	    SGLprintError("Konnte Zeichencache fÃ¼r das %s-Objekt nicht erzeugen. (%s) Wurde openGL vielleicht noch nicht initialisiert?",guesType(),gluErrorString(GLenum(error)));
 	}
 	rendering=true;
 	glNewList(ID,draw ? GL_COMPILE_AND_EXECUTE:GL_COMPILE);
@@ -225,8 +225,8 @@ GLint SGLObjBase::beginList(bool draw)
 }
 
 /**
- * Schließt den Renderercache für das Objekt ab.
- * Alle GL-Zeichenoperationen müssen zwischen beginList() und endList aufgerufen werden.
+ * SchlieÃŸt den Renderercache fÃ¼r das Objekt ab.
+ * Alle GL-Zeichenoperationen mÃ¼ssen zwischen beginList() und endList aufgerufen werden.
  */
 void SGLObjBase::endList()
 {
@@ -238,13 +238,13 @@ void SGLObjBase::endList()
 SGLObjBase::CompilerMerker::CompilerMerker(SGLObjBase *obj){this->obj=obj;}
 
 /**
- * Stellt sicher, daß der Renderercache dieses Objektes bei nächster Gelegenheit neu berechnet wird
+ * Stellt sicher, daÃŸ der Renderercache dieses Objektes bei nÃ¤chster Gelegenheit neu berechnet wird
  */
 void SGLObjBase::CompilerMerker::operator()() const
 {
 	if(obj->myList)
 		obj->myList->check_recompile=true;
 	else if(!obj->is_free)
-		{SGLprintDebug("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daß es neu generiert werden muß", obj->guesType());}
+		{SGLprintDebug("Objekt vom Typ %s ist scheinbar in (noch) keiner Objektliste.\nKann nicht vermerken, daÃŸ es neu generiert werden muÃŸ", obj->guesType());}
 	if(!obj->should_compile)obj->should_compile=1;
 }

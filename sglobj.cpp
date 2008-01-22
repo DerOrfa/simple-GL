@@ -90,7 +90,7 @@ SGLStrecke::SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2)
 }
 
 /**
- * Die Länge der Strecke.
+ * Die LÃ¤nge der Strecke.
  * @return der Abstand zwischen den beiden Endpunkten der Strecke
  */
 GLdouble SGLStrecke::Len(){return (*punkt1 - *punkt2).Len();}

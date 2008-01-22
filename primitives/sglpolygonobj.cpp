@@ -46,7 +46,7 @@ void SGLPolygonObj::generate()
 		Fl.Fl[i]->twoSideRender=twoSideRender;
 		Fl.Fl[i]->generate();
 	}
-	if(!Fl.Cnt){SGLprintError("Versuch ein Polygonobjekt ohne Seitenfl‰chen zu zeichnen");}
+	if(!Fl.Cnt){SGLprintError("Versuch ein Polygonobjekt ohne Seitenfl√§chen zu zeichnen");}
 }
 
 /*!

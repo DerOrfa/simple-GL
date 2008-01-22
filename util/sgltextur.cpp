@@ -33,7 +33,7 @@ bool SGLTextur::Load2DImage(const char *imageFile, bool MipMap)
 	char *buff=new char[strlen(imageFile)+1];
 	strcpy(buff,imageFile);
 	bool ret= Load2DImage(buff, MipMap);
-	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring löscht / hoffentlich löscht er ihn wenigstens selber
+	if(!MipMap)delete buff; //ilLoadImage() mag es scheinbar nicht, wenn man seinen Pfadstring lÃ¶scht / hoffentlich lÃ¶scht er ihn wenigstens selber
 	return ret;
 }
 
@@ -65,7 +65,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 
 	return valid=true;
 #else
-	SGLprintError("Für 2D-Texturen wird DevIL benötigt");
+	SGLprintError("FÃ¼r 2D-Texturen wird DevIL benÃ¶tigt");
 	return valid=false;
 #endif
 }
@@ -132,7 +132,7 @@ bool SGLBaseTex::unloadTex()
 	if(!glIsTexture(ID)){SGLprintWarning("OpenGL kennt die Textur \"%d\" nicht",ID);}
 
 	if(glIsEnabled(TexType))glDisable(TexType);
-	else{SGLprintWarning("Hä %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
+	else{SGLprintWarning("HÃ¤ %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
 	SGLTextur::TexLoaded=0;
 	loaded=false;
@@ -198,7 +198,7 @@ void SGLBaseTex::SetParams()
 			glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,renderMode);
 	}
 
-	glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR,envColor);//@todo erstmal Material überschreiben - später wäre bedingtes GL_MODULATE vielleicht besser
+	glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR,envColor);//@todo erstmal Material Ã¼berschreiben - spÃ¤ter wÃ¤re bedingtes GL_MODULATE vielleicht besser
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_S, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
@@ -209,10 +209,10 @@ void SGLBaseTex::SetParams()
 }
 
 /*!
-	Generiert gültige Werte für Tiefe Breite und Höhe einer Textur.
+	Generiert gÃ¼ltige Werte fÃ¼r Tiefe Breite und HÃ¶he einer Textur.
 
-	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nächstgrößte Zweierpotenz ersetzt.
-	Ist ein Wert zu groß wird er halbiert.
+	Wenn die angegebenen Werte keine Potenzen von 2 sind, werden sie durch die nÃ¤chstgrÃ¶ÃŸte Zweierpotenz ersetzt.
+	Ist ein Wert zu groÃŸ wird er halbiert.
 
     \fn SGLTextur::getMaxSize(GLint internalFormat,GLsizei width,GLsizei height,GLsizei depth, GLenum format,GLenum type)
  */
@@ -270,7 +270,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 			proxyType=GL_PROXY_TEXTURE_3D;
 			glTexImage3DEXT(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
 		default:
-			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
+			SGLprintError("UngÃ¼ltiges Texturformat (%dD) beim PrÃ¼fen der Texturdaten",sizeCnt);return false;break;
 		}
 		glGetTexLevelParameteriv(proxyType, 0, GL_TEXTURE_WIDTH,  &tmpSize);
 		bool sizeOK=true;
@@ -287,7 +287,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 	GLuint err = glGetError();
 	if(err)
 	{
-		SGLprintError("%s beim Prüfen der Texturdaten [GLerror]",gluErrorString(err));
+		SGLprintError("%s beim PrÃ¼fen der Texturdaten [GLerror]",gluErrorString(err));
 		for(int i=0;i<sizeCnt;i++)newSize[i]=0;
 	}
 	else if(!sizeEnought)
@@ -298,7 +298,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 		formatStr[0]=0;
 		FORALL_SIZE(i)
 			sprintf(formatStr+strlen(formatStr),"%d%s",newSize[i],i<sizeCnt-1 ? "x":"");
-		SGLprintError("Der 3D-Texturspeicher der Grafikkarte ist zu klein. Sie lässt höchstens eine %s-Textur zu",formatStr);
+		SGLprintError("Der 3D-Texturspeicher der Grafikkarte ist zu klein. Sie lÃ¤sst hÃ¶chstens eine %s-Textur zu",formatStr);
 		err=true;
 		delete formatStr;
 	}
@@ -324,8 +324,8 @@ short SGLBaseTex::def2dim(GLenum def)
 }
 
 /*!
-	Liefert tatsächliche Informationen über die Textur in der GL-Maschiene.
-	(tatsächliche Dimensionen, tatsächliche Größe)
+	Liefert tatsÃ¤chliche Informationen Ã¼ber die Textur in der GL-Maschiene.
+	(tatsÃ¤chliche Dimensionen, tatsÃ¤chliche GrÃ¶ÃŸe)
     \fn SGLBaseTex::GLint getTexInfo(GLenum pname)
  */
 GLint SGLBaseTex::getTexInfo(GLenum pname)
@@ -358,7 +358,7 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(ALPHA,alpha);
 	GET_CHAN_SIZE(LUMINANCE,lum);
 	GET_CHAN_SIZE(INTENSITY,intens);
-	//ATI macht hier mist wenn die Extension fehlt - also erst fragen dann schießen
+	//ATI macht hier mist wenn die Extension fehlt - also erst fragen dann schieÃŸen
 	if(gluCheckExtension((const GLubyte*)"GL_EXT_paletted_texture",glGetString(GL_EXTENSIONS)))
 		glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
 	else index=0;
@@ -400,7 +400,7 @@ void SGLBaseTex::freeTexture()
 {
 	if(ID<=0 || glIsTexture(ID) == GL_FALSE)
 	{
-		SGLprintWarning("Versuch die ungültige Textur %d zu löschen",ID);
+		SGLprintWarning("Versuch die ungÃ¼ltige Textur %d zu lÃ¶schen",ID);
 	}
 	else
 	{

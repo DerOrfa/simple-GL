@@ -21,7 +21,7 @@
  * Konstruktor.
  * Erzeugt eine neue Lichtquelle an der angebenen Position.
  * Die Lichtquelle ist anfangs "an".
- * @param LID die ID der Lichtquelle. Wenn kleiner als GL_LIGHT0 wird automatisch eine freie ID für die Lichtquelle ermittelt.
+ * @param LID die ID der Lichtquelle. Wenn kleiner als GL_LIGHT0 wird automatisch eine freie ID fÃ¼r die Lichtquelle ermittelt.
  * @return 
  */
 SGLLight::SGLLight(GLdouble PosX,GLdouble PosY,GLdouble PosZ,const int LID):SGLObj(PosX,PosY,PosZ,1)
@@ -82,9 +82,9 @@ void SGLLight::generate()
 
 /**
  * Wandelt die Lichtquelle in ein Kameralicht um.
- * Kameralichter ändern nie ihre Position relativ zur Kamera, daher müssen sie nie neu gezeichnet werden.
- * Aus diesem Grund löscht diese Funktion den Renderercache des Objektes.
- * Die Lichtquelle wird in eine kegelförmige Lichquelle mit 30° Innenwinkel umgewandelt und jegliche Transformationen werden gelöscht.
+ * Kameralichter Ã¤ndern nie ihre Position relativ zur Kamera, daher mÃ¼ssen sie nie neu gezeichnet werden.
+ * Aus diesem Grund lÃ¶scht diese Funktion den Renderercache des Objektes.
+ * Die Lichtquelle wird in eine kegelfÃ¶rmige Lichquelle mit 30Â° Innenwinkel umgewandelt und jegliche Transformationen werden gelÃ¶scht.
  */
 void SGLLight::CamLight()
 {

@@ -28,7 +28,7 @@ SGLPolygonObj(Material,PosX,PosY,PosZ,SizeFact)
 //	SGLVierEck *p=new SGLVierEck[6];
 	
 	for(int n=0;n<2;n++)for(int i=0;i<4;i++)
-		TOUCH_VEKTPTR(EckPunkte[n][i]);//MUSS vor der Verwendung von EckPunkte kommen, sonst kann es passieren, daﬂ sie ung¸ltig sind
+		TOUCH_VEKTPTR(EckPunkte[n][i]);//MUSS vor der Verwendung von EckPunkte kommen, sonst kann es passieren, da√ü sie ung√ºltig sind
 	
 	for(int i=0;i<6;i++)
 	{
@@ -123,9 +123,9 @@ void SGLQuader::recalcEdges(bool compile)
 void SGLQuader::resetTexKoord()
 {
 	if(Fl.Fl[0])Fl.Fl[0]->resetTexKoord();
-	else {SGLprintWarning("Das Fl‰chenpolygon 0 ex. nicht");}
+	else {SGLprintWarning("Das Fl√§chenpolygon 0 ex. nicht");}
 	if(Fl.Fl[1])Fl.Fl[1]->resetTexKoord();
-	else {SGLprintWarning("Das Fl‰chenpolygon 1 ex. nicht");}
+	else {SGLprintWarning("Das Fl√§chenpolygon 1 ex. nicht");}
 }
 
 void SGLQuader::setDiag(SGLVektor topleftfront,SGLVektor bottomrighttail,bool compile)

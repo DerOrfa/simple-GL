@@ -19,7 +19,7 @@ SGLShaderProgram::~SGLShaderProgram()
 	{
 		const GLuint id=i->first;
 		if(id)glDeleteShader(id);
-		else SGLprintWarning("Versuch ung�ltigen Shader zu l�schen");
+		else SGLprintWarning("Versuch ungï¿½ltigen Shader zu lï¿½schen");
 	}
 	shaders.clear();
 	if(ID)
@@ -27,7 +27,7 @@ SGLShaderProgram::~SGLShaderProgram()
 		glDeleteProgram(ID);
 		ID=0;
 	}
-	else SGLprintWarning("Versuch ung�ltiges Shaderprogram zu l�schen");
+	else SGLprintWarning("Versuch ungï¿½ltiges Shaderprogram zu lï¿½schen");
 	SGLSpace::printErrors();
 }
 
@@ -97,12 +97,12 @@ bool SGLShaderProgram::set_uniformv(std::string name,const GLfloat values[],GLsi
 		case 3:glUniform3fv(loc, cnt,values);break;
 		case 4:glUniform4fv(loc, cnt,values);break;
 		default:
-			SGLprintError("Ung�ltige Dimension %d f�r die Uniforme %s",cnt,name.c_str());
+			SGLprintError("Ungï¿½ltige Dimension %d fï¿½r die Uniforme %s",cnt,name.c_str());
 			return false;
 	}
 	else 
 	{
-		SGLprintError("Die Uniforme %s ist nicht verf�gbar",name.c_str());
+		SGLprintError("Die Uniforme %s ist nicht verfï¿½gbar",name.c_str());
 		return false;
 	}
 	return SGLSpace::printErrors();
@@ -118,12 +118,12 @@ bool SGLShaderProgram::set_uniformv(std::string name,const GLint values[],GLsize
 		case 3:glUniform3iv(loc, cnt,values);break;
 		case 4:glUniform4iv(loc, cnt,values);break;
 		default:
-			SGLprintError("Ung�ltige Dimension %d f�r die Uniforme %s",cnt,name.c_str());
+			SGLprintError("Ungï¿½ltige Dimension %d fï¿½r die Uniforme %s",cnt,name.c_str());
 			return false;
 	}
 	else 
 	{
-		SGLprintError("Die Uniforme %s ist nicht verf�gbar",name.c_str());
+		SGLprintError("Die Uniforme %s ist nicht verfï¿½gbar",name.c_str());
 		return false;
 	}
 	return SGLSpace::printErrors();
@@ -196,7 +196,7 @@ bool SGLShaderProgram::loadShader()
 		getStatus(GL_VALIDATE_STATUS,&stat);
 		if(stat==GL_FALSE)
 		{
-			SGLprintError("Shader %d ist nicht verf�gbar");
+			SGLprintError("Shader %d ist nicht verfï¿½gbar");
 			return false;
 		}
 	}

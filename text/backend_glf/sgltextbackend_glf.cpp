@@ -59,15 +59,15 @@ bool  SGLTextBackend_glf::isReady()const
  */
 void SGLTextBackend_glf::validateText(string &text)
 {
-	replace(text,"Ö","Oe");
-	replace(text,"Ä","Ae");
-	replace(text,"Ü","Ue");
+	replace(text,"Ã–","Oe");
+	replace(text,"Ã„","Ae");
+	replace(text,"Ãœ","Ue");
 
-	replace(text,"ö","oe");
-	replace(text,"ä","ae");
-	replace(text,"ü","ue");
+	replace(text,"Ã¶","oe");
+	replace(text,"Ã¤","ae");
+	replace(text,"Ã¼","ue");
 
-	replace(text,"ß","ss");
+	replace(text,"ÃŸ","ss");
 }
 
 
@@ -177,7 +177,7 @@ void SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,G
 	char temp[255];
 	strcpy(temp,myText.c_str());
 	glfGetStringBoundsF(myFontID,temp, &minx, &miny, &maxx, &maxy);
-	GLfloat underline_correction=.3;//für Buchstaben die unter die Basislinie gehen
+	GLfloat underline_correction=.3;//fÃ¼r Buchstaben die unter die Basislinie gehen
 	minx-=.1;
 
 	float int_width=maxx-minx;
@@ -192,7 +192,7 @@ void SGLTextBackend_glf::getDim(string myText,GLdouble *width,GLdouble *height,G
 	{
 		mitte->SGLV_Y=int_height/2+miny;
 		if(depth)mitte->SGLV_Z=*depth/2+1;
-		else {SGLprintWarning("SGLTextBackend_glf::getDim wurde, bei der Berechnung des Mittelpunktes keine Tiefe übergeben");}
+		else {SGLprintWarning("SGLTextBackend_glf::getDim wurde, bei der Berechnung des Mittelpunktes keine Tiefe Ã¼bergeben");}
 		switch(align)
 		{
 		case SGLText::center:mitte->SGLV_X=int_width/2+minx+.3;break;

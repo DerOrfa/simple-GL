@@ -266,7 +266,7 @@ void SGLPolygon::generateWithNormales()
 
 	for(VektorList::size_type i=1;i<s-1;i++)
 	{
-		//Normale aus vorherigem, aktuellem und nächsten Vektor bilden
+		//Normale aus vorherigem, aktuellem und nÃ¤chsten Vektor bilden
 		Norm[i]=Normale(
 			*EckVektoren[i-1],
 			*EckVektoren[i],
@@ -323,7 +323,7 @@ GLdouble SGLPolygon::spat(SGLVektor aim)
 	VektorList::size_type s=EckVektoren.size();
 	if(s<3)
 	{
-		SGLprintError("Keine Fläche");
+		SGLprintError("Keine FlÃ¤che");
 		return -1;
 	}
 	SGLVektor stuetzV(*EckVektoren[0]);
