@@ -13,7 +13,7 @@
 #include "sglmatrixobj.h"
 #include <list>
 #include "sglsignal.h"
-
+#include <climits>
 
 class SGLObjList;
 

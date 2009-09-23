@@ -59,7 +59,7 @@ SET(UTIL_OBJFILES
   ${UTIL_DIR}memconsumer.cpp
 )
 
-FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_BINARY_DIR} "*.h")
+FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 
 SET(TEXT_DIR text/)
 SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sgl3dtext.cpp ${TEXT_DIR}sgltextbackend.cpp)

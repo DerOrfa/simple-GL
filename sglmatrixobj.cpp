@@ -12,6 +12,7 @@
 #include "sglmatrixobj.h"
 #include "sglmisc.h"
 #include <GL/glu.h>
+#include <string.h>
 
 SGLMatrixObj::SGLMatrixObj(GLenum type)
 {
