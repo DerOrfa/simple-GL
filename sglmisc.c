@@ -93,11 +93,11 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
 		if(vital>1)
-			_SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintError("Dieser Renderer (%s) unterstÃ¼tzt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		else if(vital)
-			_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintWarning("Dieser Renderer (%s) unterstÃ¼tzt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		else 
-			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+			_SGLprintInfo("Dieser Renderer (%s) unterstÃ¼tzt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
 		return 0;
 	}
 	else return -1;
@@ -111,7 +111,7 @@ void debugSig()
     {
 		int isig=atoi(sig);
 		if(!isig)isig=SIGINT;
-		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",isig);
+		SGLprintInfo("LÃ¶se in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",isig);
 		kill(getpid(),isig);
     }
 #endif
