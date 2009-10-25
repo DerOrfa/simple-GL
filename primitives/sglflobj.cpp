@@ -57,7 +57,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	//wieder raus
 	beginList(draw);
 		for(i=0;i<5;i++)
-			if(EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i))))
+			if((EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i)))))
 				glDisable(GLenum(GL_CLIP_PLANE0+i));
 		if(IgnoreLight)glDisable(GL_LIGHTING);
 

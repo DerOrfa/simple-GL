@@ -22,7 +22,7 @@
 	#include <windows.h>								// Header File For Windows
 #endif
 
-#include <eclasses/evektor.h>
+#include "evektor.h"
 #include <boost/array.hpp>
 #include "sglmisc.h"
 #include "sglshptr.h"

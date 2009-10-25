@@ -1,5 +1,8 @@
 #libsgl master cmake-file
+cmake_minimum_required(VERSION 2.2)
+
 PROJECT(libsgl)
+cmake_policy(SET CMP0005 OLD) #make it not complain about escaped Preprocessor definition (can be removed when we switch to cmake 2.6)
 INCLUDE(FindOpenGL)
 INCLUDE(CPack)
 
@@ -8,7 +11,6 @@ SET(TARGET_VERSION_MINOR 9)
 
 
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
-FIND_LIBRARY(ECLASSES2_LIB eclasses2)
 
 SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
 SET(SGL_RUNTIME_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "prefix in which libsgl is going to be installed. In Most cases the same as CMAKE_INSTALL_PREFIX")
@@ -68,7 +70,7 @@ SET(TEXT_BACKEND_GLF_DIR ${TEXT_DIR}backend_glf/)
 SET(TEXT_BACKEND_GLF_OBJFILES ${TEXT_BACKEND_GLF_DIR}glf.c ${TEXT_BACKEND_GLF_DIR}sgltextbackend_glf.cpp)
 
 
-ADD_DEFINITIONS(-DUSE_DEVIL -DDATA_DIR=\\"${SGL_RUNTIME_PREFIX}/${SYS_DATADIR}/libsgl\\" -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
+ADD_DEFINITIONS(-DUSE_DEVIL -DDATA_DIR=\\"${SGL_RUNTIME_PREFIX}/${SYS_DATADIR}/libsgl\\" -DILUT_USE_OPENGL -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR})
 
 ADD_LIBRARY(sgl SHARED 
@@ -92,7 +94,7 @@ ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
 SET_TARGET_PROPERTIES(sgl_static PROPERTIES OUTPUT_NAME "sgl")
 
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} ${ECLASSES2_LIB} IL ILU ILUT m)
+TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} IL ILU ILUT m)
 INSTALL(TARGETS sgl sgl_static 
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib

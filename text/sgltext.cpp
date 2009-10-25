@@ -19,7 +19,7 @@
 #include <GL/glu.h>
 #include "backend_glf/sgltextbackend_glf.h"
 
-SGLText::SGLText(char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLText::SGLText(const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
 {
 	loadBackend(fontname);
@@ -33,7 +33,7 @@ SGLText::~SGLText()
 /*!
     \fn SGLText::loadBackend(char fontname[])
  */
-void SGLText::loadBackend(char fontname[])
+void SGLText::loadBackend(const char fontname[])
 {
     Backend=new  SGLTextBackend_glf(fontname);
 }

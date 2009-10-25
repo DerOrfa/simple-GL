@@ -14,7 +14,7 @@
 
 bool glf_inited=false;
 
-SGLTextBackend_glf::SGLTextBackend_glf(char fontname[])
+SGLTextBackend_glf::SGLTextBackend_glf(const char fontname[])
 {
 	if(!glf_inited)SGLTextBackend_glf::backendInit();
 	myFontID=-1;
@@ -32,7 +32,7 @@ SGLTextBackend_glf::~SGLTextBackend_glf()
 	glfUnloadFontD(myFontID);
 }
 
-bool SGLTextBackend_glf::loadFont(char fontname[])
+bool SGLTextBackend_glf::loadFont(const char fontname[])
 {
   if((myFontID=glfLoadFont(fontname))==GLF_ERROR) 
     {

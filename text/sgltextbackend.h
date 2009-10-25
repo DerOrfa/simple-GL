@@ -23,7 +23,7 @@ protected:
 public:
 	virtual ~SGLTextBackend();
 	void replace(string &myText,string findText,string replString);
-	virtual bool loadFont(char fontname[])=0;
+	virtual bool loadFont(const char fontname[])=0;
 	virtual void generate_3DText(
 		GLdouble tiefe,
 		string myText,

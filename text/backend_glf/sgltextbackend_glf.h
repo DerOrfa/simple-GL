@@ -30,10 +30,10 @@
 class SGLTextBackend_glf : public SGLTextBackend
 {
 public:
-	SGLTextBackend_glf(char fontname[]="");
+	SGLTextBackend_glf(const char fontname[]="");
 	~SGLTextBackend_glf();
 	void validateText(string &text);
-	bool loadFont(char fontname[]);
+	bool loadFont(const char fontname[]);
 	static void backendInit();
 	bool isReady()const;
     void generate_3DText(

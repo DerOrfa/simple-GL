@@ -20,6 +20,8 @@
 #include <GL/glu.h>
 #ifdef USE_DEVIL
 	#include <IL/ilut.h>
+#else
+	#warning not using DevIL - texture loading will be disabled
 #endif
 
 SGLTextur::SGLTextur(const char *imageFile)
@@ -51,7 +53,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 		ilBindImage(ImageId);
 		if(IL_FALSE!=ilLoadImage(imageFile))ID=ilutGLBindMipmaps();
 	}
-	else ID = ilutGLLoadImage(imageFile);//@todo in der openil-Doku steht nix ber Fehler-Return *grml*
+	else ID = ilutGLLoadImage(imageFile);//@todo in der openil-Doku steht nix über Fehler-Return *grml*
 
 	if(!ID)
 	{
@@ -292,15 +294,18 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 	}
 	else if(!sizeEnought)
 	{
-		unsigned int StrLen=sizeCnt-1;
-		FORALL_SIZE(i)StrLen+=strlen(newSize[i]);
+	//@todo fix this mess
+/*		unsigned int StrLen=sizeCnt-1;
+		FORALL_SIZE(i)StrLen+=::strlen(newSize[i]);
 		char *formatStr=new char[StrLen+1];
 		formatStr[0]=0;
 		FORALL_SIZE(i)
 			sprintf(formatStr+strlen(formatStr),"%d%s",newSize[i],i<sizeCnt-1 ? "x":"");
 		SGLprintError("Der 3D-Texturspeicher der Grafikkarte ist zu klein. Sie lässt höchstens eine %s-Textur zu",formatStr);
+		*/
+		SGLprintError("Der 3D-Texturspeicher der Grafikkarte ist zu klein.");
 		err=true;
-		delete formatStr;
+// 		delete formatStr;
 	}
 
 	FORALL_SIZE(i)size[i]=newSize[i];

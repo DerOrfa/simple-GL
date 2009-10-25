@@ -29,11 +29,11 @@ class SGLTextBackend;
 class SGLText : public SGLFlObj
 {
 public:
-	SGLText(char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+	SGLText(const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLText();
 	enum TextAlign{left,center,right};
 protected:
-	void loadBackend(char fontname[]);
+	void loadBackend(const char fontname[]);
 	string myText;
 	SGLTextBackend *Backend;
 };

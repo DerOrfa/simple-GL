@@ -44,7 +44,7 @@ GLuint SGLObj::Compile(bool draw,bool free)
 		if(IgnoreLight)
 			glDisable(GL_LIGHTING);
 		for(i=0;i<5;i++)
-			if(EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i))))
+			if((EnableClip[i]=(IgnoreClip && glIsEnabled(GLenum(GL_CLIP_PLANE0+i)))))
 				glDisable(GLenum(GL_CLIP_PLANE0+i));
 	metaGenerate();
 
