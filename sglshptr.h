@@ -37,12 +37,12 @@ public:
 	 */
 	SGLshPtr(T *ob):boost::shared_ptr<T>(ob){}
 	/**
-	 * Kopierkostruktor für boost::shared_ptr.
+	 * Kopierkostruktor fÃ¼r boost::shared_ptr.
 	 * @param ob Zu kopierender Zeiger.
 	 */
 	SGLshPtr(const boost::shared_ptr<T> &ob):boost::shared_ptr<T>(ob){}
 	/**
-	 * Kopierkostruktor für SGLshPtr.
+	 * Kopierkostruktor fÃ¼r SGLshPtr.
 	 * @param ob Zu kopierender Zeiger.
 	 */
 	template<class D> SGLshPtr(const SGLshPtr<D> &ob):boost::shared_ptr<T>(ob){}
@@ -52,7 +52,7 @@ public:
 	 * Versucht den Zeiger in einen neuen Zeiger mit anderem Typ zu casten.
 	 * Scheitert der Cast, ist  src ein leerer Zeiger.
 	 * @param ob der Ziel-Zeiger
-	 * @param check wenn true, wird überprüft ob der cast erfolgreich war und gegebenenfalls eine Warnung ausgegeben.
+	 * @param check wenn true, wird Ã¼berprÃ¼ft ob der cast erfolgreich war und gegebenenfalls eine Warnung ausgegeben.
 	 * @return Wahrheitswert, ob Cast erfolgreich war (ob Ziel-Zeiger nicht-leer ist)
 	 */
 	template<class D> bool dcast(SGLshPtr<D> &ob,const bool check=true)const
@@ -74,20 +74,20 @@ public:
 
 /**
  * \defgroup shPtr_new SGLshPtr_new
- * SGLshPtr_new(...) ist eine Abkürzung für \code SGLshPtr<Type>(new Type,..) \endcode
+ * SGLshPtr_new(...) ist eine AbkÃ¼rzung fÃ¼r \code SGLshPtr<Type>(new Type,..) \endcode
  */
 /*@{*/
 /**
- * Objektkonstruktor für Objekte deren Konstruktor 0 Parameter erwartet
+ * Objektkonstruktor fÃ¼r Objekte deren Konstruktor 0 Parameter erwartet
  */
 template<class T> SGLshPtr<T> SGLshPtr_new(){return SGLshPtr<T>(new T);}
 /**
- * Objektkonstruktor für Objekte deren Konstruktor 1 Parameter erwartet
+ * Objektkonstruktor fÃ¼r Objekte deren Konstruktor 1 Parameter erwartet
  * @param p1 erster Parameter des Kostruktors
  */
 template<class T,typename param1> SGLshPtr<T> SGLshPtr_new(param1 p1){return SGLshPtr<T>(new T(p1));}
 /**
- * Objektkonstruktor für Objekte deren Konstruktor 1 Parameter erwartet
+ * Objektkonstruktor fÃ¼r Objekte deren Konstruktor 1 Parameter erwartet
  * @param p1 erster Parameter des Kostruktors
  * @param p2 zweiter Parameter des Kostruktors
  */
@@ -96,14 +96,14 @@ template<class T,typename param1,typename param2> SGLshPtr<T> SGLshPtr_new(param
 
 /**
  * \defgroup global_cast Globale Cast-Operatoren
- * SGLshPtr_new(...) ist eine Abkürzung für \code SGLshPtr\<Type\>(new Type,..) \endcode
+ * SGLshPtr_new(...) ist eine AbkÃ¼rzung fÃ¼r \code SGLshPtr\<Type\>(new Type,..) \endcode
  */
 /*@{*/
 /**
  * Explizites dynamisches Cast. (Laufzeit-Cast)
  * Versucht den Zeiger in einen neuen Zeiger mit anderem angegebenem Typ zu casten.
  * @param src der Zeiger vom dem gecastet werden soll.
- * @param check wenn true, wird überprüft ob der cast erfolgreich war und gegebenenfalls eine Warnung ausgegeben.
+ * @param check wenn true, wird Ã¼berprÃ¼ft ob der cast erfolgreich war und gegebenenfalls eine Warnung ausgegeben.
  * @return das Ergebniss des Casts (Ein Zeiger \code SGLshPtr<D> \endcode, der an die selbe Adresse wie src zeigt), oder ein leerer Zeiger.
  */
 template<class D,class T> SGLshPtr<D> dcast(const SGLshPtr<T> &src,const bool check=true)

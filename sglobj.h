@@ -22,7 +22,7 @@
 #include "sglshptr.h"
 
 /**
- * Ein Zeichenobjekt, das nicht durch seine Grenzfl‰chen definiert wird.
+ * Ein Zeichenobjekt, das nicht durch seine Grenzfl√§chen definiert wird.
  * SGLObj-Objekte haben anders als SGLFlObj kein Material.
   *@author Enrico Reimer
   */

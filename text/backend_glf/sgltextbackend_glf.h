@@ -18,7 +18,7 @@
 	#include <gl\glu.h>								// Header File For The GLu32 Library
 	#include <gl\glaux.h>								// Header File For The GLaux Library
 #else
-	#include <GL/gl.h> //gl.h ist für glf.h nötig
+	#include <GL/gl.h> //gl.h ist fÃ¼r glf.h nÃ¶tig
 #endif
 
 #include "glf.h"

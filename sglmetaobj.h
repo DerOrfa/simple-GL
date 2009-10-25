@@ -13,11 +13,11 @@
 #include "sglobj.h"
 #include <vector>
 
-/*! \brief Abstrakte Basisklasse für Objekte, die sich aus mehreren Objekten beliebiger Art zusammensetzen.
+/*! \brief Abstrakte Basisklasse fÃ¼r Objekte, die sich aus mehreren Objekten beliebiger Art zusammensetzen.
 
 Die Funktion, die Teilobjekte compiliert, und in ihre Aufruflisten legt, muss noch von der Ableitung implementiert werden.
 Der Aufruf der Teilobjekte aus diesen Listen wird vom generate von SGLMetaObj erledigt.
-Es gibt eine Liste für transparente Objekte, und eine für nicht transparente Objekte.
+Es gibt eine Liste fÃ¼r transparente Objekte, und eine fÃ¼r nicht transparente Objekte.
 
 @author Enrico Reimer
 */

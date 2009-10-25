@@ -17,7 +17,7 @@
 
 class SGLObjList;
 
-/** Basisklasse für Zeichenobjekte.
+/** Basisklasse fÃ¼r Zeichenobjekte.
   * @author Enrico Reimer
   */
 class SGLObjBase:public SGLMatrixObj
@@ -30,17 +30,17 @@ public:
 		SGLObjBase *obj;
 		void operator()() const;
 	}
-	/** Generierungs-Slot. Dieser Slot löst die Neuberechnung des Zeichenobjektes aus. Das Objekt wird dabei jedoch nicht gezeichnet. */
+	/** Generierungs-Slot. Dieser Slot lÃ¶st die Neuberechnung des Zeichenobjektes aus. Das Objekt wird dabei jedoch nicht gezeichnet. */
 	compileNextTime; 
-	/** Zeichenpriorität des Objektes.*/
+	/** ZeichenprioritÃ¤t des Objektes.*/
 	enum Prio{
 		/** Hintergrund (wird zuerst gezeichnet ) */ 
 		floor=INT_MIN, 
-		/** hinterstes Objekt (wird über Hintergrund gezeichnet ) */ 
+		/** hinterstes Objekt (wird Ã¼ber Hintergrund gezeichnet ) */ 
 		under=-10, 
 		/** normales Objekt*/
 		std=0,
-		/** Objekt, das vor normalen Objektes gezeichnet wird (üblicherweise transparente Objekte)*/
+		/** Objekt, das vor normalen Objektes gezeichnet wird (Ã¼blicherweise transparente Objekte)*/
 		flstd=10,
 		/** vorderstes Objekt z.B. GUI-Elemente */
 		ontop=INT_MAX 
@@ -51,19 +51,19 @@ public:
 	
 	/**
 	 * Berechnet das Objekt neu.
-	 * Führt alle Operationen zum Zeichnen des Objektes aus und legt sie im Renderer-Cache unter seiner ID ab.
-	 * Dabei werden neben den reinen Zeichenoperationen gegebenfalls auch Operationen zur Transformation des Raumes und zur Konfiguration des Renderers ausgeführt.
-	 * @param draw wenn true, wird das Objekt außerdem sofort gezeichnet (zusätzlich zu dem üblichen Zeichnen, wenn die Objektliste neu gezeichnet wird)
-	 * @param free wenn true, ist das Objekt "frei", d.h. es gehört keiner Objektliste an.
+	 * FÃ¼hrt alle Operationen zum Zeichnen des Objektes aus und legt sie im Renderer-Cache unter seiner ID ab.
+	 * Dabei werden neben den reinen Zeichenoperationen gegebenfalls auch Operationen zur Transformation des Raumes und zur Konfiguration des Renderers ausgefÃ¼hrt.
+	 * @param draw wenn true, wird das Objekt auÃŸerdem sofort gezeichnet (zusÃ¤tzlich zu dem Ã¼blichen Zeichnen, wenn die Objektliste neu gezeichnet wird)
+	 * @param free wenn true, ist das Objekt "frei", d.h. es gehÃ¶rt keiner Objektliste an.
 	 * @return die Renderer-Cache-ID des Objektes
 	 */
 	virtual GLuint Compile(bool draw=true,bool free=false)=0;
 	/**
 	 * Zeichnet das Objekt.
-	 * Führt alle Operationen zum Zeichnen des Objektes aus.
-	 * Es werden nur die reinen Zeichenfunktionen aufgerufen. Andere Eigenschaften des Objektes (z.B. Transparenz) und seine Transformation werden nicht berücksichtigt.
+	 * FÃ¼hrt alle Operationen zum Zeichnen des Objektes aus.
+	 * Es werden nur die reinen Zeichenfunktionen aufgerufen. Andere Eigenschaften des Objektes (z.B. Transparenz) und seine Transformation werden nicht berÃ¼cksichtigt.
 	 * 
-	 * Beispiel für eine Implemetierung (Erzeugt eine Linie von [-1,-1,-1] nach [1,1,1]):
+	 * Beispiel fÃ¼r eine Implemetierung (Erzeugt eine Linie von [-1,-1,-1] nach [1,1,1]):
 	 * \code 	glBegin(GL_LINES);
 	 * SGLVektor(-1,-1,-1).DrawVertex();
 	 * SGLVektor( 1, 1, 1).DrawVertex();
@@ -83,8 +83,8 @@ public:
 
 	/**
 	 * Liefert das Zentrum des Objektes innerhalb seines eigenen Raumes.
-	 * Diese Funktion ist unabhängig von der Transformation (also z.B. der Position) des Objektes.
-	 * Das Zentrum eines Objektes liegt meist im Ursprung seines Raumes, daher geben fast alle Implementierungen SGLVektor(0,0,0) zurück.
+	 * Diese Funktion ist unabhÃ¤ngig von der Transformation (also z.B. der Position) des Objektes.
+	 * Das Zentrum eines Objektes liegt meist im Ursprung seines Raumes, daher geben fast alle Implementierungen SGLVektor(0,0,0) zurÃ¼ck.
 	 * @return der Positionsvektor des Objektzentrums in seinem eigenen Raum
 	 */
 	virtual SGLVektor getCenter()const = 0;

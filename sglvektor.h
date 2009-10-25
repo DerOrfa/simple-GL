@@ -37,7 +37,7 @@
 
 /**
  * Auf EVektor\<GLdouble\> basierender Positionsvektor.
- * Dieser Vektor bietet einige zus‰tzliche Operationen zum Zeichnen und zur Transformation.
+ * Dieser Vektor bietet einige zus√§tzliche Operationen zum Zeichnen und zur Transformation.
   *@author Enrico Reimer
   */
 

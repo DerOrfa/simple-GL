@@ -23,9 +23,9 @@
 struct LichtFarbe{GLfloat Umgebung[4],Difus[4],Glanz[4];};
 
 /**
- * Klasse für Lichtquellen.
+ * Klasse fÃ¼r Lichtquellen.
  * Lichtquellen werden wie andere Objekte registriert, und damit in die Objektlisten der Spaces aufgenommen.
- * Auch sie verwenden den Renderercache um gezeichnet zu werden und werden zusammen mit den anderen Objekten über die Objektlisten aufgerufen.
+ * Auch sie verwenden den Renderercache um gezeichnet zu werden und werden zusammen mit den anderen Objekten Ã¼ber die Objektlisten aufgerufen.
  * 
  *@author Enrico Reimer
  */

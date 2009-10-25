@@ -35,16 +35,16 @@ using namespace boost::signals;
 
 /**
  * simpleGL-Slot-Klasse.
- * Die Klasse entspricht der Spezifikation für Slots in boost::signals.
+ * Die Klasse entspricht der Spezifikation fÃ¼r Slots in boost::signals.
  * Von dieser Klasse abgeleitete Klassen lassen sich mittels \code SGLSignal::connect \endcode an ein Objekt binden, das von \code SGLSignal \endcode abgeleitet ist.
- * Sie müssen den \code operator(...) \endcode überladen, dieser wird ausgelöst, wenn ein verbundenes Signal ausgelöst wird.
+ * Sie mÃ¼ssen den \code operator(...) \endcode Ã¼berladen, dieser wird ausgelÃ¶st, wenn ein verbundenes Signal ausgelÃ¶st wird.
  * Objekte dieser Klasse sollten nicht kopiert werden, da sie oft Zeiger halten. (\code SGLSlot \endcode beinhaltet jedoch keine Zeiger)
  */
 class SGLSlot:public trackable
 {
 public:
 	virtual const SGLSlot& operator=( const SGLSlot & ){
-		SGLprintDebug("Achtung, kopiere Slot. Wenn der kopierte Slot einen Zeiger hält kann das seeeehr unangenehm werden.");
+		SGLprintDebug("Achtung, kopiere Slot. Wenn der kopierte Slot einen Zeiger hÃ¤lt kann das seeeehr unangenehm werden.");
 		debugSig();
 		return *this;
 	}
@@ -52,14 +52,14 @@ public:
 };
 
 /**
- * Container für eine Signal-Slot-Verbindung
+ * Container fÃ¼r eine Signal-Slot-Verbindung
  */
-typedef connection SGLConnection; //@todo dürfen connections kopiert werden??
+typedef connection SGLConnection; //@todo dÃ¼rfen connections kopiert werden??
 
 /**
  * simpleGL-Signal-Klasse.
  * Diese Klasse erbt von boost::signal\<Signature\> . 
- * Sie lässt sich mittels SGLSignal::connect an ein Objekt binden, das von SGLSlot abgeleitet ist.
+ * Sie lÃ¤sst sich mittels SGLSignal::connect an ein Objekt binden, das von SGLSlot abgeleitet ist.
  * SGLSignal-Objekte werden nicht kopiert. Sind sie Member eines kopierten Objektes wird die Kopie des Objektes ein neu initialisiertes SGLSignal halten.
  */
 template<typename Signature> 
@@ -83,8 +83,8 @@ public:
 		return *this;
 	}
 	/**
-	 * Forwarder für einfache Signale. Das Objekt leitet Signale von \code src \endcode an seine eigenen Slots weiter.
-	 * Parameter können nicht weitergeleitet werden, d.H. steht diese Funktion nur für parameterlose \code void() \endcode Signale zur Verfügung.
+	 * Forwarder fÃ¼r einfache Signale. Das Objekt leitet Signale von \code src \endcode an seine eigenen Slots weiter.
+	 * Parameter kÃ¶nnen nicht weitergeleitet werden, d.H. steht diese Funktion nur fÃ¼r parameterlose \code void() \endcode Signale zur VerfÃ¼gung.
 	 * @param src SGLSignal-Objekt, dessen Signale weitergeleitet werden sollen.
 	 * @return 
 	 */

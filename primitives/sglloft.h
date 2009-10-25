@@ -1,4 +1,4 @@
-// SGLLoft.h: Schnittstelle für die Klasse SGLLoft.
+// SGLLoft.h: Schnittstelle fÃ¼r die Klasse SGLLoft.
 //
 //////////////////////////////////////////////////////////////////////
 

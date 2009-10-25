@@ -64,7 +64,7 @@
 
 #define SGLcheckGLError																				\
 {																									\
-	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul‰ssig");}	\
+	if(rendering){SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul√§ssig");}	\
 	GLuint gluerr;																					\
 	while(gluerr= glGetError())																		\
 		{SGLprintError("%s [GLerror]",gluErrorString(gluerr));}										\
@@ -94,7 +94,7 @@ inline GLdouble sglGetd(GLenum pname)
 	GLdouble ret;
 	if(rendering)
 	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul‰ssig");
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul√§ssig");
 		debugSig();
 	}
 	glGetDoublev( pname, &ret);
@@ -106,7 +106,7 @@ inline GLfloat sglGetf(GLenum pname)
 	GLfloat ret;
 	if(rendering)
 	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul‰ssig");
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul√§ssig");
 		debugSig();
 	}
 	glGetFloatv( pname, &ret);
@@ -118,7 +118,7 @@ inline GLint sglGeti(GLenum pname)
 	GLint ret;
 	if(rendering)
 	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul‰ssig");
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zul√§ssig");
 		debugSig();
 	}
 	glGetIntegerv( pname, &ret);
@@ -130,7 +130,7 @@ inline GLint sglGeti(GLenum pname)
 };
 #endif
 
-//lt. SGI wird der Bereich 0x6000-0x7FFF nie offziell f¸r enums verwendet werden
+//lt. SGI wird der Bereich 0x6000-0x7FFF nie offziell f√ºr enums verwendet werden
 #define NON_GL_ENUM_BLOCK_BEGIN 0x6000
 #define NON_GL_ENUM_BLOCK_END 0x7FFF
 

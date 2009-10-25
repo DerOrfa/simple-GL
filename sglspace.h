@@ -47,7 +47,7 @@
 #define SGL_FOLLOW_MOUSE_FLOAT 0x7fff
 #define SGL_FOLLOW_MOUSE_REAL 0xbfff
 
-/**Basisklasse für alle SGL- Raumklassen
+/**Basisklasse fÃ¼r alle SGL- Raumklassen
   *@author Enrico Reimer
   */
 
@@ -120,7 +120,7 @@ public:
 	void CompileIntObs();
 	
 	/**
-	 * Loopback um das frameworkspezifische Neuzeichnen von "innen" auszulösen.
+	 * Loopback um das frameworkspezifische Neuzeichnen von "innen" auszulÃ¶sen.
 	 */
 	virtual void callUpdate()=0;
 	void draw();
@@ -161,9 +161,9 @@ public:
 	void GetGlInfoString(char str[]);
 	static bool printErrors();
 	/**
-	 * Führt frameworkspezifische Operationen zum Initialisieren der aus.
+	 * FÃ¼hrt frameworkspezifische Operationen zum Initialisieren der aus.
 	 * @param w Breite der View bei der Initialisierung
-	 * @param h Höhe der View bei der Initialisierung
+	 * @param h HÃ¶he der View bei der Initialisierung
 	 * @return true wenn die View erfolgreich initialisiert wurde, sonst false
 	 */
 	virtual bool setup_video(int w,int h)=0;
