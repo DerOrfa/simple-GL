@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.2)
+
 #libsgl master cmake-file
 cmake_minimum_required(VERSION 2.2)
 
@@ -8,6 +10,7 @@ INCLUDE(CPack)
 
 SET(TARGET_VERSION_MAJOR 0)
 SET(TARGET_VERSION_MINOR 9)
+SET(CPACK_PACKAGE_CONTACT "reimer@cbs.mpg.de")
 
 
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
