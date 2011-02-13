@@ -27,7 +27,7 @@
 #endif
 #ifdef QT_KONFLIKT
 #warning QT versucht gerade (warscheinlich erfolgreich) SGLSignals "kaputtzumachen"
-#warning du solltest libsgl-header immer vor QT headern laden - das hilft MANCHMAL
+#warning CONFIG += no_keywords schafft Abhilfe ("http://doc.qt.nokia.com/4.7/signalsandslots.html")
 #endif
 
 // MOC_SKIP_BEGIN
