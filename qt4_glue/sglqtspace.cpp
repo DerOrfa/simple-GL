@@ -10,11 +10,11 @@
 //
 //
 #include "sglqtspace.h"
-#include <qlayout.h>
-#include <qwidget.h>
+#include <QLayout>
+#include <QWidget>
 #include <time.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <qregexp.h>
 #include <QMouseEvent>
 #include <QFrame>
@@ -310,7 +310,7 @@ void SGLqtSpace::commonConstr(QWidget *parent)
 		setSizePolicy(QSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored));
 		if(parent->layout())
 		{
-			QBoxLayout *bl=dynamic_cast<QBoxLayout*>(parent->layout());
+// 			QBoxLayout *bl=dynamic_cast<QBoxLayout*>(parent->layout());
 //			QGridLayout *gl=dynamic_cast<QBoxLayout>(parent->layout());
 /*			if(bl)
 			{

@@ -21,7 +21,7 @@
 #define SGLQTMULTISPACEMGR_H
 
 #include "sglqtspace.h"
-#include <qobject.h>
+#include <QObject>
 #include <QLinkedList>
 
 /**

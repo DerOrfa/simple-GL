@@ -202,7 +202,7 @@ static int LittleEndian()
 |	Return: GLF_OK - if all OK
 |	Return: GLF_ERROR - if any error
 */
-static int ReadFont(char *font_name, struct glf_font *glff)
+static int ReadFont(const char *font_name, struct glf_font *glff)
 {
 
 	FILE *fontf;

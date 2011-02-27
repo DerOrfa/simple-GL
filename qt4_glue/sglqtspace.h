@@ -13,7 +13,7 @@
 #define SGLQTSPACE_H
 
 #include "../sglspace.h"
-#include <qgl.h>
+#include <QtOpenGL>
 
 /**
 @author Enrico Reimer,,,

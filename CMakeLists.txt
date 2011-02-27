@@ -1,7 +1,4 @@
-cmake_minimum_required(VERSION 2.2)
-
-#libsgl master cmake-file
-cmake_minimum_required(VERSION 2.2)
+cmake_minimum_required(VERSION 2.6)
 
 PROJECT(libsgl)
 cmake_policy(SET CMP0005 OLD) #make it not complain about escaped Preprocessor definition (can be removed when we switch to cmake 2.6)
@@ -16,8 +13,6 @@ SET(CPACK_PACKAGE_CONTACT "reimer@cbs.mpg.de")
 FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
 
 SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
-SET(SGL_RUNTIME_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE PATH "prefix in which libsgl is going to be installed. In Most cases the same as CMAKE_INSTALL_PREFIX")
-#SET(GL_EXT_INCLUDES "${OPENGL_INCLUDE_DIR}/GL" CACHE PATH "directory with glext.h and glxext.h") 
 
 SET(CORE_DIR ./)
 SET(CORE_OBJFILES  
@@ -64,6 +59,18 @@ SET(UTIL_OBJFILES
   ${UTIL_DIR}memconsumer.cpp
 )
 
+SET(USE_DEVIL off CACHE BOOL "use DevIL (aka OpenIL) for texture loading")
+SET(STATIC_LIB off CACHE BOOL "create static libs as well")
+IF(USE_DEVIL)
+ADD_DEFINITIONS(-DUSE_DEVIL)
+	find_path(DEVIL_INCLUDE_DIR "IL/ilut.h")
+	find_library(IL_LIBRARY NAMES "IL")
+	find_library(ILU_LIBRARY NAMES "ILU")
+	find_library(ILUT_LIBRARY NAMES "ILUT")
+	set(DEVIL_LIBS ${IL_LIBRARY} ${ILU_LIBRARY} ${ILUT_LIBRARY})
+	set(DEVIL_INCS ${DEVIL_INCLUDE_DIR})
+ENDIF(USE_DEVIL)
+
 FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 
 SET(TEXT_DIR text/)
@@ -73,8 +80,8 @@ SET(TEXT_BACKEND_GLF_DIR ${TEXT_DIR}backend_glf/)
 SET(TEXT_BACKEND_GLF_OBJFILES ${TEXT_BACKEND_GLF_DIR}glf.c ${TEXT_BACKEND_GLF_DIR}sgltextbackend_glf.cpp)
 
 
-ADD_DEFINITIONS(-DUSE_DEVIL -DDATA_DIR=\\"${SGL_RUNTIME_PREFIX}/${SYS_DATADIR}/libsgl\\" -DILUT_USE_OPENGL -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
-INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR})
+ADD_DEFINITIONS(-DDATA_DIR=\\"${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl\\" -DILUT_USE_OPENGL -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
+INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR} ${DEVIL_INCS})
 
 ADD_LIBRARY(sgl SHARED 
   ${CORE_OBJFILES} 
@@ -86,22 +93,24 @@ ADD_LIBRARY(sgl SHARED
 )
 #The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
-ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES} 
-  ${HELPER_OBJFILES} 
-  ${PRIMITIVES_OBJFILES} 
-  ${UTIL_OBJFILES} 
-  ${TEXT_OBJFILES} 
-  ${TEXT_BACKEND_GLF_OBJFILES} 
-)
-#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
-SET_TARGET_PROPERTIES(sgl_static PROPERTIES OUTPUT_NAME "sgl")
-
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} IL ILU ILUT m)
-INSTALL(TARGETS sgl sgl_static 
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-)
+TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} ${DEVIL_LIBS} m)
+SET(LIBS sgl)
+
+if(STATIC_LIB)
+	ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
+		${HELPER_OBJFILES}
+		${PRIMITIVES_OBJFILES}
+		${UTIL_OBJFILES}
+		${TEXT_OBJFILES}
+		${TEXT_BACKEND_GLF_OBJFILES}
+	)
+	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
+	SET_TARGET_PROPERTIES(sgl_static PROPERTIES OUTPUT_NAME "sgl")
+	SET(LIBS ${LIBS} sgl_static)
+endif(STATIC_LIB)
+	
+INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 FOREACH(inc ${includes})
   GET_FILENAME_COMPONENT(inc_path ${inc} PATH)
@@ -109,6 +118,12 @@ FOREACH(inc ${includes})
 ENDFOREACH(inc)
 
 INSTALL(DIRECTORY data/ DESTINATION ${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)
+
+SET(BUILD_QT4_GLUE off CACHE BOOL "build qt4_glue (needs qt4)")
+
+if(BUILD_QT4_GLUE)
+	add_subdirectory(qt4_glue)
+endif(BUILD_QT4_GLUE)
 
 #README
 #rm -rf `svn status|grep ^?|colrm 1 7`

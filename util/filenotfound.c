@@ -20,7 +20,7 @@ static const struct {
   unsigned int 	 width;
   unsigned int 	 height;
   unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
-  char         	*comment;
+  const char	*comment;
   unsigned char	 rle_pixel_data[4962 + 1];
 } FileNotFoundImage = {
   100, 100, 4,
