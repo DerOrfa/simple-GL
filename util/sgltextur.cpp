@@ -22,7 +22,7 @@
 	#include <OpenGL/glext.h>
 #else 
 	#include <GL/glu.h>
-	#include <OpenGL/glext.h>
+	#include <GL/glext.h>
 #endif
 #ifdef USE_DEVIL
 	#include <IL/ilut.h>
