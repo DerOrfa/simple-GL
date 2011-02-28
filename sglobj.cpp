@@ -18,8 +18,15 @@
 #include "sglobj.h"
 #include "sglmisc.h"
 #include <stdio.h>
-#include <GL/glu.h>
 #include "sglmetaobj.h"
+
+#ifdef __APPLE__
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+#endif
 
 SGLObj::SGLObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObjBase(PosX,PosY,PosZ,SizeFact)

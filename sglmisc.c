@@ -18,8 +18,15 @@
 #include "sglmisc.h"
 #include <stdio.h>
 #include <stdarg.h>
-#include <GL/glu.h>
 #include <signal.h>
+
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
+#include <GL/glu.h>
+#endif
+
+
 
 short SGLshowInfos=1;
 short SGLshowWarnings=1;

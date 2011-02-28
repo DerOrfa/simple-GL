@@ -17,7 +17,11 @@
 	#include <gl\glu.h>
 	#include <gl\glaux.h>
 #else
-	#include <GL/gl.h>
+	#ifdef __APPLE__
+		#include <OpenGL/gl.h>
+	#else 
+		#include <GL/gl.h>
+	#endif
 #endif
 
 #include "../sglobjbase.h"

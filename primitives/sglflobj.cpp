@@ -17,9 +17,13 @@
 
 #include "sglflobj.h"
 #include <stdio.h>
-#include <GL/glu.h>
 #include "../sglmisc.h"
 #include "../util/sglmaterial.h"
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 SGLFlObj::SGLFlObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObj(PosX,PosY,PosZ,SizeFact)

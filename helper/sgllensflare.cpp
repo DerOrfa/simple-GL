@@ -8,8 +8,12 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 #include "sgllensflare.h"
-#include <GL/glu.h>
 #include "../sglmisc.h"
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 void SGLLensFlare::ConvertShort(unsigned short *array, unsigned int length)
 {

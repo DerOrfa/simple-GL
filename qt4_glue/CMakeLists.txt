@@ -15,6 +15,7 @@ set(HDRS sglqtmultispacemgr.h sglqtspace.h)
 QT4_WRAP_CPP(MOCS ${HDRS})
 
 add_library(qt4_glue SHARED ${SRCS} ${MOCS})
+TARGET_LINK_LIBRARIES(qt4_glue sgl ${QT_LIBRARIES})
 INSTALL(TARGETS qt4_glue  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 #The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 

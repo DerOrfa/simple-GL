@@ -17,7 +17,13 @@
 
 #include "sgltextur.h"
 #include "../sglmisc.h"
-#include <GL/glu.h>
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+	#include <OpenGL/glext.h>
+#else 
+	#include <GL/glu.h>
+	#include <OpenGL/glext.h>
+#endif
 #ifdef USE_DEVIL
 	#include <IL/ilut.h>
 #else
@@ -270,7 +276,7 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 			glTexImage2D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
 		case 3:
 			proxyType=GL_PROXY_TEXTURE_3D;
-			glTexImage3DEXT(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
+			glTexImage3D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
 		default:
 			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
 		}
@@ -363,10 +369,13 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(ALPHA,alpha);
 	GET_CHAN_SIZE(LUMINANCE,lum);
 	GET_CHAN_SIZE(INTENSITY,intens);
+#if GL_EXT_paletted_texture
 	//ATI macht hier mist wenn die Extension fehlt - also erst fragen dann schießen
 	if(gluCheckExtension((const GLubyte*)"GL_EXT_paletted_texture",glGetString(GL_EXTENSIONS)))
 		glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
-	else index=0;
+	else 
+#endif
+		index=0;
 	if(unload)unloadTex();
 	return r+b+b+alpha+lum+intens+index;
 	#undef GET_CHAN_SIZE

@@ -17,9 +17,13 @@
 
 #include	"sglvektor.h"
 #include	"sglmisc.h"
-#include	<GL/glu.h>
 #include	"util/sgltextur.h"
 #include	"util/sglmaterial.h"
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 /**
  * Konstruktor für einzelne Koordinaten.

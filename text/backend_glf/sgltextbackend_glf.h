@@ -18,7 +18,14 @@
 	#include <gl\glu.h>								// Header File For The GLu32 Library
 	#include <gl\glaux.h>								// Header File For The GLaux Library
 #else
-	#include <GL/gl.h> //gl.h ist für glf.h nötig
+//gl.h ist für glf.h nötig
+#ifdef __APPLE__
+	#include <OpenGL/gl.h>
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/gl.h>
+	#include <GL/glu.h>
+#endif
 #endif
 
 #include "glf.h"

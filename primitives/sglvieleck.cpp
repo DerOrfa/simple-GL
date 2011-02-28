@@ -18,8 +18,12 @@
 #include "sglvieleck.h"
 #include "../sglmisc.h"
 #include <assert.h>
-#include <GL/glu.h>
 #include "../util/sglmaterial.h"
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 /*!
     \fn SGLPolygon::SGLPolygon()

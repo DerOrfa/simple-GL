@@ -18,7 +18,11 @@
 	#include <gl\glu.h>		// Header File For The GLu32 Library
 	#include <gl\glaux.h>	// Header File For The GLaux Library
 #else
-	#include <GL/gl.h>
+	#ifdef __APPLE__
+		#include <OpenGL/gl.h>
+	#else 
+		#include <GL/gl.h>
+	#endif
 #endif
 
 #include "sglvektor.h"

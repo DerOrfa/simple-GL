@@ -2,15 +2,15 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(libsgl)
 cmake_policy(SET CMP0005 OLD) #make it not complain about escaped Preprocessor definition (can be removed when we switch to cmake 2.6)
-INCLUDE(FindOpenGL)
 INCLUDE(CPack)
 
 SET(TARGET_VERSION_MAJOR 0)
 SET(TARGET_VERSION_MINOR 9)
 SET(CPACK_PACKAGE_CONTACT "reimer@cbs.mpg.de")
 
-
-FIND_LIBRARY(BOOST_SIGNALS_LIB boost_signals)
+FIND_PACKAGE(OpenGL REQUIRED)
+FIND_PACKAGE(Boost REQUIRED COMPONENTS signals)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 
 SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
 
@@ -94,7 +94,7 @@ ADD_LIBRARY(sgl SHARED
 #The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-TARGET_LINK_LIBRARIES(sgl ${BOOST_SIGNALS_LIB} ${DEVIL_LIBS} m)
+TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} m)
 SET(LIBS sgl)
 
 if(STATIC_LIB)

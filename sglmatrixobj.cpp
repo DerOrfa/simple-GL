@@ -11,8 +11,12 @@
 //
 #include "sglmatrixobj.h"
 #include "sglmisc.h"
-#include <GL/glu.h>
 #include <string.h>
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 SGLMatrixObj::SGLMatrixObj(GLenum type)
 {

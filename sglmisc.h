@@ -25,7 +25,11 @@
 #define Y_AXE	2
 #define Z_AXE	4
 
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 #ifndef GLAPI
 # ifdef _WIN32
@@ -36,7 +40,12 @@
 # define __DEFINED_GLAPI
 #endif
 
+#ifdef __APPLE__
+#include <OpenGL/glext.h>
+#else
 #include <GL/glext.h>
+#endif
+
 
 #ifdef __DEFINED_GLAPI
 # undef GLAPI

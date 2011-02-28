@@ -10,7 +10,11 @@
 #include <stdlib.h> 
 #include <string.h>
 #include "readtex.h"
-#include <GL/glu.h>
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 
 #ifndef SEEK_SET

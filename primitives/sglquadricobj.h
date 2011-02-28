@@ -19,7 +19,11 @@
 #define SGLSPHERE_H
 
 #include "sglflobj.h"
-#include <GL/glu.h>
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 
 /**
   *@author Enrico Reimer

@@ -16,7 +16,11 @@
  ***************************************************************************/
 
 #include "sgltext.h"
-#include <GL/glu.h>
+#ifdef __APPLE__
+	#include <OpenGL/glu.h>
+#else 
+	#include <GL/glu.h>
+#endif
 #include "backend_glf/sgltextbackend_glf.h"
 
 SGLText::SGLText(const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
