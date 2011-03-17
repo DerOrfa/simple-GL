@@ -1,7 +1,7 @@
 //
 // C++ Implementation: sglmatrixobj
 //
-// Description: 
+// Description:
 //
 //
 // Author: Enrico Reimer,,, <enni@Akira>, (C) 2004
@@ -14,7 +14,7 @@
 #include <string.h>
 #ifdef __APPLE__
 	#include <OpenGL/glu.h>
-#else 
+#else
 	#include <GL/glu.h>
 #endif
 
@@ -31,7 +31,9 @@ void SGLMatrixObj::Move(SGLVektor to){Move(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
 void SGLMatrixObj::MoveTo(GLdouble x,GLdouble y, GLdouble z)
 {
 	ResetTransformMatrix(NULL);
-	Move(x,y,z);
+	MyTransformMatrix[12]=x;
+	MyTransformMatrix[13]=y;
+	MyTransformMatrix[14]=z;
 }
 
 void SGLMatrixObj::Move(GLdouble x,GLdouble y, GLdouble z)
@@ -71,7 +73,7 @@ void SGLMatrixObj::Scale(GLdouble fact){Scale(fact,fact,fact);}
 void SGLMatrixObj::ScaleTo(GLdouble fact)
 {
 	ResetTransformMatrix(NULL);
-	Scale(fact);
+	MyTransformMatrix[0]=MyTransformMatrix[5]=MyTransformMatrix[10]=fact;
 }
 
 

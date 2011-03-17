@@ -9,11 +9,11 @@
  ***************************************************************************/
 #include "sglobjbase.h"
 #include "sglmisc.h"
-#include <typeinfo> 
+#include <typeinfo>
 
 #ifdef __APPLE__
 	#include <OpenGL/glu.h>
-#else 
+#else
 	#include <GL/glu.h>
 #endif
 
@@ -45,8 +45,8 @@ compileNextTime(this)
  * Standardkonstruktor.
  * Erzeugt ein Objekt an den gegebenen Raumkoordinaten.
  * @param PosX die Raumkoordinaten, an denen das Objekt erz. wird
- * @param PosY 
- * @param PosZ 
+ * @param PosY
+ * @param PosZ
  * @param SizeFact Die Grundskalierung, mit der das Objekt erzeugt wird.
  */
 SGLObjBase::SGLObjBase(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
@@ -54,9 +54,13 @@ SGLMatrixObj(GL_MODELVIEW),
 compileNextTime(this)
 {
 	ID=0;
-	ResetTransformMatrix();
-	if(PosX || PosY || PosZ)Move(PosX,PosY,PosZ);
-	if(SizeFact!=1)Scale(SizeFact,SizeFact,SizeFact);
+	ResetTransformMatrix(NULL);
+	MyTransformMatrix[12]=PosX;
+	MyTransformMatrix[13]=PosY;
+	MyTransformMatrix[14]=PosZ;
+
+	MyTransformMatrix[0]=MyTransformMatrix[5]=MyTransformMatrix[10]=SizeFact;
+
 	IgnoreClip=IgnoreLight=false;
 	FrontFace=GL_CCW;
 	FaceAt=NULL;
@@ -90,7 +94,7 @@ SGLObjBase::~SGLObjBase()
  * Bestimmt die Normale auf der durch zwei Vektoren bestimmten Ebene.
  * Die Ebene schneidet den Koordinatenursprung.
  * @param Vekt1 die zwei Vektoren zur beschreibung der Ebene
- * @param Vekt2 
+ * @param Vekt2
  * @return einen Vektor, der senkrecht auf der Ebene steht
  */
 SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
@@ -105,7 +109,7 @@ SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
  * Die Ebene schneidet den durch den Stützvektor gegebenen Punkt im Raum.
  * @param Pkt1 @param Pkt2 die zwei Vektoren zur beschreibung der Ebene
  * @param Pkt3 der Stützvektor der Ebene
- * @return 
+ * @return
  */
 SGLVektor SGLObjBase::Normale(SGLVektor Pkt1,SGLVektor Pkt2,SGLVektor Pkt3)
 {return Normale(SGLVektor(Pkt2-Pkt1),SGLVektor(Pkt3-Pkt1));}
@@ -171,8 +175,8 @@ SGLVektor SGLObjBase::getMyPos()
 
 
 /**
- * Stellt sicher, das dieses Objekt im Renderer-Cache vorliegt und liefert seine ID. 
- * Wenn force_compile war ist, das Objekt noch nicht in der OpenGL-Pipeline vorliegt 
+ * Stellt sicher, das dieses Objekt im Renderer-Cache vorliegt und liefert seine ID.
+ * Wenn force_compile war ist, das Objekt noch nicht in der OpenGL-Pipeline vorliegt
  * oder wenn es neu berechnet werden muss, wird Compile() aufgerufen.
  * Das Objekt wird dabei jedoch nicht gezeichnet.
  * @param force_compile wenn true wird das Objekt in jedem Fall neu generiert.
@@ -193,12 +197,12 @@ GLuint SGLObjBase::metaCompile(bool force_compile)
  * Bindet das Objekt an ein Anderes.
  * Löst dieses Objekt das Signal notifyChange aus, wird das gebundene Objekt bei nächster Gelegenheit neu berechnet.
  * Da beim Generieren notifyChange nicht ausgelöst wird, ist auch gegenseitiges Binden möglich.
- * \code 
+ * \code
  * objA.link(objB);
- * objB.link(objA); 
+ * objB.link(objA);
  * \endcode
  * @param obj das Zeilobjekt an das bei notifyChange neu berechnet werden soll.
- * @return 
+ * @return
  */
 SGLConnection SGLObjBase::link(SGLObjBase &obj)
 {

@@ -34,7 +34,7 @@
 #else
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
-#else 
+#else
 	#include <GL/gl.h>
 	#include <GL/glx.h>
 #endif
@@ -48,7 +48,7 @@ bool SGLSpace::globalColorAktive=false;
 
 /**
  * Versetzt den Renderer in definierte Zustände.
- * @param mode der Modus in den der Renderer versetzt werden soll. 
+ * @param mode der Modus in den der Renderer versetzt werden soll.
  */
 void SGLSpace::resetView(short mode)
 {
@@ -92,7 +92,7 @@ void SGLSpace::callHelper(int stage)
 	//Helper Zeichnen
 	for(int i=0;i<4;i++)
 		if(ClipPlanes[i]->ID)glCallList(ClipPlanes[i]->ID);
-	
+
 	if(Grids.doGrid & 1)glCallList(Grids.Grid1->ID);
 	if(Grids.doGrid & 2)glCallList(Grids.Grid2->ID);
 	if(Grids.doGrid & 4)glCallList(Grids.Grid3->ID);
@@ -130,10 +130,10 @@ void SGLSpace::show_status()
 
 /**
  * Kopierkonstruktor.
- * Kopiert src. Dabei wird auch sein reDraw-Slot kopiert. 
+ * Kopiert src. Dabei wird auch sein reDraw-Slot kopiert.
  * Folglich wird die entsprechende Debug-Warnung zur Laufzeit ausgegeben.
  * Der interne Zeiger des Slot wird jedoch reinitialisiert, die Warnung kann also in diesem Fall ignoriert werden.
- * @param src Der Space von dem ein Kopie erstellt werden soll. 
+ * @param src Der Space von dem ein Kopie erstellt werden soll.
  */
 SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
 {
@@ -166,6 +166,19 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	StatusInfo.StatusString[0]=StatusInfo.time=StatusInfo.framecount=StatusInfo.fps=0;
 	MouseInfo.DownBtns=0;
 	cloned=false;
+
+	for(int i=0;i<5;i++)ClipPlanes[i]=new SGLClipPlane(GL_CLIP_PLANE0+i);
+
+	Grids.Grid1= new SGLGrid(1);
+	Grids.Grid2= new SGLGrid(2);
+	Grids.Grid3= new SGLGrid(3);
+
+	Grids.BeschrMat->Transparenz=.5;
+	Grids.BeschrMat->SetColor(0,1,0);
+
+	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.5);
+	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
+	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
 }
 
 /**
@@ -215,7 +228,7 @@ void SGLSpace::OnResize(int width, int height)
 	}
 	Size.x=width;
 	Size.y=height;
-	
+
 	glViewport(0, 0, width, height);
  	StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
 }
@@ -229,11 +242,11 @@ void SGLSpace::setFlags(bool reCompile)
 {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_NORMALIZE);
-	
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER,0);
-	
+
 	glDisable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDepthMask(GL_TRUE);
@@ -265,9 +278,9 @@ void SGLSpace::setFlags(bool reCompile)
 
 
 /**
- * Gibt Text auf der mainConsole aus. 
+ * Gibt Text auf der mainConsole aus.
  * Wird ignoriert, wenn (noch) keine mainConsole existiert.
- * @param String 
+ * @param String
  */
 void SGLSpace::PrintOnScreen(char* String)
 {
@@ -284,10 +297,10 @@ void SGLSpace::PrintOnScreen(char* String)
  * Setzt eine Clipping-Plane.
  * Die entsprechnde Plane wird initialisiert und positioniert. Außerdem wird zweiseitiges Rendering aktiviert.
  * @param PlaneNr die Nummer der zu aktivierenden Plane. ( 0 <= PlaneNr \< GL_MAX_CLIP_PLANES)
- * @param Ax 
- * @param By 
- * @param Cz 
- * @param D 
+ * @param Ax
+ * @param By
+ * @param Cz
+ * @param D
  */
 void SGLSpace::SetClipPlane(unsigned short int PlaneNr,GLdouble Ax,GLdouble By, GLdouble Cz,GLdouble D)
 {
@@ -317,7 +330,7 @@ void SGLSpace::RotateAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 }
 
 /**
- * Verschiebt den Blickpunkt der 
+ * Verschiebt den Blickpunkt der
  * @param RelX Verschieben nach rechts/links aus Sicht des Betrachters
  * @param RelY Verschieben nach oben/unten aus Sicht des Betrachters
  * @param Cam Die Camera deren Blickpunkt verschoben werden soll
@@ -387,8 +400,8 @@ void SGLSpace::TwoSided(bool TwoSideRendering)
  * Legt die diffuse Beleuchtung fest.
  * Es wird die Helligkeit und Farbe der globalen Lichtquelle festgelegt. Diese Lichtquelle leuchtet aus allen Richtungen und wirft keine Schatten.
  * @param R die Farbe der Lichtquelle
- * @param G 
- * @param B 
+ * @param G
+ * @param B
  */
 void SGLSpace::SetRaumLicht(GLfloat R,GLfloat G, GLfloat B)
 {
@@ -421,7 +434,7 @@ bool SGLSpace::reCompileIntObs(bool redraw)
 /**
  * Stellt die rendering-Qualität ein .
  * Zur Zeit sind nur die Qualitäten 0 und 1 möglich, wobei 0 den Renderer auf höchste Geschwindigkeit und 1 ihn auf höchste Qualität stellt.
- * @param qual 
+ * @param qual
  */
 void SGLSpace::SetQuality(unsigned short int qual)
 {
@@ -521,18 +534,6 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	//glXWaitGL();
 	//glXWaitX();
 
-	for(int i=0;i<5;i++)ClipPlanes[i]=new SGLClipPlane(GL_CLIP_PLANE0+i);
-
-	Grids.Grid1= new SGLGrid(1);
-	Grids.Grid2= new SGLGrid(2);
-	Grids.Grid3= new SGLGrid(3);
-
-	Grids.BeschrMat->Transparenz=.5;
-	Grids.BeschrMat->SetColor(0,1,0);
-	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.5);
-	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
-	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
-
 	Grids.Beschr[0]=Grids.X->Compile(true,true);
 	Grids.Beschr[1]=Grids.Y->Compile(true,true);
 	Grids.Beschr[2]=Grids.Z->Compile(true,true);
@@ -566,7 +567,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
  * Ein SGLSpace setzt bei seiner Erzeugung automatisch eine Standardkamera.
  * Diese Funktion muss daher nur aufgerufen werden, wenn eine andere Kamera verwendet werden soll.
  * Die aktuelle Kamera wird dabei automatisch gelöscht, wenn sie nicht mehr verwendet wird.
- * @param cam 
+ * @param cam
  */
 void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 {
@@ -598,14 +599,14 @@ void SGLSpace::setGridsSize(GLuint size)
 	Grids.Grid1->setSize(size);
 	Grids.Grid2->setSize(size);
 	Grids.Grid3->setSize(size);
-	
+
 	Grids.X->MoveTo(size+size/10.,0,0);
 	Grids.Y->MoveTo(0,size+size/10.,0);
 	Grids.Z->MoveTo(0,0,size+size/10.);
 	Grids.X->Scale(size/10.);
 	Grids.Y->Scale(size/10.);
 	Grids.Z->Scale(size/10.);
-	
+
 	Grids.X->compileNextTime();
 	Grids.Y->compileNextTime();
 	Grids.Z->compileNextTime();
@@ -624,7 +625,7 @@ void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 
 /**
  * Interne Zeichen-Prozedur
- * Es wird StatusInfo.Processing true gesetzt. Danach werden nacheinander die internen Hilfsobjekte gezeichnet, 
+ * Es wird StatusInfo.Processing true gesetzt. Danach werden nacheinander die internen Hilfsobjekte gezeichnet,
  * die normalen (registrierten) Objekte gezeichnet und gegebenfalls Statusinformationen angezeigt.
  * Danach wird glFinish() ausgeführt, und StatusInfo.Processing false gesetzt.
  */
@@ -641,7 +642,7 @@ void SGLSpace::draw()
 		resetView(-1);
 		resetView(1);
 		show_status();
-	
+
 		printErrors();
 		glFinish();
 
@@ -656,7 +657,7 @@ SGLSpace::redrawSlot::redrawSlot(SGLSpace *myspace){this->myspace =myspace;}
  * Signalbehandlung des redraw-Slots.
  * Besitzt der Slot einen gültigen SGLSpace-Zeiger, wird callUpdate() für diesen Space ausgelöst.
  */
-void SGLSpace::redrawSlot::operator()() 
+void SGLSpace::redrawSlot::operator()()
 {
 	if(myspace)myspace->callUpdate();
 	else{SGLprintError("redrawSlot 0x%X hat keinen Space, löse nicht aus",this);}
