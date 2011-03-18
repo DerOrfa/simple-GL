@@ -60,7 +60,6 @@ protected:
 	virtual void keyPressEvent ( QKeyEvent * e );
 	virtual void focusInEvent(QFocusEvent*e);
 	virtual void focusOutEvent(QFocusEvent*e);
-	const SGLqtSpace *shareWidget;
 	struct {double x,y;}PixelMMSize;
 	void connectNotify( const char * signal );
 	void disconnectNotify( const char * signal );

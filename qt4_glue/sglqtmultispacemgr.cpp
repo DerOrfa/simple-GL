@@ -49,17 +49,9 @@ void SGLqtMultiSpaceMgr::onNewSpace(SGLqtSpace *sw)
 /*!
     \fn GLvlWndMgr_Impl::lostChild(QObject * obj)
  */
-void SGLqtMultiSpaceMgr::lostChild(QObject * obj)
+void SGLqtMultiSpaceMgr::lostChild(SGLqtSpace* obj)
 {
-//	QValueList<SGLqtSpace *>::size_type cnt=childs.size();
-	QLinkedList<SGLqtSpace *>::iterator it=childs.begin();
-	while(it!=childs.end())
-	{
-		SGLqtSpace *i= *it;
-		if(i == obj)
-			it=childs.erase(it);
-		else it++;
-	}
+	childs.removeAll(obj);
 }
 
 /*!

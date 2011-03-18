@@ -35,13 +35,12 @@ public:
 	~SGLqtMultiSpaceMgr();
 	void removeAllChilds(SGLqtSpace *exception=NULL);
 	QLinkedList<SGLqtSpace*> childs;
-
 public Q_SLOTS:
     void onNewSpace(SGLqtSpace *newSpace);
 
 protected Q_SLOTS:
 	/*$PROTECTED_SLOTS$*/
-	void lostChild(QObject * obj);
+	void lostChild(SGLqtSpace *obj);
 };
 
 #endif
