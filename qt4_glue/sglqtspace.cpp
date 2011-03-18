@@ -245,8 +245,8 @@ void SGLqtSpace::keyPressEvent(QKeyEvent * e )
 		case Qt::Key_Right:Camera->RotateCam(2,0);camChanged();break;
 		case Qt::Key_Up:Camera->RotateCam(0,2);camChanged();break;
 		case Qt::Key_Down:Camera->RotateCam(0,-2);camChanged();break;
-		case Qt::Key_PageUp:Camera->MoveZoom(0.95);break;
-		case Qt::Key_PageDown:Camera->MoveZoom(1.05);break;
+		case Qt::Key_PageUp:Camera->MoveZoom(0.95);camChanged();break;
+		case Qt::Key_PageDown:Camera->MoveZoom(1.05);camChanged();break;
 		case Qt::Key_Home:Camera->OptZoom(1.05);camChanged();break;
 		case Qt::Key_End:Camera->OptZoom(0.95);camChanged();break;
 		case Qt::Key_Insert:Camera->Roll(-1);camChanged();break;

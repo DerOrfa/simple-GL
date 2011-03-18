@@ -149,7 +149,7 @@ SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
  * @param G Der Grünanteil der Hintergrundfarbe
  * @param B Der Blauanteil der Hintergrundfarbe
  */
-SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this)
+SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this),Camera(new SGLCamera()),StdLight(NULL)
 {
 	Grids.BeschrMat=MaterialPtr(new  SGLMaterial);
 	TranspObjLst.renderTransparent=true;
@@ -540,7 +540,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 
 	StatusInfo.WindowHeight=h;
 	StatusInfo.WindowWidth=w;
-	defaultCam(SGLshPtr<SGLBaseCam>(new SGLCamera()));
+	defaultCam(Camera);
 	if(!initVis(w,h))exit(1);
 	setFlags(false);
 
