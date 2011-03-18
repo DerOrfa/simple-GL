@@ -600,12 +600,9 @@ void SGLSpace::setGridsSize(GLuint size)
 	Grids.Grid2->setSize(size);
 	Grids.Grid3->setSize(size);
 
-	Grids.X->MoveTo(size+size/10.,0,0);
-	Grids.Y->MoveTo(0,size+size/10.,0);
-	Grids.Z->MoveTo(0,0,size+size/10.);
-	Grids.X->Scale(size/10.);
-	Grids.Y->Scale(size/10.);
-	Grids.Z->Scale(size/10.);
+	Grids.X->SetPosAndScale(size+size/10.,0,0,size/10.);
+	Grids.Y->SetPosAndScale(0,size+size/10.,0,size/10.);
+	Grids.Z->SetPosAndScale(0,0,size+size/10.,size/10.);
 
 	Grids.X->compileNextTime();
 	Grids.Y->compileNextTime();

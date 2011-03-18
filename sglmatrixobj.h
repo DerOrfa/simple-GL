@@ -1,7 +1,7 @@
 //
 // C++ Interface: sglmatrixobj
 //
-// Description: 
+// Description:
 //
 //
 // Author: Enrico Reimer,,, <enni@Akira>, (C) 2004
@@ -20,7 +20,7 @@
 #else
 	#ifdef __APPLE__
 		#include <OpenGL/gl.h>
-	#else 
+	#else
 		#include <GL/gl.h>
 	#endif
 #endif
@@ -36,11 +36,11 @@ public:
 	SGLMatrixObj(GLenum type);
 	void Scale(GLdouble xfact,GLdouble yfact, GLdouble zfact);
 	void Scale(GLdouble fact);
-	void ScaleTo(GLdouble fact);
+
 	void Move(SGLVektor to);
 	void Move(GLdouble x,GLdouble y, GLdouble z);
-	void MoveTo(SGLVektor to);
-	void MoveTo(GLdouble x,GLdouble y, GLdouble z);
+
+	void SetPosAndScale(GLdouble x,GLdouble y, GLdouble z,GLdouble fact);
 	void Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdouble amount);
 	void ResetTransformMatrix(const GLdouble *newMatrix=NULL);
 	void loadMatrix();

@@ -23,19 +23,17 @@ SGLMatrixObj::SGLMatrixObj(GLenum type)
 	MatrMode= type;
 }
 
-
-
-void SGLMatrixObj::MoveTo(SGLVektor to){MoveTo(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
-void SGLMatrixObj::Move(SGLVektor to){Move(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
-
-void SGLMatrixObj::MoveTo(GLdouble x,GLdouble y, GLdouble z)
+void SGLMatrixObj::SetPosAndScale(GLdouble x, GLdouble y, GLdouble z, GLdouble fact)
 {
 	ResetTransformMatrix(NULL);
 	MyTransformMatrix[12]=x;
 	MyTransformMatrix[13]=y;
 	MyTransformMatrix[14]=z;
+	MyTransformMatrix[0]=MyTransformMatrix[5]=MyTransformMatrix[10]=fact;
 }
 
+
+void SGLMatrixObj::Move(SGLVektor to){Move(to.SGLV_X,to.SGLV_Y,to.SGLV_Z);}
 void SGLMatrixObj::Move(GLdouble x,GLdouble y, GLdouble z)
 {
 	loadMatrix();
@@ -70,12 +68,6 @@ void SGLMatrixObj::ResetTransformMatrix(const GLdouble *newMatrix)
 }
 
 void SGLMatrixObj::Scale(GLdouble fact){Scale(fact,fact,fact);}
-void SGLMatrixObj::ScaleTo(GLdouble fact)
-{
-	ResetTransformMatrix(NULL);
-	MyTransformMatrix[0]=MyTransformMatrix[5]=MyTransformMatrix[10]=fact;
-}
-
 
 /*!
     \fn SGLMatrixObj::loadMatrix()
