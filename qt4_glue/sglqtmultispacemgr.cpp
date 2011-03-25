@@ -34,7 +34,7 @@ SGLqtMultiSpaceMgr::~SGLqtMultiSpaceMgr()
 /*!
     \fn SGLqtMultiSpaceMgr::onNewSpace(SGLqtSpace *newSpace)
  */
-void SGLqtMultiSpaceMgr::onNewSpace(SGLqtSpace *sw)
+void SGLqtMultiSpaceMgr::registerSpace(SGLqtSpace *sw)
 {
 	connect(sw,SIGNAL(destroyed(QObject *)),SLOT(lostChild(QObject *)));
 	for(QLinkedList<SGLqtSpace *>::iterator it=childs.begin();it!=childs.end();it++)
@@ -49,9 +49,11 @@ void SGLqtMultiSpaceMgr::onNewSpace(SGLqtSpace *sw)
 /*!
     \fn GLvlWndMgr_Impl::lostChild(QObject * obj)
  */
-void SGLqtMultiSpaceMgr::lostChild(SGLqtSpace* obj)
+void SGLqtMultiSpaceMgr::lostWidget(SGLqtSpace* obj)
 {
+	mutex.lock();
 	childs.removeAll(obj);
+	mutex.unlock();
 }
 
 /*!
@@ -59,6 +61,7 @@ void SGLqtMultiSpaceMgr::lostChild(SGLqtSpace* obj)
  */
 void SGLqtMultiSpaceMgr::removeAllChilds(SGLqtSpace *exception)
 {
+	mutex.lock();
 	QLinkedList<SGLqtSpace *>::iterator it=childs.begin();
 	while(it!=childs.end())
 	{
@@ -69,4 +72,15 @@ void SGLqtMultiSpaceMgr::removeAllChilds(SGLqtSpace *exception)
 			it=childs.erase(it);
 		}
 	}
+	mutex.unlock();
+}
+
+SGLqtSpace* SGLqtMultiSpaceMgr::createSharedSpace(QWidget *parent)
+{
+	mutex.lock();
+	QGLWidget *shared=childs.empty() ? NULL:childs.front();
+	SGLqtSpace* ret=new SGLqtSpace(shared,parent);
+	registerSpace(ret);
+	mutex.unlock();
+	return ret;
 }

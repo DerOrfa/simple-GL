@@ -27,7 +27,7 @@
  * @param name der Name der View (wird im GL-Fenster angezeigt wenn renderName true ist)
  * @param killOnClose wenn true, löscht sich das Objekt selbst, wenn sein Kontainer geschlossen wird.
  */
-SGLqtSpace::SGLqtSpace(const SGLqtSpace *shareWidget,QWidget *parent, const char *name,bool killOnClose):   QGLWidget(parent, shareWidget),SGLSpace(0,0,102,102,204)
+SGLqtSpace::SGLqtSpace(const QGLWidget *shareWidget,QWidget *parent, const char *name,bool killOnClose):   QGLWidget(parent, shareWidget),SGLSpace(0,0,102,102,204)
 {
     setObjectName(name);
     setAttribute(Qt::WA_DeleteOnClose,killOnClose);

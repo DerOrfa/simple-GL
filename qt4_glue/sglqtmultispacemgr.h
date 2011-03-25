@@ -23,6 +23,7 @@
 #include "sglqtspace.h"
 #include <QObject>
 #include <QLinkedList>
+#include <QMutex>
 
 /**
 @author Enrico Reimer, 1.01.2005,hayd,,@[e/ea],-131.-221. 143
@@ -30,17 +31,19 @@
 class SGLqtMultiSpaceMgr : public QObject
 {
 Q_OBJECT
+	QMutex mutex;
 public:
 	SGLqtMultiSpaceMgr(QObject *parent = 0, const char *name = 0);
 	~SGLqtMultiSpaceMgr();
 	void removeAllChilds(SGLqtSpace *exception=NULL);
 	QLinkedList<SGLqtSpace*> childs;
-public Q_SLOTS:
-    void onNewSpace(SGLqtSpace *newSpace);
+public:
+    void registerSpace(SGLqtSpace *newSpace);
+	SGLqtSpace* createSharedSpace(QWidget *parent);
 
 protected Q_SLOTS:
 	/*$PROTECTED_SLOTS$*/
-	void lostChild(SGLqtSpace *obj);
+	void lostWidget(SGLqtSpace *obj);
 };
 
 #endif

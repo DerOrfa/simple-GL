@@ -23,7 +23,7 @@ class SGLqtSpace : public QGLWidget , public SGLSpace
 Q_OBJECT
 	short mouse_real_listener,mouse_float_listener;
 public:
-	SGLqtSpace(const SGLqtSpace * shareWidget,QWidget *parent=NULL, const char *name=NULL,bool killOnClose=true);
+	SGLqtSpace(const QGLWidget * shareWidget,QWidget *parent=NULL, const char *name=NULL,bool killOnClose=true);
 	SGLqtSpace(QWidget *parent=NULL, const char *name=NULL);
 	~SGLqtSpace();
 	void initializeGL();
