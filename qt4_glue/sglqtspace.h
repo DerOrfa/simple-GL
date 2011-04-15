@@ -36,7 +36,7 @@ public:
 	void sendRedrawOther();
 	void sendShowObj(shared_obj obj);
 	void sendUnshowObj(shared_obj obj);
-	void showObjectsIn(const SGLqtSpace *sp);
+	void showObjectsIn(SGLqtSpace *sp,bool existing=true);
 	unsigned int benchCnt;
 	virtual void callUpdate();
 	time_t benchTime;

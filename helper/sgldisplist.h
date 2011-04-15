@@ -19,7 +19,7 @@
 #else
 	#ifdef __APPLE__
 		#include <OpenGL/gl.h>
-	#else 
+	#else
 		#include <GL/gl.h>
 	#endif
 #endif
@@ -59,7 +59,7 @@ public:
 	bool	check_recompile,check_sorting;
 	bool	renderTransparent,render_non_native;
 	void	ListInfo();
-	unsigned short isThere(SGLObjBase *obj);
+	unsigned short isThere(const SGLObjBase*const obj);
 
 private:
 	bool	removeOb_CW(GLuint ListID);

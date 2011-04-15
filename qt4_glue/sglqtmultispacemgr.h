@@ -43,6 +43,7 @@ public:
 
 protected Q_SLOTS:
 	/*$PROTECTED_SLOTS$*/
+	void lostWidget(QObject* obj);
 	void lostWidget(SGLqtSpace *obj);
 };
 

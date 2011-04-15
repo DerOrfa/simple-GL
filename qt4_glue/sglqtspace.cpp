@@ -19,6 +19,7 @@
 #include <QMouseEvent>
 #include <QFrame>
 
+
 /**
  * Konstruktor zur Mitverwendeung eines schon initailisierten Renderers.
  * Erzeugt ein QGLWidget in dem mit parent angegeben Kontainer.
@@ -400,13 +401,28 @@ void SGLqtSpace::unshowObj(const shared_obj &obj)
  * Die Signale sigShowObj(), sigUnshowObj() und redrawOther()/redraw() werden mit den Slots showObj, unshowObj bzw. updateGL verbunden.
  * Die Spaces müssen sich einen Rendering-Context Teilen.
  * @param sp der SGLqtSpace in dem die eigenen Objekte sichtbar sein sollen.
+ * @param existing wenn true, werden auch alle schon vorhandenen objekte in sp angezeigt
  */
-void SGLqtSpace::showObjectsIn(const SGLqtSpace *sp)
+void SGLqtSpace::showObjectsIn(SGLqtSpace *sp,bool existing)
 {
 	sp->connect(this,SIGNAL(sigShowObj(const shared_obj&)),SLOT(showObj(const shared_obj&)));
 	sp->connect(this,SIGNAL(sigUnshowObj(const shared_obj&)),SLOT(unshowObj(const shared_obj&)));
 	sp->connect(this,SIGNAL(redraw()),SLOT(updateGL()));
 	sp->connect(this,SIGNAL(redrawOther(SGLqtSpace *)),SLOT(updateGL()));//Damit das redrawOther vom init schonverarbeitet werden kann vor "show"
+
+	if(existing){
+		for(list<shared_obj>::iterator i=ObjLst.Objects.begin();i!=ObjLst.Objects.end();++i){
+			const shared_obj o=*i;
+			if(o->myList== &ObjLst)
+				sp->showObj(o);
+		}
+		for(list<shared_obj>::iterator i=TranspObjLst.Objects.begin();i!=TranspObjLst.Objects.end();++i){
+			const shared_obj o=*i;
+			if(o->myList== &TranspObjLst)
+				sp->showObj(o);
+		}
+		sendRedrawOther();
+	}
 }
 
 /**

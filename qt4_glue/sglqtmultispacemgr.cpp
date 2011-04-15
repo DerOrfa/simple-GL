@@ -36,7 +36,7 @@ SGLqtMultiSpaceMgr::~SGLqtMultiSpaceMgr()
  */
 void SGLqtMultiSpaceMgr::registerSpace(SGLqtSpace *sw)
 {
-	connect(sw,SIGNAL(destroyed(QObject *)),SLOT(lostChild(QObject *)));
+	connect(sw,SIGNAL(destroyed(QObject *)),SLOT(lostWidget(QObject *)));
 	for(QLinkedList<SGLqtSpace *>::iterator it=childs.begin();it!=childs.end();it++)
 	{
 		SGLqtSpace *i= *it;
@@ -46,9 +46,14 @@ void SGLqtMultiSpaceMgr::registerSpace(SGLqtSpace *sw)
 	childs.push_back(sw);
 }
 
-/*!
-    \fn GLvlWndMgr_Impl::lostChild(QObject * obj)
- */
+void SGLqtMultiSpaceMgr::lostWidget(QObject* obj)
+{
+	SGLqtSpace *p=dynamic_cast<SGLqtSpace*>(obj);
+	if(p)
+		lostWidget(p);
+	else
+		SGLprintError("Cannot unregister %s, its no SGLqtSpace", obj->objectName().toStdString().c_str());
+}
 void SGLqtMultiSpaceMgr::lostWidget(SGLqtSpace* obj)
 {
 	mutex.lock();

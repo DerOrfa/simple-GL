@@ -54,7 +54,7 @@ SGLObjList::~SGLObjList()
 
 /**
  * Kopierkonstruktor.
- * Es werden alle Objektlisten samt Inhalt kopiert. 
+ * Es werden alle Objektlisten samt Inhalt kopiert.
  * Die Objekte bleiben jedoch trotzdem im Besitz des Originals.
  * @param src die Liste, die kopiert werden soll.
  * @return eine Referenz auf die Kopie
@@ -67,7 +67,7 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 	grow(Objects_CCW,ObjSize_CCW,src.ObjSize_CCW);
 	renderTransparent=src.renderTransparent;
 	render_non_native=src.render_non_native;
-	
+
 	ObjCnt_CW=src.ObjCnt_CW;
 	ObjCnt_CCW=src.ObjCnt_CCW;
 	memcpy(Objects_CW,src.Objects_CW,ObjCnt_CW*sizeof(GLuint));
@@ -80,7 +80,7 @@ SGLObjList& SGLObjList::operator=(const SGLObjList &src)
 
 /**
  * Löst das Zeichnen aller Objekte der Liste aus.
- * Wenn nötig wird Compile() ausgeführt. 
+ * Wenn nötig wird Compile() ausgeführt.
  * Es werden alle CW- und CCW- Objekte entsprechend ihrer Priorität aus dem Renderercache gezeichnet.
  */
 void SGLObjList::CallAllLists()
@@ -89,7 +89,9 @@ void SGLObjList::CallAllLists()
 
 	if(renderTransparent)
 		glEnable(GL_BLEND);//Ab hier transparent
-	if(check_recompile)Compile();
+
+	if(check_recompile)
+		Compile();
 
 	glFrontFace(GL_CW);
 	for(int i=ObjCnt_CW;i;i--) //@todo sollte schon noch geprüft werden (wenigstens im Debug)
@@ -98,7 +100,7 @@ void SGLObjList::CallAllLists()
 			SGLprintError("Es existiert kein Objekt mit der ID %d",Objects_CW[i-1]);
 		}
 	glCallLists(ObjCnt_CW,GL_UNSIGNED_INT,Objects_CW);
-	
+
 	glFrontFace(GL_CCW);
 	for(int i=ObjCnt_CCW;i;i--)
 		if(!glIsList(Objects_CCW[i-1]))
@@ -124,12 +126,12 @@ bool SGLObjList::AddOb(shared_obj obj)
 {
 	if(removeOb(obj))
 	{SGLprintWarning("Das %s-Objekt hat schon in der Liste existiert",obj->guesType());}//@todo nur bei debug
-		
+
 	Objects.push_back(obj);
 	obj->is_free=false;
 	//Wir Kompilieren hier noch nicht, markieren nur das Obj als "zu kompilieren"
 	if(obj->myList)obj->shared=true;
-	else 
+	else
 	{
 		obj->myList=this;
 //		obj->compileNextTime();//@todo macht das überhaupt sinn - wenn das Ob neu is, wird es eh generiert
@@ -187,7 +189,7 @@ bool SGLObjList::removeOb(shared_obj obj)
 	list<shared_obj>::iterator i=find(Objects.begin(), Objects.end(), obj);
 	if(i!=Objects.end())Objects.erase(i);
 	else return false; //Objekt wurde NICHT gefunden
-	
+
 	if(obj->myList==this)obj->myList=NULL;
 	switch(obj->FrontFace)
 	{
@@ -283,7 +285,7 @@ void SGLObjList::ListInfo()
 		unsigned int size=0;
 		char FormatStr[]="\n\t%d.\t\"%s\"\tPrio %d ID %d";
 		unsigned int FormatStr_Len=strlen(FormatStr)-3*2;
-	
+
 		unsigned int cnt=0;
 		for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 		{
@@ -310,7 +312,7 @@ void SGLObjList::ListInfo()
  * @param obj das Objekt, nach dem gesucht werden soll
  * @return 0 wenn das Objekt nicht gefunden wurde, sonst die Anzahl der derzeitigen Verwendungen
  */
-unsigned short SGLObjList::isThere(SGLObjBase *obj)
+unsigned short SGLObjList::isThere(const SGLObjBase * const obj)
 {
 	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{
