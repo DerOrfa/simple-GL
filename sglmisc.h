@@ -59,17 +59,17 @@
 #include <stdarg.h>
 #endif
 
-#define SGLprintError	if(SGLshowErrors)fprintf(stderr,"simpleGL-Error %s Line %d: ",__FILE__,__LINE__);_SGLprintError
-#define SGLprintWarning	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
+#define SGLprintError(...)	if(SGLshowErrors)_SGLprintError(__FILE__,__LINE__,__VA_ARGS__)
+#define SGLprintWarning(...)	if(SGLshowWarnings)_SGLprintWarning(__FILE__,__LINE__,__VA_ARGS__)
 
-#ifndef __OPTIMIZE__ 
-#define SGLprintDebug	if(SGLshowWarnings)fprintf(stdout,"simpleGL-Warning %s Line %d: ",__FILE__,__LINE__);_SGLprintWarning
+#ifndef __OPTIMIZE__
+#define SGLprintDebug(...)	if(SGLshowWarnings)_SGLprintWarning(__FILE__,__LINE__,__VA_ARGS__)
 #else
-#define SGLprintDebug	if(0)_SGLprintWarning
+#define SGLprintDebug(...)	if(0)_SGLprintWarning(__FILE__,__LINE__,__VA_ARGS__)
 #endif
 
-#define SGLprintInfo	if(SGLshowInfos)fprintf(stdout,"simpleGL-Info %s Line %d: ",__FILE__,__LINE__);_SGLprintInfo
-#define SGLprintState	if(SGLshowState)fprintf(stdout,"State: ");_SGLprintState
+#define SGLprintInfo(...)	if(SGLshowInfos)_SGLprintInfo(__FILE__,__LINE__,__VA_ARGS__)
+#define SGLprintState(...)	if(SGLshowState)_SGLprintState(__FILE__,__LINE__,__VA_ARGS__)
 
 #define SGLcheckGLError																				\
 {																									\
@@ -84,10 +84,10 @@ extern "C" {
 #endif
 
 void debugSig();
-void _SGLprintError(const char text[], ...);
-void _SGLprintWarning(const char text[], ...);
-void _SGLprintInfo(const char text[], ...);
-void _SGLprintState(const char text[], ...);
+void _SGLprintError(const char file[],int line,const char text[], ...);
+void _SGLprintWarning(const char file[],int line,const char text[], ...);
+void _SGLprintInfo(const char file[],int line,const char text[], ...);
+void _SGLprintState(const char file[],int line,const char text[], ...);
 
 void vwriteOut(FILE *out,const char text[], va_list argList);
 

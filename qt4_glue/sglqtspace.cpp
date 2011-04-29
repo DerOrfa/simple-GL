@@ -75,11 +75,11 @@ void SGLqtSpace::initializeGL()
 	if(context()) // es wird schon hier ein glContext beötigt - geht das
 	{
 		makeCurrent();
-		printf("OpenGL-Kontext initialisiert\n");
+		SGLprintState("OpenGL-Kontext initialisiert");
 	}
 	else
 	{
-		printf("OpenGL konnte nicht initialisiert werden");
+		SGLprintError("OpenGL konnte nicht initialisiert werden");
 		exit(1);
 	}
   sglInit(this->width(),this->height());

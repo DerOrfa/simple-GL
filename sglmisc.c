@@ -35,58 +35,50 @@ short SGLshowState=1;
 char *lastMsg=NULL;
 short rendering=0;
 
-void _SGLprintError(const char text[], ...)
+void _SGLprintError(const char file[], int line, const char text[], ...)
 {
-  if(SGLshowErrors)
-    {
-      va_list argList;
-      va_start(argList,text);
+	fprintf(stderr,"simpleGL-Error %s Line %d: ",file,line);
+	va_list argList;
+	va_start(argList,text);
 
-      vwriteOut(stderr,text, argList);
+	vwriteOut(stderr,text, argList);
 
-      va_end(argList);
-	  debugSig();
-    }
+	va_end(argList);
+	debugSig();
 }
 
-void _SGLprintWarning(const char text[], ...)
+void _SGLprintWarning(const char file[], int line, const char text[], ...)
 {
-	if(SGLshowWarnings)
-	{
-		va_list argList;
-		va_start(argList,text);
-	
-		vwriteOut(stdout,text, argList);
-	
-		va_end(argList);
-		debugSig();
-	}
+	fprintf(stdout,"simpleGL-Warning %s Line %d: ",file,line);
+	va_list argList;
+	va_start(argList,text);
+
+	vwriteOut(stdout,text, argList);
+
+	va_end(argList);
+	debugSig();
 }
 
-void _SGLprintInfo(const char text[], ...)
+void _SGLprintInfo(const char file[], int line, const char text[], ...)
 {
-  if(SGLshowInfos)
-    {
-      va_list argList;
-      va_start(argList,text);
+	fprintf(stdout,"simpleGL-Info %s Line %d: ",file,line);
+	va_list argList;
+	va_start(argList,text);
 
-      vwriteOut(stdout,text, argList);
+	vwriteOut(stdout,text, argList);
 
-      va_end(argList);
-    }
+	va_end(argList);
 }
 
-void _SGLprintState(const char text[], ...)
+void _SGLprintState(const char file[], int line, const char text[], ...)
 {
-  if(SGLshowState)
-    {
-      va_list argList;
-      va_start(argList,text);
+	fprintf(stdout,"State: ");
+	va_list argList;
+	va_start(argList,text);
 
-      vwriteOut(stdout,text, argList);
+	vwriteOut(stdout,text, argList);
 
-      va_end(argList);
-    }
+	va_end(argList);
 }
 
 void vwriteOut(FILE *file,const char text[], va_list argList)
@@ -99,12 +91,13 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
-		if(vital>1)
-			_SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
-		else if(vital)
-			_SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
-		else 
-			_SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+		if(vital>1){
+			SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+		} else if(vital){
+			SGLprintWarning("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+		} else {
+			SGLprintInfo("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);
+		}
 		return 0;
 	}
 	else return -1;
