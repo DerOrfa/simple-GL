@@ -26,4 +26,17 @@ if(STATIC_LIB)
 	INSTALL(TARGETS qt4_glue_static  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 endif(STATIC_LIB)
 
-INSTALL(FILES ${HDRS} DESTINATION include/libsgl/${inc_path})
+SET(BUILD_SAMPLES on CACHE BOOL "build qt-based examples")
+
+if(BUILD_SAMPLES)
+	include_directories(${CMAKE_SOURCE_DIR})
+	add_executable(qt4_sample1 qt4_sample1.cpp)
+	add_executable(qt4_sample2 qt4_sample2.cpp)
+	add_executable(qt4_sample3 qt4_sample3.cpp)
+	
+	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} qt4_glue sgl)
+	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} qt4_glue sgl)
+	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} qt4_glue sgl)
+endif(BUILD_SAMPLES)
+
+INSTALL(FILES ${HDRS} DESTINATION include/libsgl/qt4_glue)
