@@ -82,18 +82,21 @@ SGLStrecke::SGLStrecke(SGLshPtr<SGLVektor> Vekt1,SGLshPtr<SGLVektor> Vekt2)
 {
 	punkt1=Vekt1;
 	punkt2=Vekt2;
+	IgnoreLight=true;
 }
 
 SGLStrecke::SGLStrecke()
 {
 	punkt1=SGLshPtr<SGLVektor>(new SGLVektor(0,0,0));
 	punkt2=SGLshPtr<SGLVektor>(new SGLVektor(0,0,0));
+	IgnoreLight=true;
 }
 
 SGLStrecke::SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2)
 {
 	punkt1=SGLshPtr<SGLVektor> (new SGLVektor(Vekt1));
 	punkt2=SGLshPtr<SGLVektor> (new SGLVektor(Vekt2));
+	IgnoreLight=true;
 }
 
 /**
