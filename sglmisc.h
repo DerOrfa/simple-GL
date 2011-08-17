@@ -19,6 +19,7 @@
 #define SGLMISC_H
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 
 #define X_AXE	1

@@ -17,7 +17,6 @@
 
 #include "sglmisc.h"
 #include <stdio.h>
-#include <stdarg.h>
 #include <signal.h>
 
 #ifdef __APPLE__

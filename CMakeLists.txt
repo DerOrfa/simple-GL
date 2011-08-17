@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
 PROJECT(libsgl)
-cmake_policy(SET CMP0005 OLD) #make it not complain about escaped Preprocessor definition (can be removed when we switch to cmake 2.6)
 INCLUDE(CPack)
 
 SET(TARGET_VERSION_MAJOR 0)
@@ -80,7 +79,7 @@ SET(TEXT_BACKEND_GLF_DIR ${TEXT_DIR}backend_glf/)
 SET(TEXT_BACKEND_GLF_OBJFILES ${TEXT_BACKEND_GLF_DIR}glf.c ${TEXT_BACKEND_GLF_DIR}sgltextbackend_glf.cpp)
 
 
-ADD_DEFINITIONS(-DDATA_DIR=\\"${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl\\" -DILUT_USE_OPENGL -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -pthread -Wall)
+ADD_DEFINITIONS(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl" -DILUT_USE_OPENGL -DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -ffast-math -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR} ${DEVIL_INCS})
 
 ADD_LIBRARY(sgl SHARED 
