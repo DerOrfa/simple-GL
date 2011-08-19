@@ -120,11 +120,7 @@ void SGLMatrixObj::saveMatrix(GLenum mode,GLdouble dst[16])
  */
 const char*  SGLMatrixObj::guesType()
 {
-#ifndef WIN32
 	return typeid(*this).name();
-#else
-	return "VC60 kann kein typeid??";
-#endif
 }
 
 SGLMatrixObj::~SGLMatrixObj(){}

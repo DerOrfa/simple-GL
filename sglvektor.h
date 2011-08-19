@@ -18,10 +18,6 @@
 #ifndef SGLVEKTOR_H
 #define SGLVEKTOR_H
 
-#ifdef WIN32
-	#include <windows.h>								// Header File For Windows
-#endif
-
 #include "evektor.h"
 #include <boost/array.hpp>
 #include "sglmisc.h"

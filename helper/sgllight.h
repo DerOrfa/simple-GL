@@ -43,16 +43,8 @@ public:
 	void SetParam(GLenum pname,const GLfloat *params);
 	void SetUp();
 	LichtFarbe Farbe;
-	struct
-	#if defined WIN32
-		noname1
-	#endif //grrr.... ANSI-C Ihr M$- Dumpfbacken
-	{SGLVektor Richtung;GLfloat Ausleuchtung,Winkel;}Spot;
-	struct
-	#if defined WIN32
-		noname2
-	#endif //grrr.... ANSI-C Ihr M$- Dumpfbacken
-	{GLfloat Linear,Quadratisch;}Abnahme;
+	struct {SGLVektor Richtung;GLfloat Ausleuchtung,Winkel;}Spot;
+	struct {GLfloat Linear,Quadratisch;}Abnahme;
 	bool IsSpot;
 
 	SGLVektor getCenter()const;

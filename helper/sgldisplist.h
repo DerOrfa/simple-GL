@@ -11,17 +11,10 @@
 #ifndef SGLDISPLIST_H
 #define SGLDISPLIST_H
 
-#ifdef WIN32
-	#include <windows.h>
-	#include <gl\gl.h>
-	#include <gl\glu.h>
-//	#include <gl\glaux.h>
+#ifdef __APPLE__
+	#include <OpenGL/gl.h>
 #else
-	#ifdef __APPLE__
-		#include <OpenGL/gl.h>
-	#else
-		#include <GL/gl.h>
-	#endif
+	#include <GL/gl.h>
 #endif
 
 #include "../sglobjbase.h"

@@ -18,17 +18,10 @@
 #ifndef SGLCAMERA_H
 #define SGLCAMERA_H
 
-#ifdef WIN32
-	#include <windows.h>								// Header File For Windows
-	#include <gl\gl.h>								// Header File For The OpenGL32 Library
-	#include <gl\glu.h>								// Header File For The GLu32 Library
-//	#include <gl\glaux.h>								// Header File For The GLaux Library
-#else
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
 #else 
 	#include <GL/gl.h>
-#endif
 #endif
 
 #include "sglhelper.h"

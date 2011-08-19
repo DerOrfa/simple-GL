@@ -118,8 +118,7 @@ void SGLLensFlare::ImageGetRow(_ImageRec * image, unsigned char *buf, int y, int
 	if ((image->type & 0xFF00) == 0x0100)
 	{
 		fseek(image->file, (long) image->rowStart[y + z * image->ysize], SEEK_SET);
-		fread(image->tmp, 1, (unsigned int) image->rowSize[y + z * image->ysize],
-		image->file);
+		fread(image->tmp, 1, (unsigned int) image->rowSize[y + z * image->ysize], image->file);
 		iPtr = image->tmp;
 		oPtr = buf;
 		for (;;)

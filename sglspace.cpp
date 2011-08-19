@@ -26,18 +26,11 @@
 	#include <IL/ilut.h>
 #endif
 
-#ifdef WIN32
-	#include <windows.h>
-	#include <gl\gl.h>
-	#include <gl\glu.h>
-//	#include <gl\glaux.h>
-#else
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
 #else
 	#include <GL/gl.h>
 	#include <GL/glx.h>
-#endif
 #endif
 
 #include "text/backend_glf/sgltextbackend_glf.h"
