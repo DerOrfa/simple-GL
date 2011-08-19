@@ -25,6 +25,7 @@
 #include <GL/glu.h>
 #endif
 
+#include <string.h>
 
 
 short SGLshowInfos=1;
@@ -88,7 +89,8 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
-	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
+	const GLubyte exts=glGetString(GL_EXTENSIONS);	
+	if(strstr(exts,name)==NULL)
 	{
 		if(vital>1){
 			SGLprintError("Dieser Renderer (%s) unterstützt \"%s\" nicht. %s", glGetString(GL_RENDERER),name,msg);

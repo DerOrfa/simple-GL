@@ -369,13 +369,8 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(ALPHA,alpha);
 	GET_CHAN_SIZE(LUMINANCE,lum);
 	GET_CHAN_SIZE(INTENSITY,intens);
-#if GL_EXT_paletted_texture
-	//ATI macht hier mist wenn die Extension fehlt - also erst fragen dann schießen
-	if(gluCheckExtension((const GLubyte*)"GL_EXT_paletted_texture",glGetString(GL_EXTENSIONS)))
-		glGetTexLevelParameteriv(TexType,0,GL_TEXTURE_INDEX_SIZE_EXT,&index);
-	else 
-#endif
-		index=0;
+
+	index=0;
 	if(unload)unloadTex();
 	return r+b+b+alpha+lum+intens+index;
 	#undef GET_CHAN_SIZE
@@ -430,7 +425,7 @@ void SGLBaseTex::freeTexture()
  */
 bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 {
-	if(gluCheckExtension((const GLubyte*)"GL_ARB_multitexture",glGetString(GL_EXTENSIONS)))
+	if(sglChkExt("GL_ARB_multitexture","",0))
 	{
 		return (sglGeti(GL_MAX_TEXTURE_UNITS_ARB)>=cnt);
 	}
