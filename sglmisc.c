@@ -89,7 +89,7 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
-	const GLubyte exts=glGetString(GL_EXTENSIONS);	
+	const GLubyte *exts=glGetString(GL_EXTENSIONS);	
 	if(strstr(exts,name)==NULL)
 	{
 		if(vital>1){

@@ -30,7 +30,6 @@
 	#include <OpenGL/gl.h>
 #else
 	#include <GL/gl.h>
-	#include <GL/glx.h>
 #endif
 
 #include "text/backend_glf/sgltextbackend_glf.h"
@@ -524,8 +523,6 @@ bool SGLSpace::initVis(unsigned int XSize, unsigned int YSize)
 void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
 	GLuint	error=0;
-	//glXWaitGL();
-	//glXWaitX();
 
 	Grids.Beschr[0]=Grids.X->Compile(true,true);
 	Grids.Beschr[1]=Grids.Y->Compile(true,true);
