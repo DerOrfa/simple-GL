@@ -12,7 +12,7 @@ add_definitions(-DGL_GLEXT_PROTOTYPES -DBOOST_HAS_PTHREADS -DQT_NO_KEYWORDS)
 set(SRCS sglqtmultispacemgr.cpp sglqtspace.cpp)
 set(HDRS sglqtmultispacemgr.h sglqtspace.h)
 
-QT4_WRAP_CPP(MOCS ${HDRS})
+QT4_WRAP_CPP(MOCS ${HDRS} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED) #-DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED is a woraround for https://bugreports.qt.nokia.com/browse/QTBUG-22829
 
 add_library(qt4_glue SHARED ${SRCS} ${MOCS})
 TARGET_LINK_LIBRARIES(qt4_glue sgl ${QT_LIBRARIES})
@@ -22,7 +22,7 @@ INSTALL(TARGETS qt4_glue  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 if(STATIC_LIB)
 	add_library(qt4_glue_static STATIC ${SRCS} ${MOCS})
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
-	SET_TARGET_PROPERTIES(qt4_glue_static PROPERTIES OUTPUT_NAME "qt4_glue")
+        SET_TARGET_PROPERTIES(qt4_glue_static PROPERTIES OUTPUT_NAME "qt4_glue")
 	INSTALL(TARGETS qt4_glue_static  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 endif(STATIC_LIB)
 

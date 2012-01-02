@@ -89,6 +89,9 @@ void vwriteOut(FILE *file,const char text[], va_list argList)
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital)
 {
+#ifdef WIN32
+	SGLprintWarning("Implement me (gluCheckExtension)");
+#else
 	if(!gluCheckExtension((const GLubyte*)name,glGetString(GL_EXTENSIONS)))
 	{
 		if(vital>1){
@@ -100,19 +103,62 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 		}
 		return 0;
 	}
-	else return -1;
+	else
+#endif
+		return -1;
 }
 
 void debugSig()
 {
 #ifndef _OPTIMIZE
-    char *sig=getenv("DEBUG");
+	char *sig=getenv("DEBUG");
     if(sig)
     {
+#ifdef WIN32
+		printf("Wenn das jetzt ein richtiges OS w�re w�rde ich anhalten");
+#else
 		int isig=atoi(sig);
 		if(!isig)isig=SIGINT;
 		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",isig);
 		kill(getpid(),isig);
-    }
 #endif
+	}
+#endif
+}
+
+
+GLdouble sglGetd(GLenum pname)
+{
+	GLdouble ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetDoublev( pname, &ret);
+	return ret;
+}
+
+GLfloat sglGetf(GLenum pname)
+{
+	GLfloat ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetFloatv( pname, &ret);
+	return ret;
+}
+
+GLint sglGeti(GLenum pname)
+{
+	GLint ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetIntegerv( pname, &ret);
+	return ret;
 }
