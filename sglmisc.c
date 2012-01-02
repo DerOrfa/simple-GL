@@ -107,13 +107,54 @@ short sglChkExt(const char* name,const char *msg,unsigned short vital)
 void debugSig()
 {
 #ifndef _OPTIMIZE
-    char *sig=getenv("DEBUG");
-    if(sig)
-    {
+	char *sig=getenv("DEBUG");
+	if(sig)
+	{
 		int isig=atoi(sig);
 		if(!isig)isig=SIGINT;
+#ifdef WIN32
+		printf("Wenn das jetzt ein richtiges OS wäre würde ich das signal %d auslösen",isig);
+#else
 		SGLprintInfo("Löse in Umgebungsvariable DEBUG vereinbartes Signal %d aus\n",isig);
 		kill(getpid(),isig);
-    }
 #endif
+	}
+#endif
+}
+
+
+GLdouble sglGetd(GLenum pname)
+{
+	GLdouble ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetDoublev( pname, &ret);
+	return ret;
+}
+
+GLfloat sglGetf(GLenum pname)
+{
+	GLfloat ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetFloatv( pname, &ret);
+	return ret;
+}
+
+GLint sglGeti(GLenum pname)
+{
+	GLint ret;
+	if(rendering)
+	{
+		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
+		debugSig();
+	}
+	glGetIntegerv( pname, &ret);
+	return ret;
 }

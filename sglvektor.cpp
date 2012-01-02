@@ -188,6 +188,7 @@ void SGLVektor::DrawVertex()
  */
 	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
 	bool texOK=false;
+#ifndef WIN32
 	if(SGLTextur::TexLoaded)
 	{
 		short coord=texKoord.size();
@@ -211,10 +212,13 @@ void SGLVektor::DrawVertex()
 				glMultiTexCoord3f(i,texKoord[0], texKoord[1],texKoord[2]);
 			break;
 		default:{
-		SGLprintError("Texturtyp (%d) passt nicht zu den verfügbaren Texturkoordinaten beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded, coord,buff);}break;
+			SGLprintError("Texturtyp (%d) passt nicht zu den verfügbaren Texturkoordinaten beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded, coord,buff);}break;
 		}
 		texOK=true;//@todo naja nich immer
 	}
+#else
+#warning "Texture loading is currently not supportet for Windows"
+#endif
 	if(!SGLMaterial::MatLoaded && !texOK)
 	{
 		if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);

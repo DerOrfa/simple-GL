@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #define X_AXE	1
 #define Y_AXE	2
@@ -57,7 +58,6 @@
 #include <process.h>
 #else
 #include <unistd.h>
-#include <stdarg.h>
 #endif
 
 #define SGLprintError(...)	if(SGLshowErrors)_SGLprintError(__FILE__,__LINE__,__VA_ARGS__)
@@ -99,41 +99,9 @@ extern short rendering;
 
 short sglChkExt(const char* name,const char *msg,unsigned short vital);
 
-inline GLdouble sglGetd(GLenum pname)
-{
-	GLdouble ret;
-	if(rendering)
-	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		debugSig();
-	}
-	glGetDoublev( pname, &ret);
-	return ret;
-}
-
-inline GLfloat sglGetf(GLenum pname)
-{
-	GLfloat ret;
-	if(rendering)
-	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		debugSig();
-	}
-	glGetFloatv( pname, &ret);
-	return ret;
-}
-
-inline GLint sglGeti(GLenum pname)
-{
-	GLint ret;
-	if(rendering)
-	{
-		SGLprintDebug("glGetXX-Aufrufe zwischen glBegin und glEnd sind nicht zulässig");
-		debugSig();
-	}
-	glGetIntegerv( pname, &ret);
-	return ret;
-}
+GLdouble sglGetd(GLenum pname);
+GLfloat sglGetf(GLenum pname);
+GLint sglGeti(GLenum pname);
 
 
 #ifdef __cplusplus

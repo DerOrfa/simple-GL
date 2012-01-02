@@ -95,7 +95,8 @@ SGLBaseTex::~SGLBaseTex()
 
 bool SGLBaseTex::loadTex()
 {
-	GLboolean ret;
+	GLboolean ret=false;
+#ifndef WIN32
 	glActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	glClientActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
 	short dim=def2dim(TexType);
@@ -126,11 +127,15 @@ bool SGLBaseTex::loadTex()
 		multitex_layer++;
 		multitex->loadTex();
 	}
+#else
+#warning "Texture loading is currently not supportet for Windows"
+#endif
 	return ret;
 }
 
 bool SGLBaseTex::unloadTex()
 {
+#ifndef WIN32
 	if(multitex)
 		multitex->unloadTex();
 	glClientActiveTextureARB(GL_TEXTURE0_ARB+multitex_layer);
@@ -142,6 +147,9 @@ bool SGLBaseTex::unloadTex()
 	if(glIsEnabled(TexType))glDisable(TexType);
 	else{SGLprintWarning("Hä %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
+#else
+#warning "Texture loading is currently not supportet for Windows"
+#endif
 	SGLTextur::TexLoaded=0;
 	loaded=false;
 	return true;
@@ -275,8 +283,12 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 			proxyType=GL_PROXY_TEXTURE_2D;
 			glTexImage2D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
 		case 3:
+#ifndef WIN32
 			proxyType=GL_PROXY_TEXTURE_3D;
 			glTexImage3D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
+#else
+#warning "Texture loading is currently not supportet for Windows"
+#endif
 		default:
 			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
 		}
@@ -370,6 +382,11 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(LUMINANCE,lum);
 	GET_CHAN_SIZE(INTENSITY,intens);
 
+#ifndef WIN32
+#else
+#warning Youre compiling on WIN32, so your OpenGL implementation is broken
+#warning If you try to run on an ATI Card you might get problems
+#endif
 	index=0;
 	if(unload)unloadTex();
 	return r+b+b+alpha+lum+intens+index;
@@ -430,7 +447,6 @@ bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 		return (sglGeti(GL_MAX_TEXTURE_UNITS_ARB)>=cnt);
 	}
 	else return false;
-	//@todo kann durch sglChkExt ersetzt werden
 }
 
 SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
