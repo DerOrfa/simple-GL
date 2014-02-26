@@ -1,1 +1,2 @@
-shlibs:Depends=libboost-signals1.33.1, libc6 (>= 2.3.5-1), libdevil1c2, libgcc1 (>= 1:4.1.1-12), libstdc++6 (>= 4.1.1-12)
+shlibs:Depends=libboost-signals1.49.0 (>= 1.49.0-1), libc6 (>= 2.2.5), libgcc1 (>= 1:4.1.1), libgl1-mesa-glx | libgl1, libglu1-mesa | libglu1, libice6 (>= 1:1.0.0), libqt4-opengl (>= 4:4.5.3), libqtcore4 (>= 4:4.5.3), libqtgui4 (>= 4:4.5.3), libsgl, libsm6, libstdc++6 (>= 4.6), libx11-6, libxext6
+misc:Depends=

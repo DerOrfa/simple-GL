@@ -37,7 +37,7 @@ public:
 	{
 		((EVektor< EVektor<T> >*)this)->resize(zeilen);//GCC erkennt hier die Vererbung nicht ??
 		for(typename EMatrix<T>::size_type i=mDim();i;i--)
-			operator[](i-1).resize(spalten);
+			this->operator[](i-1).resize(spalten);
 	}
 
 	EMatrix<T>(){}
@@ -49,7 +49,7 @@ public:
 		resize(zeilen,spalten);
 
 		for(typename EMatrix<T>::size_type zeile=zeilen;zeile;zeile--)
-			operator[](zeile-1).fromArray(spalten,&values[(zeile-1)*spalten]);
+			this->operator[](zeile-1).fromArray(spalten,&values[(zeile-1)*spalten]);
 		return zeilen;
 	}
 
@@ -59,7 +59,7 @@ public:
 	{
 		resize(src.mDim(),src.nDim());
 		for(typename EMatrix<T>::size_type i=src.mDim();i;i--)
-			operator[](i-1)=EVektor<T>(src[i-1]);
+			this->operator[](i-1)=EVektor<T>(src[i-1]);
 	}
 
 	static EMatrix<T>	transp(EVektor<T> &Vekt)
@@ -87,7 +87,7 @@ public:
 		for(typename EMatrix<T>::size_type m=mDim();m;m--)
 			for(typename EMatrix<T>::size_type n=Matr.mDim();n;n--)
 			{
-				T erg=operator[](m-1).scalarprod(Matr[n-1]);
+				T erg=this->operator[](m-1).scalarprod(Matr[n-1]);
 				ret[m-1][n-1]=erg;
 			}
 		return ret;
@@ -97,7 +97,7 @@ public:
 		EVektor<T> ret(mDim(),1);
 		for(typename EMatrix<T>::size_type m=mDim();m;m--)
 		{
-			ret[m-1]=operator[](m-1).skalarprod(Vekt);
+			ret[m-1]=this->operator[](m-1).skalarprod(Vekt);
 		}
 		return ret;
 	}
@@ -105,20 +105,20 @@ public:
 	inline typename EMatrix<T>::size_type nDim()const{return (*this)[0].size();}//Fehler
 
 
-	const EVektor<T> getzvekt(typename EMatrix<T>::size_type nr){return operator[](nr);}
-	void setzvekt(EVektor<T> &Vekt,typename EMatrix<T>::size_type nr){operator[](nr)=Vekt;}
+	const EVektor<T> getzvekt(typename EMatrix<T>::size_type nr){return this->operator[](nr);}
+	void setzvekt(EVektor<T> &Vekt,typename EMatrix<T>::size_type nr){this->operator[](nr)=Vekt;}
 
 	const EVektor<T> getsvekt(typename EMatrix<T>::size_type nr)
 	{
 		EVektor<T>	ret(mDim());
 		for(typename EMatrix<T>::size_type i=mDim();i;i--)
-			ret[i-1]=operator[](i-1)[nr];
+			ret[i-1]=this->operator[](i-1)[nr];
 		return ret;
 	}
 	void setsvekt(EVektor<T> &Vekt,typename EMatrix<T>::size_type nr)
 	{
 		for(typename EMatrix<T>::size_type i=mDim();i;i--)
-			operator[](i-1).operator[](nr)=Vekt[i-1];
+			this->operator[](i-1).operator[](nr)=Vekt[i-1];
 	}
 
 	virtual int elemtostr(char* buf,typename EMatrix<T>::size_type pos,const char* vparter="|")

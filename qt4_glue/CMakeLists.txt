@@ -16,13 +16,14 @@ QT4_WRAP_CPP(MOCS ${HDRS} OPTIONS -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED) #-DBOOST
 
 add_library(qt4_glue SHARED ${SRCS} ${MOCS})
 TARGET_LINK_LIBRARIES(qt4_glue sgl ${QT_LIBRARIES})
+set_target_properties( qt4_glue PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME qt4_glue INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 INSTALL(TARGETS qt4_glue  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 #The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
 if(STATIC_LIB)
 	add_library(qt4_glue_static STATIC ${SRCS} ${MOCS})
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
-        SET_TARGET_PROPERTIES(qt4_glue_static PROPERTIES OUTPUT_NAME "qt4_glue")
+	set_target_properties( qt4_glue_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME qt4_glue INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	INSTALL(TARGETS qt4_glue_static  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 endif(STATIC_LIB)
 
@@ -33,10 +34,12 @@ if(BUILD_SAMPLES)
 	add_executable(qt4_sample1 qt4_sample1.cpp)
 	add_executable(qt4_sample2 qt4_sample2.cpp)
 	add_executable(qt4_sample3 qt4_sample3.cpp)
+	add_executable(qt4_sample4 qt4_sample4.cpp)
 	
 	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} qt4_glue sgl)
 	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} qt4_glue sgl)
 	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} qt4_glue sgl)
+	target_link_libraries(qt4_sample4 ${QT_LIBRARIES} qt4_glue sgl)
 endif(BUILD_SAMPLES)
 
 INSTALL(FILES ${HDRS} DESTINATION include/libsgl/qt4_glue)

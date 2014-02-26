@@ -7,6 +7,10 @@ SET(TARGET_VERSION_MAJOR 0)
 SET(TARGET_VERSION_MINOR 9)
 SET(CPACK_PACKAGE_CONTACT "reimer@cbs.mpg.de")
 
+set(version ${TARGET_VERSION_MAJOR}.${TARGET_VERSION_MINOR} CACHE INTERNAL "The current Version of the sgl")
+set(soversion ${TARGET_VERSION_MAJOR}.${TARGET_VERSION_MINOR} CACHE INTERNAL "The current Version of the sgl")
+
+
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS signals)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
@@ -94,6 +98,7 @@ ADD_LIBRARY(sgl SHARED
 
 #${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
 TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} m)
+set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 SET(LIBS sgl)
 
 if(STATIC_LIB)
@@ -105,7 +110,7 @@ if(STATIC_LIB)
 		${TEXT_BACKEND_GLF_OBJFILES}
 	)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
-	SET_TARGET_PROPERTIES(sgl_static PROPERTIES OUTPUT_NAME "sgl")
+	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	SET(LIBS ${LIBS} sgl_static)
 endif(STATIC_LIB)
 	
@@ -124,7 +129,3 @@ if(BUILD_QT4_GLUE)
 	add_subdirectory(qt4_glue)
 endif(BUILD_QT4_GLUE)
 
-#README
-#rm -rf `svn status|grep ^?|colrm 1 7`
-#CC=distcc CXX="distcc g++" cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
-#DISTCC_HOSTS="localhost timmy" make -j3

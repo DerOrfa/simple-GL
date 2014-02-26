@@ -1,3 +1,9 @@
+sgl (0.9-1) unstable; urgency=low
+
+  * redone packaging
+
+ -- Enrico Reimer <reimer@telemann.cbs.mpg.de>  Wed, 26 Feb 2014 15:50:14 +0100
+
 sgl (0.8-1) unstable; urgency=low
 
   * Initial Release.

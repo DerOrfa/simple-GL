@@ -260,7 +260,7 @@ public:
 	  //neuen Parameterlisten angeht => deshalb hier die selben Parameter wie bei EMatrix::elemtostr(..)
 	{
 		ostringstream temp;
-		temp << operator[](pos);
+		temp << this->operator[](pos);
 		return sprintf(buf,"%s",temp.str().c_str());
 	}
 

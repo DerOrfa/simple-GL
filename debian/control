@@ -2,17 +2,17 @@ Source: sgl
 Section: science
 Priority: optional
 Maintainer: Enrico Reimer <reimer@cbs.mpg.de>
-Build-Depends: debhelper (>= 4.0.0), libeclasses-dev, libboost-dev, libboost-signals-dev
+Build-Depends: debhelper (>= 7.0.0), libboost-dev, libboost-signals-dev, libqt4-opengl-dev, libqt4-dev
 Standards-Version: 3.6.1
 
 Package: libsgl
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, libeclasses
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Libraries for sgl
- <insert long description, indented with spaces>
+ sgl is a very simple object oriented interface to openGL
 
 Package: libsgl-dev
-Architecture: i386 amd64
-Depends: ${shlibs:Depends}, ${misc:Depends}, libsgl, libeclasses-dev
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libsgl
 Description: Development files for sgl
-  <insert long description, indented with spaces>
+ sgl is a very simple object oriented interface to openGL
