@@ -207,7 +207,7 @@ void SGLqtSpace::mouseMoveEvent ( QMouseEvent * e )
  */
 void SGLqtSpace::wheelEvent ( QWheelEvent * e )
 {
-	if(e->buttons()==Qt::NoButton)
+	if(e->buttons()==Qt::NoButton && e->modifiers()==Qt::NoModifier)
 	{
 		e->accept();
 		if(e->delta()>0)
