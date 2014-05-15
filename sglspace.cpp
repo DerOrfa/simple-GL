@@ -32,7 +32,6 @@
 	#include <GL/gl.h>
 #endif
 
-#include "text/backend_glf/sgltextbackend_glf.h"
 #include <assert.h>
 #include "util/sglmaterial.h"
 
@@ -168,9 +167,9 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 	Grids.BeschrMat->Transparenz=.5;
 	Grids.BeschrMat->SetColor(0,1,0);
 
-	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.5);
-	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
-	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
+	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.3);
+	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.3);
+	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.3);
 }
 
 /**

@@ -14,6 +14,7 @@
 #include "../primitives/sglflobj.h"
 #include "../primitives/sglquader.h"
 
+
 /**
 @author Enrico Reimer
 */
@@ -23,7 +24,6 @@ public:
 	SGL3DText(const char Text[]="", const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGL3DText();
 
-	GLdouble tiefe;
 	void getBounds(SGLQuader *BoundingQuader);
 
 	GLdouble getHeight()const;
@@ -33,8 +33,6 @@ public:
 // 	@todo void ResetMaterial(SGLMaterial *NewMaterial=0);
 
 	void getDim(GLdouble *width=NULL,GLdouble *height=NULL,GLdouble *depth=NULL,SGLVektor *center=NULL)const;
-	TextAlign align;
-
 	void generate();
 	void DrahtGitter(bool DO=true);
 };

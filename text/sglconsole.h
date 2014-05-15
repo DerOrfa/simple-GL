@@ -20,7 +20,7 @@
 class SGLConsoleText : public SGLText
 {
 public:
-	SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[]="text/fonts/courier1.glf");
+	SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[]="");
 	~SGLConsoleText();
 	void generate();
 	void print(string text);

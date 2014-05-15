@@ -21,23 +21,16 @@
 #else 
 	#include <GL/glu.h>
 #endif
-#include "backend_glf/sgltextbackend_glf.h"
+#include "../sglmisc.h"
 
-SGLText::SGLText(const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
-SGLFlObj(Material,PosX,PosY,PosZ,SizeFact)
-{
-	loadBackend(fontname);
+SGLText::SGLText(std::auto_ptr<FTFont> _renderer,MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
+SGLFlObj(Material,PosX,PosY,PosZ,SizeFact),renderer(_renderer){
+	if(renderer->Error())
+		SGLprintError("Failed to load font rendering");
 }
 
-SGLText::~SGLText()
+const char* SGLText::findFont(const char fontname[])
 {
-	delete Backend;
-}
-
-/*!
-    \fn SGLText::loadBackend(char fontname[])
- */
-void SGLText::loadBackend(const char fontname[])
-{
-    Backend=new  SGLTextBackend_glf(fontname);
+	const std::string f(fontname);
+	return f.empty()? DEFAULT_TTF: fontname;
 }

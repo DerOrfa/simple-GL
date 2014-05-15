@@ -10,11 +10,10 @@
 #include "sgl3dtext.h"
 
 SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
-:SGLText(fontname,Material,PosX,PosY,PosZ,SizeFact)
+:SGLText(std::auto_ptr<FTFont>(new FTExtrudeFont(SGLText::findFont(fontname))),Material,PosX,PosY,PosZ,SizeFact)
 {
-	align=center;
-	FrontFace=GL_CW;
-	tiefe=0.2f;
+	renderer->FaceSize(72/25.4); // 72 is one inch 72/25.4 is one mm
+	renderer->Depth(0.2);
 	myText=Text;
 }
 
@@ -25,7 +24,11 @@ SGL3DText::~SGL3DText()
 
 void SGL3DText::generate()
 {
-	Backend->generate_3DText(tiefe,myText,VisMode,align);
+	SGLVektor center=getCenter(); // move center of text to the drawing position
+	glFrontFace(GL_CW);
+	glTranslatef(-center.SGLV_X,-center.SGLV_Y,-center.SGLV_Z);
+	renderer->Render(myText.c_str());
+	glFrontFace(GL_CCW);
 }
 
 /*!
@@ -33,6 +36,7 @@ void SGL3DText::generate()
  */
 void SGL3DText::getBounds(SGLQuader *BoundingQuader)
 {
+#warning test me
 	GLdouble breite,hoehe,depth;
 	SGLVektor center=getCenter();
 
@@ -87,15 +91,10 @@ GLdouble SGL3DText::getWidth()const
  */
 SGLVektor SGL3DText::getCenter()const
 {
-	SGLVektor temp;
-	GLdouble width=getWidth();
-	switch(align)
-	{
-	case left:temp.SGLV_X+=width/2;break;
-	case right:temp.SGLV_X-=width/2;break;
-	default:;
-	}
-	return temp;
+	FTBBox box=renderer->BBox(myText.c_str());
+	const FTPoint &offset=box.Lower();
+	const FTPoint ret=offset+(box.Upper()-offset)*.5;
+	return SGLVektor(ret.X(),ret.Y(),ret.Z());
 }
 
 
@@ -112,6 +111,10 @@ void SGL3DText::DrahtGitter(bool DO)
     \fn SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)
  */
 void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
-{//@todo da stimmt was nich - wer o. was bestimmt depth ??
-	Backend->getDim(myText,width,height,depth,center,align);
+{
+	FTBBox box=renderer->BBox(myText.c_str());
+	if(width)*width=box.Upper().X()-box.Lower().X();
+	if(height)*height=box.Upper().Y()-box.Lower().Y();
+	if(depth)*depth=box.Upper().Z()-box.Lower().Z();
+
 }

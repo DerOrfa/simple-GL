@@ -9,7 +9,6 @@
  ***************************************************************************/
 #include "sglconsole.h"
 
-#include  "backend_glf/sgltextbackend_glf.h"
 #include "../util/sglmaterial.h"
 
 SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
@@ -60,7 +59,7 @@ void SGLConsole::print(string text)
 }
 
 SGLConsoleText::SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[])
-:SGLText(fontname)
+:SGLText(std::auto_ptr<FTFont>(new FTGLPixmapFont(SGLText::findFont(fontname))))
 {
 	Mat->SetColor(0,1,0,GL_FRONT_AND_BACK,true);
 	setConsDim(breite,hoehe);
@@ -78,7 +77,7 @@ SGLConsoleText::~SGLConsoleText()
  */
 void SGLConsoleText::generate()
 {
-	Backend->generate_consoleText(myText, buffer_width, buffer_height,breite,hoehe);
+#warning implement me
 }
 
 /*!
@@ -86,7 +85,7 @@ void SGLConsoleText::generate()
  */
 void SGLConsoleText::print(string text)
 {
-	Backend->validateText(text);
+#warning implement me
 	myText+=text;
 	Compile();
 }
@@ -106,7 +105,7 @@ void SGLConsoleText::setConsDim(GLdouble breite, GLdouble hoehe)
 void SGLConsoleText::clear()
 {
 	myText="";
-	Backend->consoleClear();
+#warning implement me
 }
 
 /*!
