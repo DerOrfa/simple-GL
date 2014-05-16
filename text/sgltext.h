@@ -19,8 +19,9 @@
 #define SGLTEXT_H
 
 #include "../primitives/sglflobj.h"
-#include <FTGL/ftgl.h>
 #include <auto_ptr.h>
+
+class FTFont;
 
 /**
   *@author Enrico Reimer

@@ -10,6 +10,8 @@
 #include "sglconsole.h"
 
 #include "../util/sglmaterial.h"
+#include <FTGL/ftgl.h>
+
 
 SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
 {

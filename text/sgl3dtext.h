@@ -26,9 +26,6 @@ public:
 
 	void getBounds(SGLQuader *BoundingQuader);
 
-	GLdouble getHeight()const;
-	GLdouble getDepth()const;
-	GLdouble getWidth()const;
 	SGLVektor getCenter()const;
 // 	@todo void ResetMaterial(SGLMaterial *NewMaterial=0);
 

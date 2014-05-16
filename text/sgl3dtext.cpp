@@ -8,6 +8,8 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 #include "sgl3dtext.h"
+#include <FTGL/ftgl.h>
+
 
 SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
 :SGLText(std::auto_ptr<FTFont>(new FTExtrudeFont(SGLText::findFont(fontname))),Material,PosX,PosY,PosZ,SizeFact)
@@ -24,11 +26,12 @@ SGL3DText::~SGL3DText()
 
 void SGL3DText::generate()
 {
-	SGLVektor center=getCenter(); // move center of text to the drawing position
-	glFrontFace(GL_CW);
-	glTranslatef(-center.SGLV_X,-center.SGLV_Y,-center.SGLV_Z);
+	FTBBox box=renderer->BBox(myText.c_str());
+	const FTPoint &offset=box.Lower();
+	const FTPoint center=offset+(box.Upper()-offset)*.5;
+
+	glTranslatef(-center.X(),-center.Y(),-center.Z());
 	renderer->Render(myText.c_str());
-	glFrontFace(GL_CCW);
 }
 
 /*!
@@ -36,20 +39,14 @@ void SGL3DText::generate()
  */
 void SGL3DText::getBounds(SGLQuader *BoundingQuader)
 {
-#warning test me
 	GLdouble breite,hoehe,depth;
-	SGLVektor center=getCenter();
 
 	getDim(&breite,&hoehe,&depth,NULL);
-
-
-	BoundingQuader->tiefe=depth*1.01;
+	BoundingQuader->tiefe=depth;
 	BoundingQuader->hoehe=hoehe;
 	BoundingQuader->breite=breite;
 	BoundingQuader->recalcEdges(false);
 	BoundingQuader->ResetTransformMatrix(MyTransformMatrix);
-
-	BoundingQuader->Move(center.SGLV_X,center.SGLV_Y,center.SGLV_Z);
 
 	BoundingQuader->FaceAt=FaceAt;
 	BoundingQuader->resetTexKoord();
@@ -57,44 +54,12 @@ void SGL3DText::getBounds(SGLQuader *BoundingQuader)
 }
 
 /*!
-    \fn SGL3DText::getHeight()
- */
-GLdouble SGL3DText::getHeight()const
-{
-	GLdouble temp;
-	getDim(NULL,&temp);
-	return temp;
-}
-
-/*!
-    \fn SGL3DText::getDepth()
- */
-GLdouble SGL3DText::getDepth()const
-{
-	GLdouble temp;
-	getDim(NULL,NULL,&temp);
-	return temp;
-}
-
-/*!
-    \fn SGL3DText::getWidth()
- */
-GLdouble SGL3DText::getWidth()const
-{
-	GLdouble temp;
-	getDim(&temp);
-	return temp;
-}
-
-/*!
     \fn SGL3DText::getCenter()
  */
 SGLVektor SGL3DText::getCenter()const
 {
-	FTBBox box=renderer->BBox(myText.c_str());
-	const FTPoint &offset=box.Lower();
-	const FTPoint ret=offset+(box.Upper()-offset)*.5;
-	return SGLVektor(ret.X(),ret.Y(),ret.Z());
+	// zero by definition
+	return SGLVektor(0,0,0);
 }
 
 

@@ -22,6 +22,8 @@
 	#include <GL/glu.h>
 #endif
 #include "../sglmisc.h"
+#include <FTGL/ftgl.h>
+
 
 SGLText::SGLText(std::auto_ptr<FTFont> _renderer,MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLFlObj(Material,PosX,PosY,PosZ,SizeFact),renderer(_renderer){
