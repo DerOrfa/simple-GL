@@ -17,6 +17,7 @@ SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Materi
 	renderer->FaceSize(72/25.4); // 72 is one inch 72/25.4 is one mm
 	renderer->Depth(0.2);
 	myText=Text;
+	FrontFace=GL_CW;
 }
 
 

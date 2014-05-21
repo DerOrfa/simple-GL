@@ -93,11 +93,12 @@ void SGLSpace::callHelper(int stage)
 	  {
 		glEnable(GL_BLEND);
 		if(Grids.X->should_compile)
-			Grids.X->Compile(true,true);
+			Grids.X->Compile(false,true);
 		if(Grids.Y->should_compile)
-			Grids.Y->Compile(true,true);
+			Grids.Y->Compile(false,true);
 		if(Grids.Z->should_compile)
-			Grids.Z->Compile(true,true);
+			Grids.Z->Compile(false,true);
+		glFrontFace(Grids.X->FrontFace);
 		glCallLists(3,GL_UNSIGNED_INT,Grids.Beschr);
 		glDisable(GL_BLEND);
 	  }
