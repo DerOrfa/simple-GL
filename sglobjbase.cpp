@@ -123,18 +123,29 @@ void SGLObjBase::metaGenerate()
 	loadMatrix();
 	if(FaceAt)
 	{
+		glMatrixMode(GL_MODELVIEW);
 		GLdouble XZ_wink,XY_wink;
 		SGLVektor tVekt=getCenterInSpace();
 		tVekt.resize(3);
 		//Für toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
 		tVekt=(*FaceAt)-tVekt;
 		tVekt.toWink(XZ_wink,XY_wink);
+
 		glRotated(-XZ_wink,0,1,0);
 		glRotated(90,0,1,0);
 		glRotated(-XY_wink,1,0,0);
 	}
 
+	GLenum error;
+	while((error=glGetError()))
+	{
+		SGLprintError("%s [GLerror] vor dem Generieren von %s",gluErrorString(GLenum(error)),guesType());
+	}
 	generate();
+	while((error=glGetError()))
+	{
+		SGLprintError("%s [GLerror] beim Generieren von %s",gluErrorString(GLenum(error)),guesType());
+	}
 
 	unloadMatrix();
 	notifyChange();

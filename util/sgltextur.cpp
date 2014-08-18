@@ -293,10 +293,8 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
 		}
 		glGetTexLevelParameteriv(proxyType, 0, GL_TEXTURE_WIDTH,  &tmpSize);
-		bool sizeOK=true;
 		if(tmpSize <= 0)
 		{
-			sizeOK=false;
 			newSize[grown]>>=1;
 			break;
 		}

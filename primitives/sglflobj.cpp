@@ -51,7 +51,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	GLuint error=0;
 	while((error=glGetError()))
 	{
-		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+		SGLprintError("%s [GLerror] vor dem Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
 
 	//NVIDIA optimiert Setzoperationen komplett raus aus den Listen, wenn der Wert schon gesetzt ist
