@@ -29,15 +29,21 @@ endif(STATIC_LIB)
 
 SET(BUILD_SAMPLES on CACHE BOOL "build qt-based examples")
 
+if(STATIC_LIB)
+	set(LIB qt4_glue_static sgl_static ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY} ${LIBFTGL})
+else(STATIC_LIB)
+	set(LIB qt4_glue sgl)
+endif(STATIC_LIB)
+
 if(BUILD_SAMPLES)
 	include_directories(${CMAKE_SOURCE_DIR})
 	add_executable(qt4_sample1 qt4_sample1.cpp)
 	add_executable(qt4_sample2 qt4_sample2.cpp)
 	add_executable(qt4_sample3 qt4_sample3.cpp)
 	
-	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} qt4_glue sgl)
-	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} qt4_glue sgl)
-	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} qt4_glue sgl)
+	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} ${LIB})
+	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} ${LIB})
+	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} ${LIB})
 endif(BUILD_SAMPLES)
 
 INSTALL(FILES ${HDRS} DESTINATION include/libsgl/qt4_glue)
