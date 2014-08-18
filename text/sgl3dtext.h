@@ -13,6 +13,7 @@
 #include "sgltext.h"
 #include "../primitives/sglflobj.h"
 #include "../primitives/sglquader.h"
+#include <FTGL/ftgl.h>
 
 
 /**
@@ -20,11 +21,12 @@
 */
 class SGL3DText : public SGLText
 {
+	FTBBox box;
 public:
 	SGL3DText(const char Text[]="", const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGL3DText();
 
-	void getBounds(SGLQuader *BoundingQuader);
+	void getBounds(SGLshPtr<SGLQuader> BoundingQuader);
 
 	SGLVektor getCenter()const;
 // 	@todo void ResetMaterial(SGLMaterial *NewMaterial=0);

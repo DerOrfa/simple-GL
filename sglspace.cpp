@@ -92,14 +92,16 @@ void SGLSpace::callHelper(int stage)
 	if(Grids.doGrid & 1)
 	  {
 		glEnable(GL_BLEND);
+		GLuint Beschr[3];
+
 		if(Grids.X->should_compile)
-			Grids.X->Compile(false,true);
+			Beschr[0]=Grids.X->Compile(false,true);
 		if(Grids.Y->should_compile)
-			Grids.Y->Compile(false,true);
+			Beschr[1]=Grids.Y->Compile(false,true);
 		if(Grids.Z->should_compile)
-			Grids.Z->Compile(false,true);
+			Beschr[2]=Grids.Z->Compile(false,true);
 		glFrontFace(Grids.X->FrontFace);
-		glCallLists(3,GL_UNSIGNED_INT,Grids.Beschr);
+		glCallLists(3,GL_UNSIGNED_INT,Beschr);
 		glDisable(GL_BLEND);
 	  }
 	break;
@@ -167,10 +169,6 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 
 	Grids.BeschrMat->Transparenz=.5;
 	Grids.BeschrMat->SetColor(0,1,0);
-
-	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.3);
-	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.3);
-	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.3);
 }
 
 /**
@@ -524,12 +522,16 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
 	GLuint	error=0;
 
-	Grids.Beschr[0]=Grids.X->Compile(true,true);
-	Grids.Beschr[1]=Grids.Y->Compile(true,true);
-	Grids.Beschr[2]=Grids.Z->Compile(true,true);
-
 	StatusInfo.WindowHeight=h;
 	StatusInfo.WindowWidth=w;
+
+	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.3);
+	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.3);
+	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.3);
+	Grids.X->should_compile=Grids.X->is_free=true;
+	Grids.Y->should_compile=Grids.Y->is_free=true;
+	Grids.Z->should_compile=Grids.Z->is_free=true;
+
 	defaultCam(Camera);
 	if(!initVis(w,h))exit(1);
 	setFlags(false);
