@@ -12,7 +12,7 @@
 #ifndef SGLSIGNAL_H
 #define SGLSIGNAL_H
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 #include "sglmisc.h"
 
 /**
@@ -31,7 +31,7 @@
 #endif
 
 // MOC_SKIP_BEGIN
-using namespace boost::signals;
+using namespace boost::signals2;
 
 /**
  * simpleGL-Slot-Klasse.
@@ -63,7 +63,7 @@ typedef connection SGLConnection; //@todo dürfen connections kopiert werden??
  * SGLSignal-Objekte werden nicht kopiert. Sind sie Member eines kopierten Objektes wird die Kopie des Objektes ein neu initialisiertes SGLSignal halten.
  */
 template<typename Signature> 
-class SGLSignal : public boost::signal<Signature>
+class SGLSignal : public signal<Signature>
 {
 	class forwarder : public SGLSlot{
 		public:

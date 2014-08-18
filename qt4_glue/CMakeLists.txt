@@ -34,12 +34,10 @@ if(BUILD_SAMPLES)
 	add_executable(qt4_sample1 qt4_sample1.cpp)
 	add_executable(qt4_sample2 qt4_sample2.cpp)
 	add_executable(qt4_sample3 qt4_sample3.cpp)
-	add_executable(qt4_sample4 qt4_sample4.cpp)
 	
 	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} qt4_glue sgl)
 	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} qt4_glue sgl)
 	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} qt4_glue sgl)
-	target_link_libraries(qt4_sample4 ${QT_LIBRARIES} qt4_glue sgl)
 endif(BUILD_SAMPLES)
 
 INSTALL(FILES ${HDRS} DESTINATION include/libsgl/qt4_glue)
