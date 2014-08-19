@@ -51,7 +51,7 @@
 
 class SGLSpace
 {
-	static map<std::string, bool> extProxy;
+	static std::map<std::string, bool> extProxy;
 public:
 	struct
 	{

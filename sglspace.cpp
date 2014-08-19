@@ -329,10 +329,10 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX);
 	double Yval=(RelY-MouseInfo.OldY);
-	SGLVektor V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
-	SGLVektor V2=Cam.UpVect*Yval;
-	SGLVektor V = (V1+V2)*-.1*localConf.aimMoveSpeed;
-	Cam.MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
+	const dvector V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
+	const dvector V2=Cam.UpVect*Yval;
+	const dvector V = (V1+V2)*-.1*localConf.aimMoveSpeed;
+	Cam.MoveAim(V[0],V[1],V[2]);
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
 
@@ -664,7 +664,7 @@ void SGLSpace::redrawSlot::operator=(const redrawSlot &Slot)
 }
 
 SGLSpace::spaceConfig SGLSpace::globalConf;
-map<std::string, bool> SGLSpace::extProxy;
+std::map<std::string, bool> SGLSpace::extProxy;
 
 
 /**
@@ -679,7 +679,7 @@ map<std::string, bool> SGLSpace::extProxy;
  */
 bool SGLSpace::extAvail(const std::string &ext,const std::string &msg,unsigned short vital)
 {
-	map<std::string, bool>::const_iterator i=extProxy.find(ext+msg);
+	std::map<std::string, bool>::const_iterator i=extProxy.find(ext+msg);
 	if(i==extProxy.end())
 		return (extProxy[ext+msg]=sglChkExt(ext.c_str(),msg.c_str(),vital)); //wenn noch nicht im Proxy, Renderer fragen
 	else return i->second;//sonst gef. Wert verwenden

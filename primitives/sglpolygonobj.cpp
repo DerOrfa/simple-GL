@@ -57,5 +57,5 @@ SGLVektor SGLPolygonObj::getCenter()const
 	SGLVektor ret;
 	for(int i=0;i<Fl.Cnt;i++)
 		ret+=Fl.Fl[i]->getCenter();
-	return ret/Fl.Cnt;
+	return dvector( ret/Fl.Cnt);
 }

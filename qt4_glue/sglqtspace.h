@@ -47,7 +47,6 @@ public:
 public Q_SLOTS:
 	void showObj(const shared_obj &obj);
 	void unshowObj(const shared_obj &obj);
-	void benchmark();
 	virtual void defaultHandler_pressedMouseMoveAbs(QMouseEvent * e,float relMoveX,float relMoveY);
 	virtual void defaultHandler_releasedMouseMoveAbs(QMouseEvent * e);
 

@@ -273,15 +273,15 @@ void SGLLensFlare::DoFlares(SGLshPtr<SGLBaseCam> cam, GLfloat near_clip)
 	SGLVektor at=cam->LookAt;
 
 	/* view_dir = normalize(at-from) */
-	EVektor<GLdouble> view_dir= at - from;
-	view_dir.Normalize();
+	dvector view_dir= at - from;
+	view_dir/=boost::numeric::ublas::norm_2(view_dir);
 
 	/* center = from + near_clip * view_dir */
-	EVektor<GLdouble> center = from + (view_dir* near_clip);
+	dvector center = from + (view_dir* near_clip);
 
 	/* light_dir = normalize(light-from) */
-	EVektor<GLdouble> light_dir=LightPos-from;
-	light_dir.Normalize();
+	dvector light_dir=LightPos-from;
+	light_dir/=boost::numeric::ublas::norm_2(light_dir);
 
 	/* light = from + dot(light,view_dir)*near_clip*light_dir */
 	dot =
@@ -291,25 +291,25 @@ void SGLLensFlare::DoFlares(SGLshPtr<SGLBaseCam> cam, GLfloat near_clip)
 
 	LightPos= from+(light_dir*(near_clip/dot));
 
-	EVektor<GLdouble> dx,dy;
-	EVektor<GLdouble> axis;
+	dvector dx,dy;
+	dvector axis;
 
 
 	/* axis = light - center */
 	axis= LightPos- center;
 
-	if((EVektor<GLdouble>)LightPos !=  center)dx=axis;/* dx = normalize(axis) */
-	else dx = from.kreuzprod(cam->UpVect); //dx ist senkrecht auf Kameravektor
+	if(boost::numeric::ublas::norm_2(axis))dx=axis;/* dx = normalize(axis) */
+	else dx = from.cross_prod(cam->UpVect); //dx ist senkrecht auf Kameravektor
 
-	dx.Normalize();
+	dx/=boost::numeric::ublas::norm_2(dx);
 
 	/* dy = cross(dx,view_dir) */
-	dy = dx.kreuzprod(view_dir);
+	dy = SGLVektor(dx).cross_prod(view_dir);
 
 	for (i = 0; i < num_flares; i++)
 	{
-		EVektor<GLdouble> sx= dx* (flare[i].scale * size);
-		EVektor<GLdouble> sy= dy* (flare[i].scale * size);
+		dvector sx= dx* (flare[i].scale * size);
+		dvector sy= dy* (flare[i].scale * size);
 
 		if (flare[i].type < 0)
 		{
@@ -319,12 +319,12 @@ void SGLLensFlare::DoFlares(SGLshPtr<SGLBaseCam> cam, GLfloat near_clip)
 		else glBindTexture(GL_TEXTURE_2D, flareTex[flare[i].type]);
 
 		/* position = center + flare[i].loc * axis */
-		SGLVektor position= center+ (axis* flare[i].loc);
+		SGLVektor position= dvector( center+ (axis* flare[i].loc));
 
-		SGLVektor A=position+ sx + sy;
-		SGLVektor B=position- sx + sy;
-		SGLVektor C=position- sx - sy;
-		SGLVektor D=position+ sx - sy;
+		const SGLVektor A=dvector(position+ sx + sy);
+		const SGLVektor B=dvector(position- sx + sy);
+		const SGLVektor C=dvector(position- sx - sy);
+		const SGLVektor D=dvector(position+ sx - sy);
 
 		LichtFarbe tColor=Light->getFarbeAt(from);
 		glColor3f
@@ -414,8 +414,8 @@ bool SGLLensFlare::isVisible(SGLshPtr<SGLBaseCam> cam)
 	LichtFarbe tCol=Light->getFarbeAt(Camera->Pos);
 	if(tCol.Glanz[0]+tCol.Glanz[1]+tCol.Glanz[2] < .05)return false;//Wenn's Licht zu dunkel is, gibts kein Flare
 
-	SGLVektor blickricht=cam->Pos-cam->LookAt;
-	SGLVektor Lichtricht=cam->Pos-Light->getMyPos();
-	if(blickricht.skalarprod(Lichtricht) <0)return false;//Wenn das licht hinter der Kamera is => kein Flare
+	dvector blickricht=cam->Pos-cam->LookAt;
+	dvector Lichtricht=cam->Pos-Light->getMyPos();
+	if(boost::numeric::ublas::inner_prod(blickricht,Lichtricht) <0)return false;//Wenn das licht hinter der Kamera is => kein Flare
 	return true;
 }

@@ -52,7 +52,7 @@ void SGLConsole::compileSubObjects()
 /*!
     \fn SGLConsole::print(string text)
  */
-void SGLConsole::print(string text)
+void SGLConsole::print(std::string text)
 {
 	if(!text.length())return;
 	empty=false;
@@ -85,7 +85,7 @@ void SGLConsoleText::generate()
 /*!
     \fn SGLConsoleText::print(string text)
  */
-void SGLConsoleText::print(string text)
+void SGLConsoleText::print(std::string text)
 {
 #warning implement me
 	myText+=text;

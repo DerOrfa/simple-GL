@@ -187,7 +187,7 @@ void SGLBaseCam::RotateCamAround(GLdouble Xdeg, GLdouble Ydeg,SGLVektor &around)
 void SGLBaseCam::Roll(GLdouble degree)
 {
 	if(lockRoll)return;
-	UpVect=UpVect.Rotate(EVektor<GLdouble>(Pos-LookAt),degree);
+	UpVect=UpVect.Rotate(Pos-LookAt,degree);
 	Compile();
 	ViewMatr.outDated=true;
 }
@@ -195,7 +195,7 @@ void SGLBaseCam::Roll(GLdouble degree)
 void SGLBaseCam::MoveZoom(GLdouble fact)
 {
 	if(lockMoveZoom)return;
-	Pos=(EVektor<GLdouble>(Pos-LookAt)*fact)+LookAt;
+	Pos=((Pos-LookAt)*fact)+LookAt;
 	Compile();
 	ViewMatr.outDated=true;
 }
@@ -214,7 +214,7 @@ double SGLBaseCam::ViewLength()
 {
 	SGLVektor tVek(Pos-LookAt);
 	ViewMatr.outDated=true;
-	return tVek.Len();
+	return boost::numeric::ublas::norm_2(tVek);
 }
 
 void SGLBaseCam::ResetView()
@@ -237,10 +237,10 @@ void SGLBaseCam::ResetView()
 void SGLBaseCam::ReCalcUpVect(bool PosIsOnNull,double rotdeg)
 {
 	if(!PosIsOnNull)Pos=Pos-LookAt;
-	SGLVektor HelpVekt(Pos.kreuzprod(UpVect));
+	SGLVektor HelpVekt(Pos.cross_prod(UpVect));
 	UpVect=Pos.Rotate(HelpVekt,90);
 	if(rotdeg)UpVect=UpVect.Rotate(Pos,rotdeg);
-	UpVect.Normalize();
+	UpVect/=boost::numeric::ublas::norm_2(UpVect);
 	if(!PosIsOnNull)Pos=Pos+LookAt;
 	ViewMatr.outDated=true;
 }
@@ -257,10 +257,9 @@ void SGLBaseCam::ResetUpVect(double rotdeg)
 
 void SGLBaseCam::MoveAimTo(SGLVektor to)
 {
-	SGLVektor newAim=to;
-	SGLVektor amount=newAim-LookAt;
-	LookAt=newAim;
-	if(move_cam_with_aim)MoveCam(amount.SGLV_X, amount.SGLV_Y, amount.SGLV_Z);
+	const dvector amount=to-LookAt;
+	LookAt=to;
+	if(move_cam_with_aim)MoveCam(amount[0], amount[1], amount[2]);
 	else
 	{
 		ReCalcUpVect();
@@ -326,18 +325,18 @@ void SGLBaseCam::recalcEcken()
 	{
 	case resizeView:
 	{
-		recalcAngle((*Ecken[1]-*Ecken[2]).Len()/2);
+		recalcAngle(boost::numeric::ublas::norm_2(*Ecken[1]-*Ecken[2])/2);
 	}break;
 	case moveCam:
 	{
-		recalcPos((*Ecken[1]-*Ecken[2]).Len()/2);
+		recalcPos(boost::numeric::ublas::norm_2(*Ecken[1]-*Ecken[2])/2);
 	}
 	case scaleView:
 	{
 		SGLVektor PosVektor=getLookVektor();
 		
 		double DiagWinkel=ATAN(ViewFormat);//Der Winkel der Diagonalen des Sichtfeldes zur Senkrechte
-		double high=TAN(Angle/2)*PosVektor.Len(); //Höhe der senkrechten auf dem Horizont berechnen [tan(alpha)=a/b]
+		double high=TAN(Angle/2)*boost::numeric::ublas::norm_2(PosVektor); //Höhe der senkrechten auf dem Horizont berechnen [tan(alpha)=a/b]
 		double c = high/COS(DiagWinkel); //die Hypotenuse des Dreiecks aus Diagonalen und der Senkrechte [cos(alpha)=b/c]
 
 		*Ecken[0]=UpVect.Rotate(PosVektor,360-DiagWinkel);
@@ -358,7 +357,7 @@ void SGLBaseCam::recalcEcken()
 }
 
 SGLVektor SGLBaseCam::getLookVektor(){return SGLVektor(Pos-LookAt);}
-void SGLBaseCam::setLookVektor(SGLVektor Vekt)
+void SGLBaseCam::setLookVektor(dvector Vekt)
 {
 	Pos=Vekt+LookAt;
 	ViewMatr.outDated=true;
@@ -399,13 +398,13 @@ void SGLBaseCam::unloadView()
  */
 void SGLBaseCam::recalcAngle(GLdouble height)
 {
-	Angle=ATAN(height/getLookVektor().Len())*2; // alpha=atan(a/b) (*2 weil wir den Winkel auf der mittelachse berechnet haben, brauchen aber den gesamten Winkel
+	Angle=ATAN(height/boost::numeric::ublas::norm_2(getLookVektor()))*2; // alpha=atan(a/b) (*2 weil wir den Winkel auf der mittelachse berechnet haben, brauchen aber den gesamten Winkel
 }
 
 void SGLBaseCam::recalcPos(GLdouble height)
 {
 	SGLVektor LookVekt=getLookVektor();
-	double oldlen=LookVekt.Len();
+	double oldlen=boost::numeric::ublas::norm_2(LookVekt);
 	double newlen=height/TAN(Angle/2);//b=a/tan(alpha)
 	setLookVektor(LookVekt*(newlen /oldlen));// newlen : oldlen = newvek : oldvek => newvek = (newlen : oldlen)*oldvek
 }

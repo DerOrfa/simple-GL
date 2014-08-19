@@ -130,8 +130,8 @@ void SGLQuader::resetTexKoord()
 
 void SGLQuader::setDiag(SGLVektor topleftfront,SGLVektor bottomrighttail,bool compile)
 {
-	SGLVektor mitte=SGLVektor(topleftfront+bottomrighttail)/2.;
-	SGLVektor dim=(topleftfront-bottomrighttail);
+	dvector mitte=(topleftfront+bottomrighttail)/2.;
+	dvector dim=topleftfront-bottomrighttail;
 	ResetTransformMatrix();
 	Move(mitte);
 	breite=dim.SGLV_X<0 ? -dim.SGLV_X:dim.SGLV_X;

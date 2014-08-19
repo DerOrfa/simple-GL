@@ -30,7 +30,7 @@
 class SGLObjList
 {
 public:
-	struct SortFunc : public binary_function<shared_obj &, shared_obj &, bool> {
+	struct SortFunc : public std::binary_function<shared_obj &, shared_obj &, bool> {
 		bool operator()(shared_obj &x, shared_obj &y) { return y->priority < x->priority; }
 	};
 	SGLObjList(bool transp=false);
@@ -42,7 +42,7 @@ public:
 	bool	AddOb(GLuint ListID,GLenum Face);
 	bool 	AddOb(shared_obj obj);
 	void	Clear();
-	list<shared_obj>	Objects;
+	std::list<shared_obj>	Objects;
 	GLuint		*Objects_CW;
 	GLuint		*Objects_CCW;
 	unsigned short	ObjCnt_CW,ObjCnt_CCW;

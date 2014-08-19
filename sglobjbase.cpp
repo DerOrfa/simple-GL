@@ -10,6 +10,8 @@
 #include "sglobjbase.h"
 #include "sglmisc.h"
 #include <typeinfo>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 
 #ifdef __APPLE__
 	#include <OpenGL/glu.h>
@@ -17,6 +19,7 @@
 	#include <GL/glu.h>
 #endif
 
+using boost::numeric::ublas::matrix;
 
 /**
  * Kopierkonstruktor.
@@ -80,7 +83,7 @@ SGLObjBase::~SGLObjBase()
 {
 	if(myList)
 	{
-		cout << myList->Objects.size() << endl;
+		std::cout << myList->Objects.size() << std::endl;
 		unsigned int count=myList->isThere(this);
 		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
 	}
@@ -99,8 +102,9 @@ SGLObjBase::~SGLObjBase()
  */
 SGLVektor SGLObjBase::Normale(SGLVektor Vekt1,SGLVektor Vekt2)
 {
-	SGLVektor ret=Vekt1.kreuzprod(Vekt2);
-	if(!glIsEnabled(GL_NORMALIZE))ret.Normalize();
+	SGLVektor ret=Vekt1.cross_prod(Vekt2);
+	if(!glIsEnabled(GL_NORMALIZE))
+		ret/=boost::numeric::ublas::norm_2(ret);
 	return ret;
 }
 
@@ -124,16 +128,15 @@ void SGLObjBase::metaGenerate()
 	if(FaceAt)
 	{
 		glMatrixMode(GL_MODELVIEW);
-		GLdouble XZ_wink,XY_wink;
+		GLdouble ebene_wink,steigung;
 		SGLVektor tVekt=getCenterInSpace();
 		tVekt.resize(3);
-		//Für toWink darf der Vektor nur 3 El haben (sonst geht toWink von nem 4Dim Raum aus)
-		tVekt=(*FaceAt)-tVekt;
-		tVekt.toWink(XZ_wink,XY_wink);
+		tVekt=*FaceAt-tVekt;
+		tVekt.toWink(ebene_wink,steigung);
 
-		glRotated(-XZ_wink,0,1,0);
+		glRotated(-ebene_wink,0,1,0);
 		glRotated(90,0,1,0);
-		glRotated(-XY_wink,1,0,0);
+		glRotated(-steigung,1,0,0);
 	}
 
 	GLenum error;
@@ -157,13 +160,14 @@ void SGLObjBase::metaGenerate()
  */
 SGLVektor SGLObjBase::getCenterInSpace()
 {
-	SGLVektor ret=getCenter();
+	dvector ret=getCenter();
 	ret.resize(4);
 	ret[3]=1;
-	EMatrix<GLdouble> Matr(4,4);
-	Matr.fromArray(4,4,MyTransformMatrix);
-	Matr=Matr.transp();
-	ret=SGLVektor(Matr*(ret));
+	matrix<GLdouble,boost::numeric::ublas::column_major> Matr(4,4);
+	std::copy(MyTransformMatrix,MyTransformMatrix+16,Matr.data().begin());
+	
+	ret=boost::numeric::ublas::prod(Matr,ret);
+	ret.resize(3);
 	return ret;
 }
 
@@ -174,12 +178,11 @@ SGLVektor SGLObjBase::getCenterInSpace()
  */
 SGLVektor SGLObjBase::getMyPos()
 {
-	EVektor<GLdouble> ret(4);
-	EMatrix<GLdouble> tMatr(4,4);
-	ret.resize(4);ret[3]=1;
-	tMatr.fromArray(4,4,MyTransformMatrix);
-	tMatr=tMatr.transp();
-	ret=SGLVektor(tMatr*(ret));
+	dvector ret(4);
+	dmatrix tMatr(4,4);
+	ret[3]=1;
+	std::copy(MyTransformMatrix,MyTransformMatrix+16,tMatr.data().begin());
+	ret=boost::numeric::ublas::prod(tMatr,ret);
 	ret.resize(3);
 	return ret;
 }

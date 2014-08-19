@@ -34,7 +34,7 @@ public:
 	static const char* findFont(const char fontname[]);
 	SGLText(std::auto_ptr<FTFont> renderer,MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 protected:
-	string myText;
+	std::string myText;
 };
 
 #endif

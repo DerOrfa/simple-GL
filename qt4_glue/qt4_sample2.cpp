@@ -5,7 +5,7 @@
 #include <qt4_glue/sglqtspace.h>
 #include <text/sgl3dtext.h>
 #include <text/sglconsole.h>
-#include <helper/sgllensflare.h>
+// #include <helper/sgllensflare.h>
 
 #include <QApplication>
 

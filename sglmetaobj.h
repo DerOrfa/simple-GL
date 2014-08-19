@@ -28,7 +28,7 @@ public:
 
     ~SGLMetaObj();
 
-    vector<GLint> Objs, TrObjs;
+    std::vector<GLint> Objs, TrObjs;
 
     virtual void compileSubObjects() = 0;
 

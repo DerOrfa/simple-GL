@@ -23,7 +23,7 @@ public:
 	SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[]="");
 	~SGLConsoleText();
 	void generate();
-	void print(string text);
+	void print(std::string text);
 	void setConsDim(GLdouble breite, GLdouble hoehe);
 	void clear();
 	SGLVektor getCenter()const;
@@ -46,7 +46,7 @@ public:
 	SGLConsoleText *text;
 
     void compileSubObjects();
-    void print(string text);
+    void print(std::string text);
 
     public: void clear();
     bool empty;
