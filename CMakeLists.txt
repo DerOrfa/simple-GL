@@ -71,6 +71,8 @@ SET(UTIL_OBJFILES
 
 SET(USE_DEVIL off CACHE BOOL "use DevIL (aka OpenIL) for texture loading")
 SET(STATIC_LIB off CACHE BOOL "create static libs as well")
+SET(SHARED_LIB off CACHE BOOL "create sahred libs as well")
+
 IF(USE_DEVIL)
 ADD_DEFINITIONS(-DUSE_DEVIL)
 	find_path(DEVIL_INCLUDE_DIR "IL/ilut.h")
@@ -89,20 +91,22 @@ SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sg
 ADD_DEFINITIONS(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl" -DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL -ffast-math -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR} ${DEVIL_INCS})
 
-ADD_LIBRARY(sgl SHARED 
-  ${CORE_OBJFILES} 
-  ${HELPER_OBJFILES} 
-  ${PRIMITIVES_OBJFILES} 
-  ${UTIL_OBJFILES} 
-  ${TEXT_OBJFILES} 
-  ${TEXT_BACKEND_FTGL_OBJFILES}
-)
-#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
+if(SHARED_LIB)
+	ADD_LIBRARY(sgl SHARED
+		${CORE_OBJFILES}
+		${HELPER_OBJFILES}
+		${PRIMITIVES_OBJFILES}
+		${UTIL_OBJFILES}
+		${TEXT_OBJFILES}
+		${TEXT_BACKEND_FTGL_OBJFILES}
+	)
+	#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
-#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
-set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-SET(LIBS sgl)
+	#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
+	TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
+	set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+	list(APPEND LIBS sgl)
+endif(SHARED_LIB)
 
 if(STATIC_LIB)
 	ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
@@ -114,7 +118,7 @@ if(STATIC_LIB)
 	)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-	SET(LIBS ${LIBS} sgl_static)
+	list(APPEND LIBS sgl_static)
 endif(STATIC_LIB)
 	
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
