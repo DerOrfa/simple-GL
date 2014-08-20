@@ -8,6 +8,7 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 #include "sgl3dtext.h"
+#include <FTGL/ftgl.h>
 
 
 SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
@@ -17,7 +18,7 @@ SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Materi
 	renderer->Depth(0.2);
 
 	/// @note should not be run before OpenGL is initialized
-	box=renderer->BBox(Text);
+	box=std::auto_ptr<FTBBox>(new FTBBox( renderer->BBox(Text)));
 	myText=Text;
 }
 
@@ -26,8 +27,8 @@ SGL3DText::~SGL3DText(){}
 
 void SGL3DText::generate()
 {
-	const FTPoint &offset=box.Lower();
-	const FTPoint center=offset+(box.Upper()-offset)*.5;
+	const FTPoint &offset=box->Lower();
+	const FTPoint center=offset+(box->Upper()-offset)*.5;
 	renderer->Render(myText.c_str(),-1,FTPoint()-center);
 }
 
@@ -75,7 +76,7 @@ void SGL3DText::DrahtGitter(bool DO)
  */
 void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
 {
-	if(width)*width=box.Upper().X()-box.Lower().X();
-	if(height)*height=box.Upper().Y()-box.Lower().Y();
-	if(depth)*depth=box.Upper().Z()-box.Lower().Z();
+	if(width)*width=box->Upper().X()-box->Lower().X();
+	if(height)*height=box->Upper().Y()-box->Lower().Y();
+	if(depth)*depth=box->Upper().Z()-box->Lower().Z();
 }
