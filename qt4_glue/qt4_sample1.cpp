@@ -16,9 +16,6 @@ int main(int argc, char *argv[])
 	SGLqtSpace *w= new SGLqtSpace(NULL, "sample1");
 	w->show();
 
-	SGLLight	myLight;
-	myLight.Abnahme.Quadratisch=.01;
-
 	SGLshPtr<SGLQuader> quad1(new SGLQuader);
 	quad1->SetPosAndScale(0,2,0,1);
 	SGLshPtr<SGLQuader> quad2(new SGLQuader(*quad1));
