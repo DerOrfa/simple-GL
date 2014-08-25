@@ -10,7 +10,7 @@
 #include "sglmetaobj.h"
 
 SGLMetaObj::SGLMetaObj(GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
-:SGLObj(PosX,PosY,PosZ,SizeFact)
+:SGLObj(PosX,PosY,PosZ,SizeFact),twoSideRender(false)
 {}
 
 SGLMetaObj::~SGLMetaObj()
@@ -24,9 +24,17 @@ SGLMetaObj::~SGLMetaObj()
  */
 void SGLMetaObj::generate()
 {
+	bool restoreCullFaces=false;
+	if(	glIsEnabled(GL_CULL_FACE) && twoSideRender ){
+		glDisable(GL_CULL_FACE);
+		restoreCullFaces=true;
+	}
+
 	int i;
 	for(i=Objs.size();i;i--)
 		glCallList(Objs[i-1]);
+	if(restoreCullFaces)
+		glEnable(GL_CULL_FACE);
 
 	if(TrObjs.size())
 	{

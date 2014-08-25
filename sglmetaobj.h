@@ -24,11 +24,12 @@ Es gibt eine Liste für transparente Objekte, und eine für nicht transparente O
 class SGLMetaObj : public SGLObj
 {
 public:
-    SGLMetaObj(GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+    SGLMetaObj(GLdouble PosX = 0, GLdouble PosY = 0, GLdouble PosZ = 0, GLdouble SizeFact = 1);
 
     ~SGLMetaObj();
 
     std::vector<GLint> Objs, TrObjs;
+    bool twoSideRender;
 
     virtual void compileSubObjects() = 0;
 
