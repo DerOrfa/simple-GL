@@ -94,15 +94,14 @@ void SGLSpace::callHelper(int stage)
 		glEnable(GL_BLEND);
 		GLuint Beschr[3];
 
-		if(Grids.X->should_compile)
-			Beschr[0]=Grids.X->Compile(false,true);
-		if(Grids.Y->should_compile)
-			Beschr[1]=Grids.Y->Compile(false,true);
-		if(Grids.Z->should_compile)
-			Beschr[2]=Grids.Z->Compile(false,true);
+		Beschr[0]=Grids.X->should_compile ? Grids.X->Compile(false,true):Beschr[0]=Grids.X->ID;
+		Beschr[1]=Grids.Y->should_compile ? Grids.Y->Compile(false,true):Beschr[1]=Grids.Y->ID;
+		Beschr[2]=Grids.Z->should_compile ? Grids.Z->Compile(false,true):Beschr[2]=Grids.Z->ID;
+
 		glFrontFace(Grids.X->FrontFace);
 		glCallLists(3,GL_UNSIGNED_INT,Beschr);
 		glDisable(GL_BLEND);
+		Grids.X->should_compile=Grids.Y->should_compile=Grids.Z->should_compile=false;
 	  }
 	break;
 	}
