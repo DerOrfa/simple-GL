@@ -119,6 +119,7 @@ if(STATIC_LIB)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl_static)
+	TARGET_LINK_LIBRARIES(sgl_static ${Boost_LIBRARIES} ${DEVIL_LIBS} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
 endif(STATIC_LIB)
 	
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
