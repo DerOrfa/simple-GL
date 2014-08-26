@@ -83,7 +83,6 @@ SGLObjBase::~SGLObjBase()
 {
 	if(myList)
 	{
-		std::cout << myList->Objects.size() << std::endl;
 		unsigned int count=myList->isThere(this);
 		if(count){SGLprintError("lösche noch %d mal verwendetes Objekt",count);}
 	}
