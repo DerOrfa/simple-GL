@@ -47,3 +47,24 @@ void SGLMetaObj::generate()
 		glDisable(GL_BLEND);
 	}
 }
+
+SGLFlMetaObj::SGLFlMetaObj(MaterialPtr mat, GLdouble PosX, GLdouble PosY, GLdouble PosZ, GLdouble SizeFact)
+: SGLFlObj(mat,PosX,PosY,PosZ,SizeFact),twoSideRender(false)
+{}
+
+SGLFlMetaObj::~SGLFlMetaObj(){Objs.clear();}
+
+void SGLFlMetaObj::generate()
+{
+	bool restoreCullFaces=false;
+	if(	glIsEnabled(GL_CULL_FACE) && twoSideRender ){
+		glDisable(GL_CULL_FACE);
+		restoreCullFaces=true;
+	}
+
+	int i;
+	for(i=Objs.size();i;i--)
+		glCallList(Objs[i-1]);
+	if(restoreCullFaces)
+		glEnable(GL_CULL_FACE);
+}

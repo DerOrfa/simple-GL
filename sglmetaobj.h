@@ -11,6 +11,7 @@
 #define SGLMETAOBJ_H
 
 #include "sglobj.h"
+#include "primitives/sglflobj.h"
 #include <vector>
 
 /*! \brief Abstrakte Basisklasse für Objekte, die sich aus mehreren Objekten beliebiger Art zusammensetzen.
@@ -29,6 +30,21 @@ public:
     ~SGLMetaObj();
 
     std::vector<GLint> Objs, TrObjs;
+    bool twoSideRender;
+
+    virtual void compileSubObjects() = 0;
+
+    public: void generate();
+};
+
+class SGLFlMetaObj : public SGLFlObj
+{
+public:
+    SGLFlMetaObj(MaterialPtr mat=MaterialPtr(), GLdouble PosX = 0, GLdouble PosY = 0, GLdouble PosZ = 0, GLdouble SizeFact = 1);
+
+    ~SGLFlMetaObj();
+
+    std::vector<GLint> Objs;
     bool twoSideRender;
 
     virtual void compileSubObjects() = 0;
