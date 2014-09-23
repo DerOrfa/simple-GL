@@ -44,7 +44,7 @@ SGLObjList::SGLObjList(const SGLObjList &src)
  */
 SGLObjList::~SGLObjList()
 {
-	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+	for(std::list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{
 		if(*i){if((*i)->myList==this)(*i)->myList=NULL;}//Alle Objekte trennen
 		else{SGLprintError("Huch, da is ein Ungültiges Objekt in der Liste an Stelle %d von %d",distance(i, Objects.begin()),Objects.size());}
@@ -186,7 +186,7 @@ bool SGLObjList::removeOb(GLuint ListID)
 bool SGLObjList::removeOb(shared_obj obj)
 {
 	if(Objects.empty())return false;
-	list<shared_obj>::iterator i=find(Objects.begin(), Objects.end(), obj);
+	std::list<shared_obj>::iterator i=find(Objects.begin(), Objects.end(), obj);
 	if(i!=Objects.end())Objects.erase(i);
 	else return false; //Objekt wurde NICHT gefunden
 
@@ -267,7 +267,7 @@ void SGLObjList::Compile(bool force)
 		check_sorting=false;
 		ListInfo();
 	}
-	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+	for(std::list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 		if(render_non_native || (*i)->myList==this)
 			AddOb((*i)->metaCompile(force),(*i)->FrontFace);
 	check_recompile=false;
@@ -314,7 +314,7 @@ void SGLObjList::ListInfo()
  */
 unsigned short SGLObjList::isThere(const SGLObjBase * const obj)
 {
-	for(list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
+	for(std::list<shared_obj>::iterator i=Objects.begin();i!=Objects.end();i++)
 	{
 		if(*i){if(i->get()==obj)return i->use_count();}
 		else{SGLprintError("Huch, da is ein Ungültiges Objekt in der Liste an Stelle %d von %d",distance(i, Objects.begin()),Objects.size());}

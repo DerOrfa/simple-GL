@@ -24,6 +24,7 @@
 #else 
 	#include <GL/glu.h>
 #endif
+#include "../sglmetaobj.h"
 
 SGLFlObj::SGLFlObj(MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact):
 SGLObj(PosX,PosY,PosZ,SizeFact)
@@ -41,6 +42,11 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	GLint		CullFace;
 	int i;
 	bool EnableClip[5];
+
+	SGLFlMetaObj *meta=dynamic_cast<SGLFlMetaObj*>(this);
+	if(meta)
+		meta->compileSubObjects();
+
 	if(!VisMode)
 	{
 		GLint MasterPolyMode[2];
@@ -51,7 +57,7 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 	GLuint error=0;
 	while((error=glGetError()))
 	{
-		SGLprintError("%s [GLerror] beim Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
+		SGLprintError("%s [GLerror] vor dem Zeichnen von %s",gluErrorString(GLenum(error)),guesType());
 	}
 
 	//NVIDIA optimiert Setzoperationen komplett raus aus den Listen, wenn der Wert schon gesetzt ist
@@ -84,7 +90,8 @@ GLuint SGLFlObj::Compile(bool draw,bool free)
 			if(IgnoreLight)// @todo nochmal überlegen wie Textur, Material und Farbe sich untereinander verhalten
 			{
 				
-				if(Mat->tex)Mat->tex->loadTex();
+				if(Mat->tex)
+					Mat->tex->loadTex();
 				else 
 				{
 					glColor4f(

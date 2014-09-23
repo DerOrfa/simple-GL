@@ -103,7 +103,7 @@ SGLStrecke::SGLStrecke(SGLVektor Vekt1,SGLVektor Vekt2)
  * Die Länge der Strecke.
  * @return der Abstand zwischen den beiden Endpunkten der Strecke
  */
-GLdouble SGLStrecke::Len(){return (*punkt1 - *punkt2).Len();}
+GLdouble SGLStrecke::Len(){return boost::numeric::ublas::norm_2(*punkt1 - *punkt2);}
 
 void SGLStrecke::generate()
 {
@@ -115,5 +115,5 @@ void SGLStrecke::generate()
 
 SGLVektor SGLStrecke::getCenter()const
 {
-	return SGLVektor(*punkt1 + *punkt2)/2.;
+	return dvector((*punkt1 + *punkt2)/2);
 }

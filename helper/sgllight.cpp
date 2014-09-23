@@ -174,7 +174,7 @@ void SGLLight::setVisible(bool visible)
 LichtFarbe SGLLight::getFarbeAt(SGLVektor vekt)
 {
     LichtFarbe ret=Farbe;
-	double len=fabs((this->getMyPos()-vekt).Len());
+	const double len=boost::numeric::ublas::norm_2(getMyPos()-vekt);
 	double attenuation=1/(1+len*Abnahme.Linear+pow(len,2)*Abnahme.Quadratisch);
 	ret.Difus[0]*=attenuation;
 	ret.Difus[1]*=attenuation;

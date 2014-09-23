@@ -44,21 +44,15 @@ void SGLqtMultiSpaceMgr::registerSpace(SGLqtSpace *sw)
 		i->showObjectsIn(sw);
 	}
 	childs.push_back(sw);
+	qDebug("Registered %s(0x%x)",sw->objectName().toStdString().c_str(),sw);
 }
 
 void SGLqtMultiSpaceMgr::lostWidget(QObject* obj)
 {
-	SGLqtSpace *p=dynamic_cast<SGLqtSpace*>(obj);
-	if(p)
-		lostWidget(p);
-	else
-		SGLprintError("Cannot unregister %s, its no SGLqtSpace", obj->objectName().toStdString().c_str());
-}
-void SGLqtMultiSpaceMgr::lostWidget(SGLqtSpace* obj)
-{
 	mutex.lock();
-	childs.removeAll(obj);
+	childs.removeAll(reinterpret_cast<SGLqtSpace*>(obj)); // force type, as we dont really have it anymore, but doesn't matter 'for removing the pointer anyway
 	mutex.unlock();
+	qDebug("Unregistered %s(0x%x)",obj->objectName().toStdString().c_str(),obj);
 }
 
 /*!
@@ -83,8 +77,10 @@ void SGLqtMultiSpaceMgr::removeAllChilds(SGLqtSpace *exception)
 SGLqtSpace* SGLqtMultiSpaceMgr::createSharedSpace(QWidget *parent)
 {
 	mutex.lock();
+	assert(parent);
 	QGLWidget *shared=childs.empty() ? NULL:childs.front();
 	SGLqtSpace* ret=new SGLqtSpace(shared,parent);
+	ret->setObjectName(QString("shared SGLqtSpace in ")+parent->objectName());
 	registerSpace(ret);
 	mutex.unlock();
 	return ret;

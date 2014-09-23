@@ -5,7 +5,7 @@
 #include <qt4_glue/sglqtspace.h>
 #include <text/sgl3dtext.h>
 #include <text/sglconsole.h>
-#include <helper/sgllensflare.h>
+// #include <helper/sgllensflare.h>
 
 #include <QApplication>
 
@@ -15,9 +15,6 @@ int main(int argc, char *argv[])
 	SGLprintState("Initialisiere Schnittstelle ...");
 	SGLqtSpace *w= new SGLqtSpace(NULL, "sample1");
 	w->show();
-
-	SGLLight	myLight;
-	myLight.Abnahme.Quadratisch=.01;
 
 	SGLshPtr<SGLQuader> quad1(new SGLQuader);
 	quad1->SetPosAndScale(0,2,0,1);

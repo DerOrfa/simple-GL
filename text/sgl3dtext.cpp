@@ -8,78 +8,49 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 #include "sgl3dtext.h"
+#include <FTGL/ftgl.h>
+
 
 SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
-:SGLText(fontname,Material,PosX,PosY,PosZ,SizeFact)
+:SGLText(std::auto_ptr<FTFont>(new FTExtrudeFont(SGLText::findFont(fontname))),Material,PosX,PosY,PosZ,SizeFact)
 {
-	align=center;
-	FrontFace=GL_CW;
-	tiefe=0.2f;
+	renderer->FaceSize(72/25.4); // 72 is one inch 72/25.4 is one mm
+	renderer->Depth(0.2);
+
+	/// @note should not be run before OpenGL is initialized
+	box=std::auto_ptr<FTBBox>(new FTBBox( renderer->BBox(Text)));
 	myText=Text;
 }
 
 
-SGL3DText::~SGL3DText()
-{
-}
+SGL3DText::~SGL3DText(){}
 
 void SGL3DText::generate()
 {
-	Backend->generate_3DText(tiefe,myText,VisMode,align);
+	const FTPoint &offset=box->Lower();
+	const FTPoint center=offset+(box->Upper()-offset)*.5;
+	renderer->Render(myText.c_str(),-1,FTPoint()-center);
 }
 
 /*!
     \fn SGL3DText::getBounds(SGLQuader *BoundingQuader)
  */
-void SGL3DText::getBounds(SGLQuader *BoundingQuader)
+void SGL3DText::getBounds(SGLshPtr<SGLQuader> BoundingQuader)
 {
 	GLdouble breite,hoehe,depth;
-	SGLVektor center=getCenter();
+	assert(BoundingQuader);
 
 	getDim(&breite,&hoehe,&depth,NULL);
-
-
-	BoundingQuader->tiefe=depth*1.01;
+	BoundingQuader->tiefe=depth;
 	BoundingQuader->hoehe=hoehe;
 	BoundingQuader->breite=breite;
 	BoundingQuader->recalcEdges(false);
 	BoundingQuader->ResetTransformMatrix(MyTransformMatrix);
 
-	BoundingQuader->Move(center.SGLV_X,center.SGLV_Y,center.SGLV_Z);
-
 	BoundingQuader->FaceAt=FaceAt;
 	BoundingQuader->resetTexKoord();
 	BoundingQuader->Compile();
-}
-
-/*!
-    \fn SGL3DText::getHeight()
- */
-GLdouble SGL3DText::getHeight()const
-{
-	GLdouble temp;
-	getDim(NULL,&temp);
-	return temp;
-}
-
-/*!
-    \fn SGL3DText::getDepth()
- */
-GLdouble SGL3DText::getDepth()const
-{
-	GLdouble temp;
-	getDim(NULL,NULL,&temp);
-	return temp;
-}
-
-/*!
-    \fn SGL3DText::getWidth()
- */
-GLdouble SGL3DText::getWidth()const
-{
-	GLdouble temp;
-	getDim(&temp);
-	return temp;
+	link(*BoundingQuader);
 }
 
 /*!
@@ -87,15 +58,7 @@ GLdouble SGL3DText::getWidth()const
  */
 SGLVektor SGL3DText::getCenter()const
 {
-	SGLVektor temp;
-	GLdouble width=getWidth();
-	switch(align)
-	{
-	case left:temp.SGLV_X+=width/2;break;
-	case right:temp.SGLV_X-=width/2;break;
-	default:;
-	}
-	return temp;
+	return SGLVektor(0,0,0);
 }
 
 
@@ -112,6 +75,8 @@ void SGL3DText::DrahtGitter(bool DO)
     \fn SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)
  */
 void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
-{//@todo da stimmt was nich - wer o. was bestimmt depth ??
-	Backend->getDim(myText,width,height,depth,center,align);
+{
+	if(width)*width=box->Upper().X()-box->Lower().X();
+	if(height)*height=box->Upper().Y()-box->Lower().Y();
+	if(depth)*depth=box->Upper().Z()-box->Lower().Z();
 }

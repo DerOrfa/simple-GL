@@ -80,7 +80,7 @@ public:
 	void recalcEcken();
 	void getCross(SGLVektor Horiz[2],SGLVektor Vert[2]);
 	SGLVektor getLookVektor();
-	void setLookVektor(SGLVektor Vekt);
+	void setLookVektor(dvector Vekt);
 	void recalcAngle(GLdouble height);
 	void recalcPos(GLdouble height);
 	bool showCross,move_cam_with_aim;
@@ -127,7 +127,5 @@ class SGLvisibleCamera: public SGLBaseCam
 public:
 	virtual void generate();
 };
-
-#include "sgllensflare.h"
 
 #endif

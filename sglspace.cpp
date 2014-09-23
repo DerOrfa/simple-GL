@@ -32,7 +32,6 @@
 	#include <GL/gl.h>
 #endif
 
-#include "text/backend_glf/sgltextbackend_glf.h"
 #include <assert.h>
 #include "util/sglmaterial.h"
 
@@ -93,14 +92,16 @@ void SGLSpace::callHelper(int stage)
 	if(Grids.doGrid & 1)
 	  {
 		glEnable(GL_BLEND);
-		if(Grids.X->should_compile)
-			Grids.X->Compile(true,true);
-		if(Grids.Y->should_compile)
-			Grids.Y->Compile(true,true);
-		if(Grids.Z->should_compile)
-			Grids.Z->Compile(true,true);
-		glCallLists(3,GL_UNSIGNED_INT,Grids.Beschr);
+		GLuint Beschr[3];
+
+		Beschr[0]=Grids.X->should_compile ? Grids.X->Compile(false,true):Beschr[0]=Grids.X->ID;
+		Beschr[1]=Grids.Y->should_compile ? Grids.Y->Compile(false,true):Beschr[1]=Grids.Y->ID;
+		Beschr[2]=Grids.Z->should_compile ? Grids.Z->Compile(false,true):Beschr[2]=Grids.Z->ID;
+
+		glFrontFace(Grids.X->FrontFace);
+		glCallLists(3,GL_UNSIGNED_INT,Beschr);
 		glDisable(GL_BLEND);
+		Grids.X->should_compile=Grids.Y->should_compile=Grids.Z->should_compile=false;
 	  }
 	break;
 	}
@@ -167,10 +168,6 @@ SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigne
 
 	Grids.BeschrMat->Transparenz=.5;
 	Grids.BeschrMat->SetColor(0,1,0);
-
-	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.5);
-	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.5);
-	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.5);
 }
 
 /**
@@ -331,10 +328,10 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
 	double Xval=(RelX-MouseInfo.OldX);
 	double Yval=(RelY-MouseInfo.OldY);
-	SGLVektor V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
-	SGLVektor V2=Cam.UpVect*Yval;
-	SGLVektor V = (V1+V2)*-.1*localConf.aimMoveSpeed;
-	Cam.MoveAim(V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
+	const dvector V1=(Cam.UpVect.Rotate(Cam.getLookVektor(),-90))*Xval;
+	const dvector V2=Cam.UpVect*Yval;
+	const dvector V = (V1+V2)*-.1*localConf.aimMoveSpeed;
+	Cam.MoveAim(V[0],V[1],V[2]);
 	sprintf(StatusInfo.StatusString,"%sZiel verschoben um: %.3f in X-Richtung, um: %.3f in Y-Richtung und um: %.3f in Z-Richtung\n",StatusInfo.StatusString,V.SGLV_X,V.SGLV_Y,V.SGLV_Z);
 }
 
@@ -524,12 +521,16 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 {
 	GLuint	error=0;
 
-	Grids.Beschr[0]=Grids.X->Compile(true,true);
-	Grids.Beschr[1]=Grids.Y->Compile(true,true);
-	Grids.Beschr[2]=Grids.Z->Compile(true,true);
-
 	StatusInfo.WindowHeight=h;
 	StatusInfo.WindowWidth=w;
+
+	Grids.X= new SGL3DText("X","",Grids.BeschrMat,6,0,0,.3);
+	Grids.Y= new SGL3DText("Y","",Grids.BeschrMat,0,6,0,.3);
+	Grids.Z= new SGL3DText("Z","",Grids.BeschrMat,0,0,6,.3);
+	Grids.X->should_compile=Grids.X->is_free=true;
+	Grids.Y->should_compile=Grids.Y->is_free=true;
+	Grids.Z->should_compile=Grids.Z->is_free=true;
+
 	defaultCam(Camera);
 	if(!initVis(w,h))exit(1);
 	setFlags(false);
@@ -662,7 +663,7 @@ void SGLSpace::redrawSlot::operator=(const redrawSlot &Slot)
 }
 
 SGLSpace::spaceConfig SGLSpace::globalConf;
-map<std::string, bool> SGLSpace::extProxy;
+std::map<std::string, bool> SGLSpace::extProxy;
 
 
 /**
@@ -677,7 +678,7 @@ map<std::string, bool> SGLSpace::extProxy;
  */
 bool SGLSpace::extAvail(const std::string &ext,const std::string &msg,unsigned short vital)
 {
-	map<std::string, bool>::const_iterator i=extProxy.find(ext+msg);
+	std::map<std::string, bool>::const_iterator i=extProxy.find(ext+msg);
 	if(i==extProxy.end())
 		return (extProxy[ext+msg]=sglChkExt(ext.c_str(),msg.c_str(),vital)); //wenn noch nicht im Proxy, Renderer fragen
 	else return i->second;//sonst gef. Wert verwenden

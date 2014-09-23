@@ -84,9 +84,9 @@ long int SGLIcosahedron::subdivide(SGLVektor v1,SGLVektor v2, SGLVektor v3,unsig
 		v23= v2+v3;
 		v31= v3+v1;
 
-		v12.Normalize();v12.SetColor(v1.SGLV_R,v1.SGLV_G,v1.SGLV_B);
-		v23.Normalize();v23.SetColor(v2.SGLV_R,v1.SGLV_G,v3.SGLV_B);
-		v31.Normalize();v31.SetColor(v3.SGLV_R,v1.SGLV_G,v1.SGLV_B);
+		v12/=boost::numeric::ublas::norm_2(v12);v12.SetColor(v1.SGLV_R,v1.SGLV_G,v1.SGLV_B);
+		v23/=boost::numeric::ublas::norm_2(v23);v23.SetColor(v2.SGLV_R,v1.SGLV_G,v3.SGLV_B);
+		v31/=boost::numeric::ublas::norm_2(v31);v31.SetColor(v3.SGLV_R,v1.SGLV_G,v1.SGLV_B);
 
 		return	subdivide(v1,v12,v31,depth-1)+
 				subdivide(v2,v23,v12,depth-1)+

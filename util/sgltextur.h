@@ -42,7 +42,7 @@ public:
 		void operator()() const;
 	}update;
 	SGLSignal<void()> changed;
-	SGLBaseTex();
+	SGLBaseTex(bool _MipMap=false);
 	virtual ~SGLBaseTex();
 	SGLshPtr<SGLBaseTex> multitex;
 	GLuint	ID;

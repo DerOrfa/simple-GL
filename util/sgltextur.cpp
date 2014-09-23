@@ -79,7 +79,7 @@ bool SGLTextur::Load2DImage(char *imageFile, bool MipMap)
 }
 
 
-SGLBaseTex::SGLBaseTex():SGLMatrixObj(GL_TEXTURE),update(this)
+SGLBaseTex::SGLBaseTex(bool _MipMap):SGLMatrixObj(GL_TEXTURE),update(this),MipMap(_MipMap)
 {
 	ID=0;
 	ResetTransformMatrix();
@@ -219,9 +219,8 @@ void SGLBaseTex::SetParams()
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_T, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
 	glTexParameterf(TexType, GL_TEXTURE_WRAP_R, repeat?GL_REPEAT:GL_CLAMP_TO_BORDER);
 
-	if(MipMap)	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
-	else		glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER,weich ? GL_LINEAR:GL_NEAREST);
+	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER, MipMap ? GL_NEAREST_MIPMAP_NEAREST:GL_NEAREST);
+	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER, weich ? GL_LINEAR:GL_NEAREST);
 }
 
 /*!
@@ -293,10 +292,8 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
 		}
 		glGetTexLevelParameteriv(proxyType, 0, GL_TEXTURE_WIDTH,  &tmpSize);
-		bool sizeOK=true;
 		if(tmpSize <= 0)
 		{
-			sizeOK=false;
 			newSize[grown]>>=1;
 			break;
 		}

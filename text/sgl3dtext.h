@@ -14,27 +14,24 @@
 #include "../primitives/sglflobj.h"
 #include "../primitives/sglquader.h"
 
+struct FTBBox;
+
 /**
 @author Enrico Reimer
 */
 class SGL3DText : public SGLText
 {
+    std::auto_ptr< FTBBox > box;
 public:
 	SGL3DText(const char Text[]="", const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGL3DText();
 
-	GLdouble tiefe;
-	void getBounds(SGLQuader *BoundingQuader);
+	void getBounds(SGLshPtr<SGLQuader> BoundingQuader);
 
-	GLdouble getHeight()const;
-	GLdouble getDepth()const;
-	GLdouble getWidth()const;
 	SGLVektor getCenter()const;
 // 	@todo void ResetMaterial(SGLMaterial *NewMaterial=0);
 
 	void getDim(GLdouble *width=NULL,GLdouble *height=NULL,GLdouble *depth=NULL,SGLVektor *center=NULL)const;
-	TextAlign align;
-
 	void generate();
 	void DrahtGitter(bool DO=true);
 };

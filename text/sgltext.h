@@ -19,25 +19,22 @@
 #define SGLTEXT_H
 
 #include "../primitives/sglflobj.h"
+#include <auto_ptr.h>
 
-using namespace std;
-class SGLTextBackend;
+class FTFont;
 
 /**
   *@author Enrico Reimer
   */
 class SGLText : public SGLFlObj
 {
-public:
-	SGLText(const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
-	~SGLText();
-	enum TextAlign{left,center,right};
 protected:
-	void loadBackend(const char fontname[]);
-	string myText;
-	SGLTextBackend *Backend;
+	std::auto_ptr<FTFont> renderer;
+public:
+	static const char* findFont(const char fontname[]);
+	SGLText(std::auto_ptr<FTFont> renderer,MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
+protected:
+	std::string myText;
 };
-
-#include "sgltextbackend.h"
 
 #endif

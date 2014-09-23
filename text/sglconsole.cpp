@@ -9,10 +9,11 @@
  ***************************************************************************/
 #include "sglconsole.h"
 
-#include  "backend_glf/sgltextbackend_glf.h"
 #include "../util/sglmaterial.h"
+#include <FTGL/ftgl.h>
 
-SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
+
+SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, const char fontname[])
 {
 	background=new SGLQuader(MaterialPtr(),breite,hoehe,.03);
 	text = new SGLConsoleText(breite,hoehe, fontname);
@@ -51,7 +52,7 @@ void SGLConsole::compileSubObjects()
 /*!
     \fn SGLConsole::print(string text)
  */
-void SGLConsole::print(string text)
+void SGLConsole::print(std::string text)
 {
 	if(!text.length())return;
 	empty=false;
@@ -59,8 +60,8 @@ void SGLConsole::print(string text)
 	this->text->Compile();
 }
 
-SGLConsoleText::SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[])
-:SGLText(fontname)
+SGLConsoleText::SGLConsoleText(GLdouble breite,GLdouble hoehe, const char fontname[])
+:SGLText(std::auto_ptr<FTFont>(new FTGLPixmapFont(SGLText::findFont(fontname))))
 {
 	Mat->SetColor(0,1,0,GL_FRONT_AND_BACK,true);
 	setConsDim(breite,hoehe);
@@ -78,15 +79,15 @@ SGLConsoleText::~SGLConsoleText()
  */
 void SGLConsoleText::generate()
 {
-	Backend->generate_consoleText(myText, buffer_width, buffer_height,breite,hoehe);
+#warning implement me
 }
 
 /*!
     \fn SGLConsoleText::print(string text)
  */
-void SGLConsoleText::print(string text)
+void SGLConsoleText::print(std::string text)
 {
-	Backend->validateText(text);
+#warning implement me
 	myText+=text;
 	Compile();
 }
@@ -106,7 +107,7 @@ void SGLConsoleText::setConsDim(GLdouble breite, GLdouble hoehe)
 void SGLConsoleText::clear()
 {
 	myText="";
-	Backend->consoleClear();
+#warning implement me
 }
 
 /*!

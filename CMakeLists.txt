@@ -12,10 +12,17 @@ set(soversion ${TARGET_VERSION_MAJOR}.${TARGET_VERSION_MINOR} CACHE INTERNAL "Th
 
 
 FIND_PACKAGE(OpenGL REQUIRED)
-FIND_PACKAGE(Boost REQUIRED COMPONENTS signals)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+FIND_PACKAGE(Freetype REQUIRED)
+FIND_PACKAGE(Boost 1.36 REQUIRED)
+
+
+find_path(FTGL_INCLUDE_DIR "FTGL/ftgl.h")
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS} ${FTGL_INCLUDE_DIR})
+
+find_library(LIBFTGL ftgl)
 
 SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
+find_file(DEFAULT_TTF NAMES FreeMonoBold.ttf FreeSansBold.ttf CACHE PATH_SUFFIXES "share/fonts/truetype/freefont" DOC "path to default truetype font")
 
 SET(CORE_DIR ./)
 SET(CORE_OBJFILES  
@@ -64,6 +71,8 @@ SET(UTIL_OBJFILES
 
 SET(USE_DEVIL off CACHE BOOL "use DevIL (aka OpenIL) for texture loading")
 SET(STATIC_LIB off CACHE BOOL "create static libs as well")
+SET(SHARED_LIB off CACHE BOOL "create sahred libs as well")
+
 IF(USE_DEVIL)
 ADD_DEFINITIONS(-DUSE_DEVIL)
 	find_path(DEVIL_INCLUDE_DIR "IL/ilut.h")
@@ -77,29 +86,27 @@ ENDIF(USE_DEVIL)
 FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 
 SET(TEXT_DIR text/)
-SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sgl3dtext.cpp ${TEXT_DIR}sgltextbackend.cpp)
+SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sgl3dtext.cpp)
 
-SET(TEXT_BACKEND_GLF_DIR ${TEXT_DIR}backend_glf/)
-SET(TEXT_BACKEND_GLF_OBJFILES ${TEXT_BACKEND_GLF_DIR}glf.c ${TEXT_BACKEND_GLF_DIR}sgltextbackend_glf.cpp)
-
-
-ADD_DEFINITIONS(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl" -DILUT_USE_OPENGL -ffast-math -Wall)
+ADD_DEFINITIONS(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl" -DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL -ffast-math -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR} ${DEVIL_INCS})
 
-ADD_LIBRARY(sgl SHARED 
-  ${CORE_OBJFILES} 
-  ${HELPER_OBJFILES} 
-  ${PRIMITIVES_OBJFILES} 
-  ${UTIL_OBJFILES} 
-  ${TEXT_OBJFILES} 
-  ${TEXT_BACKEND_GLF_OBJFILES} 
-)
-#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
+if(SHARED_LIB)
+	ADD_LIBRARY(sgl SHARED
+		${CORE_OBJFILES}
+		${HELPER_OBJFILES}
+		${PRIMITIVES_OBJFILES}
+		${UTIL_OBJFILES}
+		${TEXT_OBJFILES}
+		${TEXT_BACKEND_FTGL_OBJFILES}
+	)
+	#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
-#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} m)
-set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-SET(LIBS sgl)
+	#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
+	TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
+	set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+	list(APPEND LIBS sgl)
+endif(SHARED_LIB)
 
 if(STATIC_LIB)
 	ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
@@ -107,11 +114,12 @@ if(STATIC_LIB)
 		${PRIMITIVES_OBJFILES}
 		${UTIL_OBJFILES}
 		${TEXT_OBJFILES}
-		${TEXT_BACKEND_GLF_OBJFILES}
+		${TEXT_BACKEND_FTGL_OBJFILES}
 	)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-	SET(LIBS ${LIBS} sgl_static)
+	list(APPEND LIBS sgl_static)
+	TARGET_LINK_LIBRARIES(sgl_static ${Boost_LIBRARIES} ${DEVIL_LIBS} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
 endif(STATIC_LIB)
 	
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
@@ -128,4 +136,3 @@ SET(BUILD_QT4_GLUE off CACHE BOOL "build qt4_glue (needs qt4)")
 if(BUILD_QT4_GLUE)
 	add_subdirectory(qt4_glue)
 endif(BUILD_QT4_GLUE)
-

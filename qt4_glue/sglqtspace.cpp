@@ -55,10 +55,10 @@ SGLqtSpace::SGLqtSpace(QWidget *parent, const char *name):QGLWidget(parent),SGLS
  */
 SGLqtSpace::~SGLqtSpace()
 {
-	for(list<shared_obj>::iterator i=ObjLst.Objects.begin();i!=ObjLst.Objects.end();i++)
+	for(std::list<shared_obj>::iterator i=ObjLst.Objects.begin();i!=ObjLst.Objects.end();i++)
 		if((*i)->shared && (*i)->myList==&ObjLst)
 			sigUnshowObj(*i);
-	for(list<shared_obj>::iterator i=TranspObjLst.Objects.begin();i!=TranspObjLst.Objects.end();i++)
+	for(std::list<shared_obj>::iterator i=TranspObjLst.Objects.begin();i!=TranspObjLst.Objects.end();i++)
 		if((*i)->shared && (*i)->myList==&TranspObjLst)
 			sigUnshowObj(*i);
 }
@@ -207,7 +207,7 @@ void SGLqtSpace::mouseMoveEvent ( QMouseEvent * e )
  */
 void SGLqtSpace::wheelEvent ( QWheelEvent * e )
 {
-	if(e->buttons()==Qt::NoButton)
+	if(e->buttons()==Qt::NoButton && e->modifiers()==Qt::NoModifier)
 	{
 		e->accept();
 		if(e->delta()>0)
@@ -411,12 +411,12 @@ void SGLqtSpace::showObjectsIn(SGLqtSpace *sp,bool existing)
 	sp->connect(this,SIGNAL(redrawOther(SGLqtSpace *)),SLOT(updateGL()));//Damit das redrawOther vom init schonverarbeitet werden kann vor "show"
 
 	if(existing){
-		for(list<shared_obj>::iterator i=ObjLst.Objects.begin();i!=ObjLst.Objects.end();++i){
+		for(std::list<shared_obj>::iterator i=ObjLst.Objects.begin();i!=ObjLst.Objects.end();++i){
 			const shared_obj o=*i;
 			if(o->myList== &ObjLst)
 				sp->showObj(o);
 		}
-		for(list<shared_obj>::iterator i=TranspObjLst.Objects.begin();i!=TranspObjLst.Objects.end();++i){
+		for(std::list<shared_obj>::iterator i=TranspObjLst.Objects.begin();i!=TranspObjLst.Objects.end();++i){
 			const shared_obj o=*i;
 			if(o->myList== &TranspObjLst)
 				sp->showObj(o);
@@ -448,19 +448,6 @@ void SGLqtSpace::focusOutEvent(QFocusEvent *e)
 		frame->setFrameStyle(QFrame::Box|QFrame::Raised);
 	lostFocus(e->reason());
 	QGLWidget::focusOutEvent(e);
-}
-
-void SGLqtSpace::benchmark()
-{
-	Camera->RotateCamAround(1,1,Camera->LookAt);
-	if(benchTime!=time(NULL))
-	{
-		cout << benchCnt << endl;
-		time(&benchTime);
-		benchCnt=1;
-	}
-	else benchCnt++;
-	updateGL();
 }
 
 void SGLqtSpace::defaultHandler_releasedMouseMoveAbs(QMouseEvent * e)

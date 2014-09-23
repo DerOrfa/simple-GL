@@ -19,6 +19,8 @@
 #include	"sglmisc.h"
 #include	"util/sgltextur.h"
 #include	"util/sglmaterial.h"
+#include	<boost/numeric/ublas/matrix.hpp>
+#include	<boost/numeric/ublas/io.hpp>
 #ifdef __APPLE__
 	#include <OpenGL/glu.h>
 #else 
@@ -31,7 +33,7 @@
  * @param Y Y-Position des Vektors
  * @param Z Z-Position des Vektors
  */
-SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):EVektor<GLdouble>(3)
+SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):dvector(3)
 {
 	SGLV_X= X;
 	SGLV_Y= Y;
@@ -44,7 +46,7 @@ SGLVektor::SGLVektor(GLdouble X,GLdouble Y,GLdouble Z):EVektor<GLdouble>(3)
  * @param Array[] dreistelliges Array mit den X-, Y- und Z- Koordinaten.
  * @return 
  */
-SGLVektor::SGLVektor(GLdouble Array[3]):EVektor<GLdouble>(3)
+SGLVektor::SGLVektor(GLdouble Array[3]):dvector(3)
 {
 	SGLV_X= Array[0];
 	SGLV_Y= Array[1];
@@ -52,7 +54,7 @@ SGLVektor::SGLVektor(GLdouble Array[3]):EVektor<GLdouble>(3)
 	SGLV_R=SGLV_G=SGLV_B=-1;
 }
 
-SGLVektor::SGLVektor(GLfloat Array[3]):EVektor<GLdouble>(3)
+SGLVektor::SGLVektor(GLfloat Array[3]):dvector(3)
 {
 	SGLV_X= Array[0];
 	SGLV_Y= Array[1];
@@ -64,8 +66,9 @@ SGLVektor::SGLVektor(GLfloat Array[3]):EVektor<GLdouble>(3)
  * Kopierkonstrukor zur Erzeugung aus EVektor\<GLdouble\> 
  * @param src der EVektor, der kopiert werden soll.
  */
-SGLVektor::SGLVektor(const EVektor<GLdouble> &src):EVektor<GLdouble>(src)
+SGLVektor::SGLVektor(const dvector &src):dvector(src)
 {
+	assert(src.size()==3);
 	SGLV_R=SGLV_G=SGLV_B=-1;
 }
 
@@ -73,11 +76,21 @@ SGLVektor::SGLVektor(const EVektor<GLdouble> &src):EVektor<GLdouble>(src)
  * Kopierkonstrukor zur Erzeugung aus SGLVektor 
  * @param src der SGLVektor, der kopiert werden soll.
  */
-SGLVektor::SGLVektor(const SGLVektor &src):EVektor<GLdouble>(src)
+SGLVektor::SGLVektor(const SGLVektor &src):dvector(src)
 {
 	SGLV_R=src.SGLV_R;
 	SGLV_G=src.SGLV_G;
 	SGLV_B=src.SGLV_B;
+}
+
+dvector SGLVektor::cross_prod(const vector< GLdouble >& b)
+{
+	dvector ret(3);
+	const dvector &a=*this;
+	ret[0]=a[1]*b[2]-a[2]*b[1];
+	ret[1]=a[2]*b[0]-a[0]*b[2];
+	ret[2]=a[0]*b[1]-a[1]*b[0];
+	return ret;
 }
 
 //@todo erst checken, dann dokumentieren
@@ -96,27 +109,27 @@ SGLVektor SGLVektor::Rotate(GLdouble Yrot, GLdouble Xrot, GLdouble Zrot)
  * @param Amount der Winkel, um den rotiert werden soll (in Grad)
  * @return der rotierte Vektor
  */
-SGLVektor SGLVektor::Rotate(SGLVektor RotVekt, GLdouble Amount)
+SGLVektor SGLVektor::Rotate(dvector RotVekt, GLdouble Amount)
 {
-	RotVekt.Normalize();
+	RotVekt/=boost::numeric::ublas::norm_2(RotVekt);
 
-	EMatrix<GLdouble> RotMat(3,3);
+	dmatrix RotMat(3,3);
 	GLdouble x=RotVekt.SGLV_X,y=RotVekt.SGLV_Y,z=RotVekt.SGLV_Z;
 	GLdouble c=COS(Amount),s=SIN(Amount);
 
-	RotMat[0][0]=x*x*(1-c)+c;
-	RotMat[0][1]=x*y*(1-c)-z*s;
-	RotMat[0][2]=x*z*(1-c)+y*s;
+	RotMat(0,0)=x*x*(1-c)+c;
+	RotMat(0,1)=x*y*(1-c)-z*s;
+	RotMat(0,2)=x*z*(1-c)+y*s;
 
-	RotMat[1][0]=y*x*(1-c)+z*s;
-	RotMat[1][1]=y*y*(1-c)+c;
-	RotMat[1][2]=y*z*(1-c)-x*s;
+	RotMat(1,0)=y*x*(1-c)+z*s;
+	RotMat(1,1)=y*y*(1-c)+c;
+	RotMat(1,2)=y*z*(1-c)-x*s;
 
-	RotMat[2][0]=z*x*(1-c)-y*s;
-	RotMat[2][1]=z*y*(1-c)+x*s;
-	RotMat[2][2]=z*z*(1-c)+c;
+	RotMat(2,0)=z*x*(1-c)-y*s;
+	RotMat(2,1)=z*y*(1-c)+x*s;
+	RotMat(2,2)=z*z*(1-c)+c;
 
-	return SGLVektor(RotMat * (*this));
+	return dvector(boost::numeric::ublas::prod(RotMat, *this));
 }
 
 /**
@@ -158,7 +171,7 @@ GLdouble SGLVektor::Xwink()
 	return 0;
 }
 
-SGLVektor SGLVektor::operator =(EVektor<GLdouble> &VektPtr)
+SGLVektor SGLVektor::operator =(const dvector &VektPtr)
 {
 	*this=SGLVektor(VektPtr);
 	return *this;
@@ -186,7 +199,7 @@ void SGLVektor::DrawVertex()
 	Setzt wenn gegeben Texturkoordinaten für alle Texturrenderer vom der aktiven bis zu  GL_TEXTURE0_ARB herunter.
 	(Aber immer nur die Selben)
  */
-	char buff[50];sprint(buff);//@todo Ressourcenverschwendung wenn kein Fehler auftritt, brauch ich auch keinen String
+	std::stringstream buff;
 	bool texOK=false;
 #ifndef WIN32
 	if(SGLTextur::TexLoaded)
@@ -194,7 +207,8 @@ void SGLVektor::DrawVertex()
 		short coord=texKoord.size();
 		if(coord<SGLTextur::TexLoaded)
 		{
-			SGLprintWarning("Die geladene Textur hat %d Dimensionen, die Texturkoordinaten des Vertex \"%s\" sind aber nur %d-Dimensional",SGLTextur::TexLoaded,buff,coord);
+			buff << *this;
+			SGLprintWarning("Die geladene Textur hat %d Dimensionen, die Texturkoordinaten des Vertex \"%s\" sind aber nur %d-Dimensional",SGLTextur::TexLoaded,buff.str().c_str(),coord);
 		}
 		int i=GL_TEXTURE0_ARB+SGLTextur::multitex_layer ;//@todo dirty Hack
 		switch(SGLTextur::TexLoaded > coord ? coord:SGLTextur::TexLoaded )
@@ -212,7 +226,8 @@ void SGLVektor::DrawVertex()
 				glMultiTexCoord3f(i,texKoord[0], texKoord[1],texKoord[2]);
 			break;
 		default:{
-			SGLprintError("Texturtyp (%d) passt nicht zu den verfügbaren Texturkoordinaten beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded, coord,buff);}break;
+			buff << *this;
+			SGLprintError("Texturtyp (%d) passt nicht zu den verfügbaren Texturkoordinaten beim Zeichnen des Vertex \"%s\"",SGLTextur::TexLoaded, coord,buff.str().c_str());}break;
 		}
 		texOK=true;//@todo naja nich immer
 	}
@@ -222,7 +237,10 @@ void SGLVektor::DrawVertex()
 	if(!SGLMaterial::MatLoaded && !texOK)
 	{
 		if(SGLV_R>=0 || SGLV_G>=0 || SGLV_B>=0)glColor3dv(Color);
-		else{SGLprintWarning("Keine Farbinformationen verfgbar beim Zeichnen des Vertex \"%s\"",buff);}
+		else{
+			buff << *this;
+			SGLprintWarning("Keine Farbinformationen verfgbar beim Zeichnen des Vertex \"%s\"",buff.str().c_str());
+		}
 	}
 	DrawPureVertex();
 }
@@ -269,8 +287,31 @@ void SGLVektor::SetColor(unsigned char R,unsigned char G,unsigned char B)
  */
 GLdouble SGLVektor::toWink(GLdouble &ebene_wink,GLdouble &steigung_wink)
 {
-	GLdouble tWink[2];
-	GLdouble ret=BasisWink(tWink);
+	assert(size()==3);
+	struct BasisWink{
+		static GLdouble recurse(const dvector &vec,GLdouble buff[]){
+			GLdouble a,b,c;
+			c=boost::numeric::ublas::norm_2(vec); //Länge des Vektors
+			
+			if(vec.size()>2)
+			{
+				dvector vec2(2);
+				vec2[0]=vec[0];vec2[1]=vec[2];
+				a=recurse(vec2,buff+1); //Länge des Vektors auf die size()-1-Ebene projeziert (und sein Winkel auf dieser Ebene)
+			}
+			else a=vec[0];
+
+			b=vec[1];//Höhe
+			*buff= a ? ATAN(b/a):90;
+			if(a<0)*buff+=180;//2. & 3. Quadranten gibts nur im 2dim Raum, bei höherdim. Räumen wird das auf eine 180°-Rotation auf der darunter-liegenden "Ebene" zurï¿½ckgefï¿½hrt
+			else if(b<0)*buff+=360;
+			return c;
+		}
+	};
+
+	
+	GLdouble tWink[2];	
+	GLdouble ret=BasisWink::recurse(*this,tWink);
 	ebene_wink=tWink[1];
 	steigung_wink=tWink[0];
 	return ret;
@@ -350,3 +391,13 @@ void SGLVektor::DrawPkt(double size)
 		glVertex3d(SGLV_X,SGLV_Y,SGLV_Z+size/2);
 	glEnd();
 }
+
+GLdouble SGLVektor::spatprod(const vector< GLdouble >& b, const vector< GLdouble >& c) const
+{
+	assert(this->size()==3);
+	//Sarrus
+	return	 (*this)[0]*b[1]*c[2] - (*this)[0]*b[2]*c[1]
+		+(*this)[1]*b[2]*c[0] - (*this)[1]*b[0]*c[2]
+		+(*this)[2]*b[0]*c[1] - (*this)[2]*b[1]*c[0];
+}
+
