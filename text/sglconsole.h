@@ -20,7 +20,7 @@
 class SGLConsoleText : public SGLText
 {
 public:
-	SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[]="");
+	SGLConsoleText(GLdouble breite,GLdouble hoehe, const char fontname[]="");
 	~SGLConsoleText();
 	void generate();
 	void print(std::string text);
@@ -39,7 +39,7 @@ private:
 class SGLConsole : public SGLMetaObj
 {
 public:
-	SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[]="");
+	SGLConsole(GLdouble breite,GLdouble hoehe, const char fontname[]="");
 	~SGLConsole();
 	SGLVektor getCenter()const;
 	SGLQuader *background;

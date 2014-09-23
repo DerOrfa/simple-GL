@@ -13,7 +13,7 @@
 #include <FTGL/ftgl.h>
 
 
-SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, char fontname[])
+SGLConsole::SGLConsole(GLdouble breite,GLdouble hoehe, const char fontname[])
 {
 	background=new SGLQuader(MaterialPtr(),breite,hoehe,.03);
 	text = new SGLConsoleText(breite,hoehe, fontname);
@@ -60,7 +60,7 @@ void SGLConsole::print(std::string text)
 	this->text->Compile();
 }
 
-SGLConsoleText::SGLConsoleText(GLdouble breite,GLdouble hoehe, char fontname[])
+SGLConsoleText::SGLConsoleText(GLdouble breite,GLdouble hoehe, const char fontname[])
 :SGLText(std::auto_ptr<FTFont>(new FTGLPixmapFont(SGLText::findFont(fontname))))
 {
 	Mat->SetColor(0,1,0,GL_FRONT_AND_BACK,true);
