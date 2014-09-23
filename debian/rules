@@ -21,7 +21,7 @@ gitver = $(shell [ -x /usr/bin/git ] && git describe --tags --match '*\.*\.*' $$
 # an already installed package -- upstream is working on a fix
 CMAKE_FLAGS= \
 	-DCMAKE_INSTALL_PREFIX:PATH=/usr -DCMAKE_BUILD_TYPE=Release \
-	-DBUILD_QT4_GLUE:BOOL=ON -DBUILD_SAMPLES:BOOL=OFF -DSTATIC_LIB:BOOL=ON
+	-DBUILD_QT4_GLUE:BOOL=ON -DBUILD_SAMPLES:BOOL=OFF -DSHARED_LIB:BOOL=ON
 
 override_dh_auto_test:
 	# don't work ATM

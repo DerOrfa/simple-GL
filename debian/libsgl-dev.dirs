@@ -1,5 +1,4 @@
 usr/lib
-usr/include/libsgl/text/backend_glf
 usr/include/libsgl/text
 usr/include/libsgl/primitives
 usr/include/libsgl/helper
