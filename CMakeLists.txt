@@ -4,7 +4,7 @@ PROJECT(libsgl)
 INCLUDE(CPack)
 
 SET(TARGET_VERSION_MAJOR 0)
-SET(TARGET_VERSION_MINOR 9)
+SET(TARGET_VERSION_MINOR 10)
 SET(CPACK_PACKAGE_CONTACT "reimer@cbs.mpg.de")
 
 set(version ${TARGET_VERSION_MAJOR}.${TARGET_VERSION_MINOR} CACHE INTERNAL "The current Version of the sgl")
@@ -13,7 +13,7 @@ set(soversion ${TARGET_VERSION_MAJOR}.${TARGET_VERSION_MINOR} CACHE INTERNAL "Th
 
 FIND_PACKAGE(OpenGL REQUIRED)
 FIND_PACKAGE(Freetype REQUIRED)
-FIND_PACKAGE(Boost 1.36 REQUIRED)
+FIND_PACKAGE(Boost 1.39 REQUIRED)
 
 
 find_path(FTGL_INCLUDE_DIR "FTGL/ftgl.h")
@@ -71,7 +71,7 @@ SET(UTIL_OBJFILES
 
 SET(USE_DEVIL off CACHE BOOL "use DevIL (aka OpenIL) for texture loading")
 SET(STATIC_LIB off CACHE BOOL "create static libs as well")
-SET(SHARED_LIB off CACHE BOOL "create sahred libs as well")
+SET(SHARED_LIB on CACHE BOOL "create sahred libs as well")
 
 IF(USE_DEVIL)
 ADD_DEFINITIONS(-DUSE_DEVIL)
@@ -103,12 +103,13 @@ if(SHARED_LIB)
 	#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
 	#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-	TARGET_LINK_LIBRARIES(sgl ${Boost_LIBRARIES} ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
+	TARGET_LINK_LIBRARIES(sgl ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
 	set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl)
 endif(SHARED_LIB)
 
 if(STATIC_LIB)
+	find_library(LIBFTGL_STATIC "${CMAKE_STATIC_LIBRARY_PREFIX}ftgl${CMAKE_STATIC_LIBRARY_SUFFIX}")
 	ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
 		${HELPER_OBJFILES}
 		${PRIMITIVES_OBJFILES}
@@ -119,7 +120,7 @@ if(STATIC_LIB)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl_static)
-	TARGET_LINK_LIBRARIES(sgl_static ${Boost_LIBRARIES} ${DEVIL_LIBS} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
+	TARGET_LINK_LIBRARIES(sgl_static ${DEVIL_LIBS} ${LIBFTGL_STATIC} ${FREETYPE_LIBRARIES} m)
 endif(STATIC_LIB)
 	
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)

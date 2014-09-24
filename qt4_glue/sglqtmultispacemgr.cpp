@@ -44,7 +44,7 @@ void SGLqtMultiSpaceMgr::registerSpace(SGLqtSpace *sw)
 		i->showObjectsIn(sw);
 	}
 	childs.push_back(sw);
-	qDebug("Registered %s(0x%x)",sw->objectName().toStdString().c_str(),sw);
+	qDebug("Registered %s(0x%p)",sw->objectName().toStdString().c_str(),sw);
 }
 
 void SGLqtMultiSpaceMgr::lostWidget(QObject* obj)
@@ -52,7 +52,7 @@ void SGLqtMultiSpaceMgr::lostWidget(QObject* obj)
 	mutex.lock();
 	childs.removeAll(reinterpret_cast<SGLqtSpace*>(obj)); // force type, as we dont really have it anymore, but doesn't matter 'for removing the pointer anyway
 	mutex.unlock();
-	qDebug("Unregistered %s(0x%x)",obj->objectName().toStdString().c_str(),obj);
+	qDebug("Unregistered %s(0x%p)",obj->objectName().toStdString().c_str(),obj);
 }
 
 /*!
