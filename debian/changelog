@@ -1,3 +1,9 @@
+sgl (0.10-2) unstable; urgency=low
+
+  * re-added the static lib
+
+ -- Enrico Reimer <reimer@cbs.mpg.de>  Wed, 24 Sep 2014 15:34:16 +0200
+
 sgl (0.10-1) unstable; urgency=low
 
   * switch to ftgl based text rendering
