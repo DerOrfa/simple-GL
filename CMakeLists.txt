@@ -21,7 +21,6 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS} ${FTGL_INCLUDE
 
 find_library(LIBFTGL ftgl)
 
-SET(SYS_DATADIR "share" CACHE PATH "systems dir for data (excl. prefix)")
 find_file(DEFAULT_TTF NAMES FreeMonoBold.ttf FreeSansBold.ttf CACHE PATH_SUFFIXES "share/fonts/truetype/freefont" DOC "path to default truetype font")
 
 SET(CORE_DIR ./)
@@ -43,7 +42,6 @@ SET(HELPER_OBJFILES
   ${HELPER_DIR}sglhelper.cpp 
   ${HELPER_DIR}sgllight.cpp 
   ${HELPER_DIR}sgldisplist.cpp
-  ${HELPER_DIR}sgllensflare.cpp 
 )
 
 SET(PRIMITIVES_DIR primitives/)
@@ -61,11 +59,9 @@ SET(PRIMITIVES_OBJFILES
 
 SET(UTIL_DIR util/)
 SET(UTIL_OBJFILES 
-  ${UTIL_DIR}readtex.c
   ${UTIL_DIR}sglmaterial.cpp
   ${UTIL_DIR}sgltextur.cpp
 #  ${UTIL_DIR}sglshader.cpp #GLSL not fully supported by all current GL implementations - so skip it till we find clean solution
-  ${UTIL_DIR}sglimagefile.cpp
   ${UTIL_DIR}memconsumer.cpp
 )
 
@@ -88,7 +84,7 @@ FILE(GLOB_RECURSE includes RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*.h")
 SET(TEXT_DIR text/)
 SET(TEXT_OBJFILES ${TEXT_DIR}sgltext.cpp ${TEXT_DIR}sglconsole.cpp ${TEXT_DIR}sgl3dtext.cpp)
 
-ADD_DEFINITIONS(-DDATA_DIR="${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl" -DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL -ffast-math -Wall)
+ADD_DEFINITIONS(-DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL -ffast-math -Wall)
 INCLUDE_DIRECTORIES(${GL_EXT_INCLUDES} ${OPENGL_INCLUDE_DIR} ${DEVIL_INCS})
 
 if(SHARED_LIB)
@@ -98,7 +94,6 @@ if(SHARED_LIB)
 		${PRIMITIVES_OBJFILES}
 		${UTIL_OBJFILES}
 		${TEXT_OBJFILES}
-		${TEXT_BACKEND_FTGL_OBJFILES}
 	)
 	#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
@@ -115,7 +110,6 @@ if(STATIC_LIB)
 		${PRIMITIVES_OBJFILES}
 		${UTIL_OBJFILES}
 		${TEXT_OBJFILES}
-		${TEXT_BACKEND_FTGL_OBJFILES}
 	)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
@@ -129,8 +123,6 @@ FOREACH(inc ${includes})
   GET_FILENAME_COMPONENT(inc_path ${inc} PATH)
   INSTALL(FILES ${inc} DESTINATION include/libsgl/${inc_path})
 ENDFOREACH(inc)
-
-INSTALL(DIRECTORY data/ DESTINATION ${CMAKE_INSTALL_PREFIX}/${SYS_DATADIR}/libsgl PATTERN ".svn" EXCLUDE)
 
 SET(BUILD_QT4_GLUE off CACHE BOOL "build qt4_glue (needs qt4)")
 
