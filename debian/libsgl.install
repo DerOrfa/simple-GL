@@ -1,2 +1,1 @@
-debian/tmp/usr/share/libsgl/pics/* usr/share/libsgl/pics
 debian/tmp/usr/lib/*.so.* usr/lib
