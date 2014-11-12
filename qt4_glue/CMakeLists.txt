@@ -37,6 +37,7 @@ if(BUILD_QT4_SAMPLES)
 	else(STATIC_LIB)
 		set(LIB qt4_glue sgl ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
 	endif(STATIC_LIB)
+	message(STATUS "linking samples against ${LIB}")
 
 	add_executable(qt4_sample1 qt4_sample1.cpp)
 	add_executable(qt4_sample2 qt4_sample2.cpp)
