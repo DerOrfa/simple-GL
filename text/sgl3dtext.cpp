@@ -16,7 +16,7 @@ SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Materi
 {
 	renderer->FaceSize(72/25.4); // 72 is one inch 72/25.4 is one mm
 	renderer->Depth(0.2);
-	FrontFace=GL_CW;
+	FrontFace=sglGeti(GL_FRONT_FACE); //ftgl gets the fron face from OpenGL, so we do the same
 	/// @note should not be run before OpenGL is initialized
 	box=std::auto_ptr<FTBBox>(new FTBBox( renderer->BBox(Text)));
 	myText=Text;
