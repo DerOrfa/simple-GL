@@ -128,7 +128,7 @@ void SGLSpace::show_status()
  * Der interne Zeiger des Slot wird jedoch reinitialisiert, die Warnung kann also in diesem Fall ignoriert werden.
  * @param src Der Space von dem ein Kopie erstellt werden soll.
  */
-SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
+SGLSpace::SGLSpace(SGLSpace &src):initialized(src.initialized),reDraw(NULL)
 {
 	*this = src;
 	reDraw.myspace=this;//*hehe* dirty
@@ -142,7 +142,7 @@ SGLSpace::SGLSpace(SGLSpace &src):reDraw(NULL)
  * @param G Der Grünanteil der Hintergrundfarbe
  * @param B Der Blauanteil der Hintergrundfarbe
  */
-SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):reDraw(this),Camera(new SGLCamera()),StdLight(NULL)
+SGLSpace::SGLSpace(unsigned int XSize, unsigned int YSize,unsigned int R,unsigned int G,unsigned int B):initialized(false),reDraw(this),Camera(new SGLCamera()),StdLight(NULL)
 {
 	Grids.BeschrMat=MaterialPtr(new  SGLMaterial);
 	TranspObjLst.renderTransparent=true;
@@ -547,6 +547,7 @@ void SGLSpace::sglInit(unsigned int w,unsigned int h)
 	GetGlInfoString(StatusInfo.StatusString);
 
 	OnResize(w,h);
+	initialized=true;
 
 	while((error=glGetError()))
 	{SGLprintError("%s [GLerror]",gluErrorString(GLenum(error)));}
@@ -586,18 +587,23 @@ void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
  */
 void SGLSpace::setGridsSize(GLuint size)
 {
-  //	GLuint oldsize=Grids.Grid1->Size;
-	Grids.Grid1->setSize(size);
-	Grids.Grid2->setSize(size);
-	Grids.Grid3->setSize(size);
+	if(initialized){
+		
+		Grids.Grid1->setSize(size);
+		Grids.Grid2->setSize(size);
+		Grids.Grid3->setSize(size);
 
-	Grids.X->SetPosAndScale(size+size/10.,0,0,size/10.);
-	Grids.Y->SetPosAndScale(0,size+size/10.,0,size/10.);
-	Grids.Z->SetPosAndScale(0,0,size+size/10.,size/10.);
+		Grids.X->SetPosAndScale(size+size/10.,0,0,size/10.);
+		Grids.Y->SetPosAndScale(0,size+size/10.,0,size/10.);
+		Grids.Z->SetPosAndScale(0,0,size+size/10.,size/10.);
 
-	Grids.X->compileNextTime();
-	Grids.Y->compileNextTime();
-	Grids.Z->compileNextTime();
+		Grids.X->compileNextTime();
+		Grids.Y->compileNextTime();
+		Grids.Z->compileNextTime();
+	
+	} else {
+		SGLprintError("view was not initialized");
+	}
 }
 
 
