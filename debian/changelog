@@ -1,4 +1,4 @@
-sgl (0.11-1) unstable; urgency=low
+sgl (0.11-1) UNRELEASED; urgency=low
 
   * remove lensflare and raw texture loading
 
