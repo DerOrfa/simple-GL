@@ -132,14 +132,14 @@ void SGLqtSpace::mousePressEvent ( QMouseEvent * e )
 {
 	MouseInfo.MovedPastDownBtn=false;
 	mouseBtnDown(e);
-	MouseInfo.DownBtns=e->button();
+	MouseInfo.DownBtns|=e->button();
 	QGLWidget::mousePressEvent (e);
 }
 void SGLqtSpace::mouseReleaseEvent ( QMouseEvent * e )
 {
 	if(!MouseInfo.MovedPastDownBtn)onMouseClick(e);
 	mouseBtnUp(e,MouseInfo.MovedPastDownBtn);
-	MouseInfo.DownBtns=e->button();
+	MouseInfo.DownBtns&= ~e->button();
 	QGLWidget::mouseReleaseEvent(e);
 }
 void SGLqtSpace::mouseDoubleClickEvent ( QMouseEvent * e )
@@ -471,37 +471,60 @@ void SGLqtSpace::defaultHandler_pressedMouseMoveAbs(QMouseEvent * e,float XPos,f
 		}
 }
 
+#if QT_VERSION >= 0x050000
+void SGLqtSpace::connectNotify(const QMetaMethod& signal){
+	connectNotify(signal.name());
+}
+void SGLqtSpace::disconnectNotify(const QMetaMethod& signal){
+	disconnectNotify(signal.name());
+}
+#endif
+
 void SGLqtSpace::connectNotify( const char * signal )
 {
-	QRegExp moveFloat("^[0-9]\\w+MouseMove\\w+\\([^,]+,[\\s]*float[^,]*,[\\s]*float[^)]*\\)$");
-	QRegExp moveReal("^[0-9]\\w+MouseMove\\w+\\([^),]*\\)$");
+	#if QT_VERSION >= 0x050000
+	static const QRegExp moveFloat("^\\w+MouseMove$");
+	static const QRegExp moveReal("^\\w+MouseMoveAbs$");
+	#else
+	static const QRegExp moveFloat("^[0-9]\\w+MouseMove\\w+\\([^,]+,[\\s]*float[^,]*,[\\s]*float[^)]*\\)$");
+	static const QRegExp moveReal("^[0-9]\\w+MouseMove\\w+\\([^),]*\\)$");
+	#endif
 
 	if(moveFloat.exactMatch(signal))
 	{
 		mouse_float_listener++;
 		MouseInfo.MouseMode|=SGL_FOLLOW_MOUSE_FLOAT;
+		qDebug("Connected to relative mouse move listener (%s)",signal);
 	}
 	if(moveReal.exactMatch(signal))
 	{
 		mouse_real_listener++;
 		MouseInfo.MouseMode|=SGL_FOLLOW_MOUSE_REAL;
+		qDebug("Connected to absolute mouse move listener (%s)",signal);
 	}
 }
 
 void SGLqtSpace::disconnectNotify( const char * signal )
 {
-	QRegExp moveFloat("^[0-9]\\w+MouseMove\\w+\\([^,]+,[\\s]*float[^,]*,[\\s]*float[^)]*\\)$");
-	QRegExp moveReal("^[0-9]\\w+MouseMove\\w+\\([^),]*\\)$");
-
+	#if QT_VERSION >= 0x050000
+	static const QRegExp moveFloat("^\\w+MouseMove$");
+	static const QRegExp moveReal("^\\w+MouseMoveAbs$");
+	#else
+	static const QRegExp moveFloat("^[0-9]\\w+MouseMove\\w+\\([^,]+,[\\s]*float[^,]*,[\\s]*float[^)]*\\)$");
+	static const QRegExp moveReal("^[0-9]\\w+MouseMove\\w+\\([^),]*\\)$");
+	#endif
+	
 	if(moveFloat.exactMatch(signal))
 	{
 		if(mouse_float_listener>0)mouse_float_listener--;
 		if(!mouse_float_listener)MouseInfo.MouseMode&=~SGL_FOLLOW_MOUSE_FLOAT;
+		qDebug("disconnected relative mouse move listener (%s)",signal);
 	}
 	else if(moveReal.exactMatch(signal))
 	{
 		if(mouse_real_listener>0)mouse_real_listener--;
 		if(!mouse_real_listener)MouseInfo.MouseMode&=~SGL_FOLLOW_MOUSE_REAL;
+		qDebug("disconnected absolute mouse move listener (%s)",signal);
 	}
 	setMouseTracking(MouseInfo.MouseMode);
 }

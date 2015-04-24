@@ -125,7 +125,8 @@ FOREACH(inc ${includes})
 ENDFOREACH(inc)
 
 SET(BUILD_QT4_GLUE off CACHE BOOL "build qt4_glue (needs qt4)")
+SET(BUILD_QT5_GLUE off CACHE BOOL "build qt5_glue (needs qt5)")
 
-if(BUILD_QT4_GLUE)
-	add_subdirectory(qt4_glue)
-endif(BUILD_QT4_GLUE)
+if(BUILD_QT4_GLUE OR BUILD_QT5_GLUE)
+	add_subdirectory(qt_glue)
+endif(BUILD_QT4_GLUE OR BUILD_QT5_GLUE)
