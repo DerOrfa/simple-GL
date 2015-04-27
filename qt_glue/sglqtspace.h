@@ -60,6 +60,10 @@ protected:
 	virtual void focusInEvent(QFocusEvent*e);
 	virtual void focusOutEvent(QFocusEvent*e);
 	struct {double x,y;}PixelMMSize;
+	#if QT_VERSION >= 0x050000
+    void connectNotify(const QMetaMethod& signal);
+    void disconnectNotify(const QMetaMethod& signal);
+	#endif
 	void connectNotify( const char * signal );
 	void disconnectNotify( const char * signal );
 
