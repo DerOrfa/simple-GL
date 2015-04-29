@@ -1,8 +1,9 @@
-sgl (0.11-1) UNRELEASED; urgency=low
+sgl (0.11-1ubuntu1) UNRELEASED; urgency=low
 
   * remove lensflare and raw texture loading
+  * add glue code for qt5
 
- -- Enrico Reimer <reimer@cbs.mpg.de>  Wed, 01 Oct 2014 18:09:17 +0200
+ -- Enrico Reimer <reimer@cbs.mpg.de>  Mon, 27 Apr 2015 18:34:06 +0200
 
 sgl (0.10-2) unstable; urgency=low
 

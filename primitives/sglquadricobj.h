@@ -30,10 +30,11 @@
   */
 class SGLQuadricObj : public SGLFlObj
 {
+protected:
+	GLUquadricObj *quadric;
 public:
 	SGLQuadricObj(MaterialPtr Material=MaterialPtr (),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGLQuadricObj();
-	GLUquadricObj *quadric;
 	SGLVektor getCenter()const;
 };
 

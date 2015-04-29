@@ -24,6 +24,7 @@ endif(SHARED_LIB)
  
 if(STATIC_LIB)
 	add_library(sgl_qt5_static STATIC ${Q5SRCS})
+	list(APPEND CMAKE_CXX_FLAGS "-fPIC")
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_qt5_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl_qt5 INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	INSTALL(TARGETS sgl_qt5_static  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
