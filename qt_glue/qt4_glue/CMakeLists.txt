@@ -43,10 +43,13 @@ if(BUILD_QT_SAMPLES)
 	add_executable(qt4_sample1 qt4_sample1.cpp)
 	add_executable(qt4_sample2 qt4_sample2.cpp)
 	add_executable(qt4_sample3 qt4_sample3.cpp)
+	add_executable(qt4_stlsample ../stlsample.cpp)
+
 	
 	target_link_libraries(qt4_sample1 ${QT_LIBRARIES} ${LIB} ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
 	target_link_libraries(qt4_sample2 ${QT_LIBRARIES} ${LIB} ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
 	target_link_libraries(qt4_sample3 ${QT_LIBRARIES} ${LIB} ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
+	target_link_libraries(qt4_stlsample ${QT_LIBRARIES} ${LIB} ${OPENGL_LIBRARIES} ${QT_QTOPENGL_LIBRARY})
 endif(BUILD_QT_SAMPLES)
 
 

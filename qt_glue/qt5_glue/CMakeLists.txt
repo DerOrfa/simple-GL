@@ -42,10 +42,12 @@ if(BUILD_QT_SAMPLES)
 	add_executable(qt5_sample1 ../sample1.cpp)
 	add_executable(qt5_sample2 ../sample2.cpp)
 	add_executable(qt5_sample3 ../sample3.cpp)
+	add_executable(qt5_stlsample ../stlsample.cpp)
 	
 	target_link_libraries(qt5_sample1 ${LIB} ${OPENGL_LIBRARIES})
 	target_link_libraries(qt5_sample2 ${LIB} ${OPENGL_LIBRARIES})
 	target_link_libraries(qt5_sample3 ${LIB} ${OPENGL_LIBRARIES})
+	target_link_libraries(qt5_stlsample ${LIB} ${OPENGL_LIBRARIES})
 endif(BUILD_QT_SAMPLES)
 
 
