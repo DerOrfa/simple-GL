@@ -29,28 +29,30 @@ class STLObj : public SGLFlObj{
 		using namespace boost::spirit;
 		namespace phoenix = boost::phoenix;
 		
-		typedef BOOST_TYPEOF( boost::spirit::ascii::space - qi::eol  ) skip_type;
+		typedef BOOST_TYPEOF( qi::standard::space - qi::eol  ) skip_type;
 		
 		
 		istream_iterator first(f), last;
-		qi::rule<istream_iterator, vector(),skip_type> vec( qi::repeat(3)[qi::float_] >> qi::eol, "vector" );
-		qi::rule<istream_iterator, polygon(),skip_type> ply("outer loop" >> qi::eol >> +("vertex" >> vec) >> "endloop" >> qi::eol,"polygon");
-		qi::rule<istream_iterator, facet(),skip_type > fct(lit("facet normal") >> vec >> ply >> "endfacet" >> qi::eol );
+		qi::rule<istream_iterator, vector(),skip_type> vec( qi::repeat(3)[qi::float_], "vector" );
+		qi::rule<istream_iterator, vector(),skip_type> vertex("vertex" >> vec >> qi::eol);
+		qi::rule<istream_iterator, vector(),skip_type> normal("normal" >> vec >> qi::eol);
+		qi::rule<istream_iterator, polygon(),skip_type> ply("outer loop" >> qi::eol >> +vertex >> "endloop" >> qi::eol,"polygon");
+		qi::rule<istream_iterator, facet(),skip_type > fct("facet" >> normal >> ply >> "endfacet" >> qi::eol );
 		qi::rule<istream_iterator,skip_type > solid(
-			"solid" >> qi::eol >>
+			"solid" >> omit[*(qi::char_-qi::eol)] >> qi::eol >>
 			*fct[phoenix::push_back(phoenix::ref(facets),boost::spirit::_1)] >> 
-			"endsolid" 
+			"endsolid" >> omit[*(qi::char_-qi::eol)] >> qi::eol
 		);
 		
-	 	BOOST_SPIRIT_DEBUG_NODE(vec);
-		BOOST_SPIRIT_DEBUG_NODE(ply);
-		BOOST_SPIRIT_DEBUG_NODE(fct);
-		BOOST_SPIRIT_DEBUG_NODE(solid);
+// 	 	BOOST_SPIRIT_DEBUG_NODE(vec);
+// 		BOOST_SPIRIT_DEBUG_NODE(ply);
+// 		BOOST_SPIRIT_DEBUG_NODE(fct);
+// 		BOOST_SPIRIT_DEBUG_NODE(solid);
 		
 		bool ok = qi::phrase_parse(
 			first, last, 
 			solid,
-			ascii::space - qi::eol
+			qi::standard::space - qi::eol
 		);
 		
 		return ok;
@@ -84,16 +86,14 @@ int main(int argc, char *argv[])
 	QApplication a(argc,argv);
 	SGLprintState("Initialisiere Schnittstelle ...");
 	SGLqtSpace *w= new SGLqtSpace(NULL, "stlview");
-	w->show();
 	
 	for(int i=1;i<argc;i++){
-		SGLshPtr< STLObj > obj=SGLshPtr_new<STLObj>(argv[i]);
-		obj->Scale(1./30);
-		w->registerObj(obj);
+		w->registerObj(SGLshPtr_new<STLObj>(argv[i]));
 	}
-
+	
+	w->show();
+	
 	SGLprintState("fertsch");
 	a.connect( &a, SIGNAL(lastWindowClosed()), SLOT(quit()) );
 	return a.exec();
-
 }
