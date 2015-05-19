@@ -1,5 +1,5 @@
 #define BOOST_SPIRIT_DEBUG_PRINT_SOME 500
-#define BOOST_SPIRIT_DEBUG 1
+// #define BOOST_SPIRIT_DEBUG 1
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,11 +33,11 @@ class STLObj : public SGLFlObj{
 		
 		
 		istream_iterator first(f), last;
-		qi::rule<istream_iterator, vector(),skip_type> vec( qi::repeat(3)[qi::float_], "vector" );
-		qi::rule<istream_iterator, polygon(),skip_type> ply("outer loop" >> +("vertex" >> vec) >> "endloop","polygon");
-		qi::rule<istream_iterator, facet(),skip_type > fct(lit("facet normal") >> vec >> ply >> "endfacet" );
+		qi::rule<istream_iterator, vector(),skip_type> vec( qi::repeat(3)[qi::float_] >> qi::eol, "vector" );
+		qi::rule<istream_iterator, polygon(),skip_type> ply("outer loop" >> qi::eol >> +("vertex" >> vec) >> "endloop" >> qi::eol,"polygon");
+		qi::rule<istream_iterator, facet(),skip_type > fct(lit("facet normal") >> vec >> ply >> "endfacet" >> qi::eol );
 		qi::rule<istream_iterator,skip_type > solid(
-			"solid" >>
+			"solid" >> qi::eol >>
 			*fct[phoenix::push_back(phoenix::ref(facets),boost::spirit::_1)] >> 
 			"endsolid" 
 		);
