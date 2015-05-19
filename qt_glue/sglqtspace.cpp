@@ -308,22 +308,16 @@ void SGLqtSpace::commonConstr(QWidget *parent)
 		setSizePolicy(QSizePolicy(QSizePolicy::Ignored,QSizePolicy::Ignored));
 		if(parent->layout())
 		{
-// 			QBoxLayout *bl=dynamic_cast<QBoxLayout*>(parent->layout());
-//			QGridLayout *gl=dynamic_cast<QBoxLayout>(parent->layout());
-/*			if(bl)
-			{
-				if(!bl->findChild(this))bl->add(this);
-			}
-			else*/
-			{
-				SGLprintWarning("Konnte nicht prüfen, ob dieser Space schon in diesem Layout ist.  Füge ihn hinzu.");
+			if(!parent->layout()->findChild<SGLqtSpace*>(this->objectName())){
 				parent->layout()->addWidget(this);
+			} else {
+				SGLprintWarning("Dieser Space ist offenbar schon in diesem Layout. Füge ihn NICHT hinzu.");
 			}
 		}
 		else
 			(new QVBoxLayout(parent))->addWidget(this);
 	}
-  setFocusPolicy(Qt::WheelFocus);
+	setFocusPolicy(Qt::WheelFocus);
 	connect(this,SIGNAL(redraw()),SLOT(updateGL()));
 	connect(this,SIGNAL(pressedMouseMoveAbs(QMouseEvent *,float ,float)),SLOT(defaultHandler_pressedMouseMoveAbs(QMouseEvent *,float ,float)));
 	connect(this,SIGNAL(releasedMouseMoveAbs(QMouseEvent *)),SLOT(defaultHandler_releasedMouseMoveAbs(QMouseEvent *)));
