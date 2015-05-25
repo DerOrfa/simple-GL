@@ -19,7 +19,7 @@
 #define SGLTEXT_H
 
 #include "../primitives/sglflobj.h"
-#include <auto_ptr.h>
+#include <memory>
 
 class FTFont;
 

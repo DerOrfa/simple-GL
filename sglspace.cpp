@@ -218,8 +218,8 @@ void SGLSpace::OnResize(int width, int height)
 	Size.x=width;
 	Size.y=height;
 
-	glViewport(0, 0, width, height);
- 	StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
+    glViewport(0, 0, width, height);
+    StatusInfo.update=true;//@todo sollte u.U. automatisch neu zeichnen
 }
 
 
@@ -343,7 +343,7 @@ void SGLSpace::MoveAim(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
  */
 void SGLSpace::RotateCam(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam)
 {
-	RotateCamAround(RelX,RelY,Cam,Cam.LookAt);
+    RotateCamAround(RelX,RelY,Cam,Cam.LookAt);
 }
 
 /**
@@ -363,8 +363,8 @@ void SGLSpace::RotateCamAround(GLdouble RelX,GLdouble RelY,SGLBaseCam &Cam,SGLVe
 	Camera->RotateCamAround(-XRot*XRotateFact*40,-YRot*YRotateFact*40,around);
 	Camera->Roll(XRot*30*XRollFact-YRot*30*YRollFact);
 
-	if(StatusInfo.StatusString)sprintf(StatusInfo.StatusString,"%sCamera rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
-	if(StatusInfo.StatusString)sprintf(StatusInfo.StatusString,"%sXRotateFact: %.3f, XRollFact: %.3f\nYRotateFact: %.3f,YRollFact: %.3f\n",StatusInfo.StatusString,XRotateFact,XRollFact,YRotateFact,YRollFact);
+	sprintf(StatusInfo.StatusString,"%sCamera rotiert um: %.3f in X-Richtung und um: %.3f in Y-Richtung\n",StatusInfo.StatusString,XRot,YRot);
+	sprintf(StatusInfo.StatusString,"%sXRotateFact: %.3f, XRollFact: %.3f\nYRotateFact: %.3f,YRollFact: %.3f\n",StatusInfo.StatusString,XRotateFact,XRollFact,YRotateFact,YRollFact);
 }
 
 /*
@@ -588,7 +588,7 @@ void SGLSpace::defaultCam(SGLshPtr<SGLBaseCam> cam)
 void SGLSpace::setGridsSize(GLuint size)
 {
 	if(initialized){
-		
+
 		Grids.Grid1->setSize(size);
 		Grids.Grid2->setSize(size);
 		Grids.Grid3->setSize(size);
@@ -600,7 +600,7 @@ void SGLSpace::setGridsSize(GLuint size)
 		Grids.X->compileNextTime();
 		Grids.Y->compileNextTime();
 		Grids.Z->compileNextTime();
-	
+
 	} else {
 		SGLprintError("view was not initialized");
 	}
@@ -614,7 +614,7 @@ void SGLSpace::setGridsSize(GLuint size)
  */
 void SGLSpace::registerDynamicTex(SGLBaseTex &tex)
 {
-	tex.changed.connect(reDraw);
+    tex.changed.connect(reDraw);
 }
 
 /**
@@ -665,7 +665,7 @@ void SGLSpace::redrawSlot::operator()()
  */
 void SGLSpace::redrawSlot::operator=(const redrawSlot &Slot)
 {
-	myspace=NULL;
+    myspace=NULL;
 }
 
 SGLSpace::spaceConfig SGLSpace::globalConf;
