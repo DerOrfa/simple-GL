@@ -29,7 +29,7 @@ class STLObj : public SGLFlObj{
 		using namespace boost::spirit;
 		namespace phoenix = boost::phoenix;
 		
-		typedef BOOST_TYPEOF( boost::spirit::ascii::space - qi::eol  ) skip_type;
+		typedef BOOST_TYPEOF( qi::space - qi::eol  ) skip_type;
 		
 		
 		istream_iterator first(f), last;
@@ -50,7 +50,7 @@ class STLObj : public SGLFlObj{
 		bool ok = qi::phrase_parse(
 			first, last, 
 			solid,
-			ascii::space - qi::eol
+			qi::space - qi::eol
 		);
 		
 		return ok;
