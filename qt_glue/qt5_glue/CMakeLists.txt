@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.6)
 
 #this will find qt4 and set the include-dirs for the modules QtOpenGL QtGui QtCore
-find_package(Qt5 COMPONENTS OpenGL)
+find_package(Qt5 COMPONENTS OpenGL REQUIRED)
 set(CMAKE_AUTOMOC TRUE)
 
 foreach(LOOP ${HDRS})
