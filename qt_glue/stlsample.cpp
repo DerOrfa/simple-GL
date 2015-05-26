@@ -29,7 +29,7 @@ class STLObj : public SGLFlObj{
 		using namespace boost::spirit;
 		namespace phoenix = boost::phoenix;
 		
-		typedef BOOST_TYPEOF( qi::standard::space - qi::eol  ) skip_type;
+		typedef BOOST_TYPEOF( qi::space - qi::eol  ) skip_type;
 		
 		
 		istream_iterator first(f), last;
@@ -88,7 +88,9 @@ int main(int argc, char *argv[])
 	SGLqtSpace *w= new SGLqtSpace(NULL, "stlview");
 	
 	for(int i=1;i<argc;i++){
-		w->registerObj(SGLshPtr_new<STLObj>(argv[i]));
+		SGLshPtr< STLObj > obj=SGLshPtr_new<STLObj>(argv[i]);
+		obj->Scale(1./30);
+		w->registerObj(obj);
 	}
 	
 	w->show();

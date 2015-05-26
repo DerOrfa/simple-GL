@@ -66,6 +66,10 @@ void SGLMatrixObj::ResetTransformMatrix(const GLdouble *newMatrix)
 		else MyTransformMatrix[i]=1;
 	}
 }
+const GLdouble* SGLMatrixObj::getTransformMatrix() const{
+	return MyTransformMatrix;
+}
+
 
 void SGLMatrixObj::Scale(GLdouble fact){Scale(fact,fact,fact);}
 

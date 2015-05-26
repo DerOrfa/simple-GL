@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.11)
 
 PROJECT(libsgl)
 INCLUDE(CPack)
@@ -20,45 +20,48 @@ find_path(FTGL_INCLUDE_DIR "FTGL/ftgl.h")
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIRS} ${FTGL_INCLUDE_DIR})
 
 find_library(LIBFTGL ftgl)
-
+if(APPLE)
+find_file(DEFAULT_TTF NAMES  "Andale Mono.ttf" CACHE PATHS /Library/Fonts/ DOC "path to default truetype font")
+else(APPLE)
 find_file(DEFAULT_TTF NAMES FreeMonoBold.ttf FreeSansBold.ttf CACHE PATH_SUFFIXES "share/fonts/truetype/freefont" DOC "path to default truetype font")
+endif(APPLE)
 
 SET(CORE_DIR ./)
-SET(CORE_OBJFILES  
+SET(CORE_OBJFILES
   ${CORE_DIR}sglmisc.c
-  ${CORE_DIR}sglobj.cpp 
-  ${CORE_DIR}sglobjbase.cpp 
-  ${CORE_DIR}sglspace.cpp 
-  ${CORE_DIR}sglvektor.cpp 
-  ${CORE_DIR}sglmetaobj.cpp 
+  ${CORE_DIR}sglobj.cpp
+  ${CORE_DIR}sglobjbase.cpp
+  ${CORE_DIR}sglspace.cpp
+  ${CORE_DIR}sglvektor.cpp
+  ${CORE_DIR}sglmetaobj.cpp
   ${CORE_DIR}sglmatrixobj.cpp
 )
 
 SET(HELPER_DIR helper/)
-SET(HELPER_OBJFILES 
-  ${HELPER_DIR}sglcamera.cpp 
-  ${HELPER_DIR}sglclipplane.cpp 
-  ${HELPER_DIR}sglgrid.cpp 
-  ${HELPER_DIR}sglhelper.cpp 
-  ${HELPER_DIR}sgllight.cpp 
+SET(HELPER_OBJFILES
+  ${HELPER_DIR}sglcamera.cpp
+  ${HELPER_DIR}sglclipplane.cpp
+  ${HELPER_DIR}sglgrid.cpp
+  ${HELPER_DIR}sglhelper.cpp
+  ${HELPER_DIR}sgllight.cpp
   ${HELPER_DIR}sgldisplist.cpp
 )
 
 SET(PRIMITIVES_DIR primitives/)
-SET(PRIMITIVES_OBJFILES 
+SET(PRIMITIVES_OBJFILES
   ${PRIMITIVES_DIR}sglflobj.cpp
   ${PRIMITIVES_DIR}sglgeosphere.cpp
   ${PRIMITIVES_DIR}sglicosahedron.cpp
   ${PRIMITIVES_DIR}sglloft.cpp
   ${PRIMITIVES_DIR}sglneck.cpp
   ${PRIMITIVES_DIR}sglpolygonobj.cpp
-  ${PRIMITIVES_DIR}sglquader.cpp 
-  ${PRIMITIVES_DIR}sglvieleck.cpp 
+  ${PRIMITIVES_DIR}sglquader.cpp
+  ${PRIMITIVES_DIR}sglvieleck.cpp
   ${PRIMITIVES_DIR}sglquadricobj.cpp
 )
 
 SET(UTIL_DIR util/)
-SET(UTIL_OBJFILES 
+SET(UTIL_OBJFILES
   ${UTIL_DIR}sglmaterial.cpp
   ${UTIL_DIR}sgltextur.cpp
 #  ${UTIL_DIR}sglshader.cpp #GLSL not fully supported by all current GL implementations - so skip it till we find clean solution
@@ -105,6 +108,8 @@ endif(SHARED_LIB)
 
 if(STATIC_LIB)
 	find_library(LIBFTGL_STATIC "${CMAKE_STATIC_LIBRARY_PREFIX}ftgl${CMAKE_STATIC_LIBRARY_SUFFIX}")
+	find_library(LIBPNG_STATIC "${CMAKE_STATIC_LIBRARY_PREFIX}png${CMAKE_STATIC_LIBRARY_SUFFIX}")
+
 	ADD_LIBRARY(sgl_static STATIC   ${CORE_OBJFILES}
 		${HELPER_OBJFILES}
 		${PRIMITIVES_OBJFILES}
@@ -114,9 +119,9 @@ if(STATIC_LIB)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl_static)
-	TARGET_LINK_LIBRARIES(sgl_static ${DEVIL_LIBS} ${LIBFTGL_STATIC} ${FREETYPE_LIBRARIES} m)
+	TARGET_LINK_LIBRARIES(sgl_static ${DEVIL_LIBS} ${LIBFTGL_STATIC} ${FREETYPE_LIBRARIES} ${LIBPNG_STATIC} z bz2 m)
 endif(STATIC_LIB)
-	
+
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 
 FOREACH(inc ${includes})

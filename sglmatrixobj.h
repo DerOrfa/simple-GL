@@ -36,6 +36,7 @@ public:
 	void SetPosAndScale(GLdouble x,GLdouble y, GLdouble z,GLdouble fact);
 	void Rotate(GLdouble xfact,GLdouble yfact, GLdouble zfact, GLdouble amount);
 	void ResetTransformMatrix(const GLdouble *newMatrix=NULL);
+	const GLdouble* getTransformMatrix()const;
 	void loadMatrix();
 	void unloadMatrix();
 	void saveMatrix(GLenum type,GLdouble dst[16]=NULL);

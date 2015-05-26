@@ -11,14 +11,20 @@
 #include <FTGL/ftgl.h>
 
 
+const FTBBox &SGL3DText::box()const
+{
+	if(m_box.get()==NULL)
+		const_cast<std::auto_ptr<FTBBox>&>(m_box)=
+			std::auto_ptr<FTBBox>(new FTBBox( renderer->BBox(myText.c_str())));// TODO baaad voodoo
+	return *m_box;
+}
+
 SGL3DText::SGL3DText(const char Text[], const char fontname[],MaterialPtr Material,GLdouble PosX,GLdouble PosY,GLdouble PosZ,GLdouble SizeFact)
 :SGLText(std::auto_ptr<FTFont>(new FTExtrudeFont(SGLText::findFont(fontname))),Material,PosX,PosY,PosZ,SizeFact)
 {
 	renderer->FaceSize(72/25.4); // 72 is one inch 72/25.4 is one mm
 	renderer->Depth(0.2);
 	FrontFace=sglGeti(GL_FRONT_FACE); //ftgl gets the fron face from OpenGL, so we do the same
-	/// @note should not be run before OpenGL is initialized
-	box=std::auto_ptr<FTBBox>(new FTBBox( renderer->BBox(Text)));
 	myText=Text;
 }
 
@@ -27,8 +33,8 @@ SGL3DText::~SGL3DText(){}
 
 void SGL3DText::generate()
 {
-	const FTPoint &offset=box->Lower();
-	const FTPoint center=offset+(box->Upper()-offset)*.5;
+	const FTPoint &offset=box().Lower();
+	const FTPoint center=offset+(box().Upper()-offset)*.5;
 	renderer->Render(myText.c_str(),-1,FTPoint()-center);
 }
 
@@ -58,7 +64,7 @@ void SGL3DText::getBounds(SGLshPtr<SGLQuader> BoundingQuader)
  */
 SGLVektor SGL3DText::getCenter()const
 {
-	return SGLVektor(0,0,0);
+    return SGLVektor(0,0,0);
 }
 
 
@@ -76,7 +82,7 @@ void SGL3DText::DrahtGitter(bool DO)
  */
 void SGL3DText::getDim(GLdouble *width,GLdouble *height,GLdouble *depth,SGLVektor *center)const
 {
-	if(width)*width=box->Upper().X()-box->Lower().X();
-	if(height)*height=box->Upper().Y()-box->Lower().Y();
-	if(depth)*depth=box->Upper().Z()-box->Lower().Z();
+	if(width)*width=box().Upper().X()-box().Lower().X();
+	if(height)*height=box().Upper().Y()-box().Lower().Y();
+	if(depth)*depth=box().Upper().Z()-box().Lower().Z();
 }
