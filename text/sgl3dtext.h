@@ -14,16 +14,14 @@
 #include "../primitives/sglflobj.h"
 #include "../primitives/sglquader.h"
 
-class FTBBox;
+struct FTBBox;
 
 /**
 @author Enrico Reimer
 */
 class SGL3DText : public SGLText
 {
-    std::auto_ptr< FTBBox > m_box;
-protected:
-    const FTBBox& box() const;
+    std::auto_ptr< FTBBox > box;
 public:
 	SGL3DText(const char Text[]="", const char fontname[]="",MaterialPtr Material=MaterialPtr(),GLdouble PosX=0,GLdouble PosY=0,GLdouble PosZ=0,GLdouble SizeFact=1);
 	~SGL3DText();
