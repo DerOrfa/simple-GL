@@ -79,7 +79,7 @@ SGLConsoleText::~SGLConsoleText()
  */
 void SGLConsoleText::generate()
 {
-#warning implement me
+//@todo implement me
 }
 
 /*!
@@ -87,7 +87,7 @@ void SGLConsoleText::generate()
  */
 void SGLConsoleText::print(std::string text)
 {
-#warning implement me
+//@todo implement me
 	myText+=text;
 	Compile();
 }
@@ -107,7 +107,7 @@ void SGLConsoleText::setConsDim(GLdouble breite, GLdouble hoehe)
 void SGLConsoleText::clear()
 {
 	myText="";
-#warning implement me
+//@todo implement me
 }
 
 /*!

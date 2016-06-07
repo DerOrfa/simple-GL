@@ -2,6 +2,9 @@
 #define SGLSHADER_H
 #include <string>
 #include <map>
+#ifdef WIN32
+#include <windows.h>
+#endif
 #include <GL/gl.h>
 
 /**

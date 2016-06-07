@@ -21,7 +21,10 @@
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
 #else 
-	#include <GL/gl.h>
+	#ifdef WIN32
+		#include <windows.h>
+	#endif
+#include <GL/gl.h>
 #endif
 
 #include "sglhelper.h"

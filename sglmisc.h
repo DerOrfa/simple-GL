@@ -27,10 +27,21 @@
 #define Y_AXE	2
 #define Z_AXE	4
 
+#ifdef WIN32
+#include <windows.h>
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #else
 #include <GL/gl.h>
+#ifndef WIN32
+#include <GL/glext.h>
+#endif
 #endif
 
 #ifndef GLAPI
@@ -42,22 +53,10 @@
 # define __DEFINED_GLAPI
 #endif
 
-#ifdef __APPLE__
-#include <OpenGL/glext.h>
-#else
-#include <GL/glext.h>
-#endif
-
 
 #ifdef __DEFINED_GLAPI
 # undef GLAPI
 # undef __DEFINED_GLAPI
-#endif
-
-#ifdef WIN32
-#include <process.h>
-#else
-#include <unistd.h>
 #endif
 
 #define SGLprintError(...)	if(SGLshowErrors)_SGLprintError(__FILE__,__LINE__,__VA_ARGS__)

@@ -29,6 +29,9 @@
 #ifdef __APPLE__
 	#include <OpenGL/gl.h>
 #else
+	#ifdef WIN32
+		#include <windows.h>
+	#endif
 	#include <GL/gl.h>
 #endif
 
@@ -254,7 +257,7 @@ void SGLSpace::setFlags(bool reCompile)
 	//Die Texturen aktivieren, und deaktivieren ihre entspr. Modi selbst.
 	glDisable(GL_TEXTURE_1D);
 	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_TEXTURE_3D);
+//	glDisable(GL_TEXTURE_3D); @todo fix this to get 3D-Textures back -- OpenGL on Windows is huge a mess
 
 	if(reCompile)
 	{

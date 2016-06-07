@@ -18,6 +18,9 @@
 #ifndef SGLVEKTOR_H
 #define SGLVEKTOR_H
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/vector_expression.hpp>

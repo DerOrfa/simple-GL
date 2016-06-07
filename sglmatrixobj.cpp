@@ -112,7 +112,7 @@ void SGLMatrixObj::saveMatrix(GLenum mode,GLdouble dst[16])
 		CASE_SET(GL_MODELVIEW);break;
 		CASE_SET(GL_PROJECTION);break;
 		CASE_SET(GL_TEXTURE);break;
-		CASE_SET(GL_COLOR);break;
+//		CASE_SET(GL_COLOR);break; @todo fixme
 		default:SGLprintError("Unbekannter MatrixMode");type=0;break;
 	}
 	if(type)glGetDoublev(type,dst);

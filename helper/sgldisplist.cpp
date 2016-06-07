@@ -8,6 +8,8 @@
  *   (at your option) any later version.                                   *
  ***************************************************************************/
 
+#define NOMINMAX // yep, that nonsense is still there
+
 #include "sgldisplist.h"
 #include "../sglmisc.h"
 #include <stdlib.h>

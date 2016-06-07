@@ -232,7 +232,7 @@ void SGLVektor::DrawVertex()
 		texOK=true;//@todo naja nich immer
 	}
 #else
-#warning "Texture loading is currently not supportet for Windows"
+// "Texture loading is currently not supportet for Windows"
 #endif
 	if(!SGLMaterial::MatLoaded && !texOK)
 	{

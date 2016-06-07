@@ -104,9 +104,10 @@ if(NOT SYS_FTGL)
 		${FTGL_DIR}FTGlyph/FTPixmapGlyph.cpp
 		${FTGL_DIR}FTGlyph/FTExtrudeGlyph.cpp
 	)
+	ADD_DEFINITIONS(-DFTGL_LIBRARY_STATIC) #we are using our own ftgl-implemetation (which is like a statically linked one)
 endif(NOT SYS_FTGL)
 
-ADD_DEFINITIONS(-DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL -ffast-math -Wall)
+ADD_DEFINITIONS(-DDEFAULT_TTF="${DEFAULT_TTF}" -DILUT_USE_OPENGL)
 
 if(SHARED_LIB)
 	ADD_LIBRARY(sgl SHARED
@@ -119,7 +120,7 @@ if(SHARED_LIB)
 	#The library target "sgl" already has a default OUTPUT_NAME of "sgl", so we don't need to change it.
 
 	#${OPENGL_LIBRARIES} #DONT Link libGL here - confuses QT's OpenGL-Interface
-	TARGET_LINK_LIBRARIES(sgl ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES} m)
+	TARGET_LINK_LIBRARIES(sgl ${DEVIL_LIBS} ${OPENGL_LIBRARIES} ${LIBFTGL} ${FREETYPE_LIBRARIES})
 	set_target_properties( sgl PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl)
 endif(SHARED_LIB)
@@ -139,7 +140,7 @@ if(STATIC_LIB)
 	#The library target "sgl_static" has a default OUTPUT_NAME of "sgl_static", can be changed with
 	set_target_properties( sgl_static PROPERTIES SOVERSION ${soversion} VERSION ${version} OUTPUT_NAME sgl INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 	list(APPEND LIBS sgl_static)
-	TARGET_LINK_LIBRARIES(sgl_static ${DEVIL_LIBS} ${LIBFTGL_STATIC} ${FREETYPE_LIBRARIES} ${LIBPNG_STATIC} m)
+	TARGET_LINK_LIBRARIES(sgl_static ${DEVIL_LIBS} ${LIBFTGL_STATIC} ${FREETYPE_LIBRARIES} ${LIBPNG_STATIC})
 endif(STATIC_LIB)
 
 INSTALL(TARGETS ${LIBS}  LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)

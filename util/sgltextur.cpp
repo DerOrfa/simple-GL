@@ -22,12 +22,12 @@
 	#include <OpenGL/glext.h>
 #else 
 	#include <GL/glu.h>
+#ifndef WIN32 
 	#include <GL/glext.h>
+#endif
 #endif
 #ifdef USE_DEVIL
 	#include <IL/ilut.h>
-#else
-	#warning not using DevIL - texture loading will be disabled
 #endif
 
 SGLTextur::SGLTextur(const char *imageFile)
@@ -127,8 +127,6 @@ bool SGLBaseTex::loadTex()
 		multitex_layer++;
 		multitex->loadTex();
 	}
-#else
-#warning "Texture loading is currently not supportet for Windows"
 #endif
 	return ret;
 }
@@ -147,8 +145,6 @@ bool SGLBaseTex::unloadTex()
 	if(glIsEnabled(TexType))glDisable(TexType);
 	else{SGLprintWarning("Hä %dD-Texturen waren gar nicht aktiv ?",def2dim(TexType));}
 	if(glIsTexture(0))glBindTexture(GL_TEXTURE_2D,0);//eigentlich sollte die Textur 0 immer ex.
-#else
-#warning "Texture loading is currently not supportet for Windows"
 #endif
 	SGLTextur::TexLoaded=0;
 	loaded=false;
@@ -158,6 +154,8 @@ bool SGLBaseTex::unloadTex()
 /** No descriptions */
 void SGLBaseTex::SetParams()
 {
+#ifndef WIN32 //texture on Win32-OpenGL is broken beyond repair
+
 	switch(renderMode)
 	{
 		case SGL_MTEX_MODE_TINT:
@@ -221,6 +219,7 @@ void SGLBaseTex::SetParams()
 
 	glTexParameterf(TexType, GL_TEXTURE_MIN_FILTER, MipMap ? GL_NEAREST_MIPMAP_NEAREST:GL_NEAREST);
 	glTexParameterf(TexType, GL_TEXTURE_MAG_FILTER, weich ? GL_LINEAR:GL_NEAREST);
+#endif
 }
 
 /*!
@@ -285,8 +284,6 @@ bool SGLBaseTex::genValidSize(GLint internalFormat,GLsizei size[],unsigned short
 #ifndef WIN32
 			proxyType=GL_PROXY_TEXTURE_3D;
 			glTexImage3D(proxyType,0,internalFormat,newSize[0]+(border ? 2:0),newSize[1]+(border ? 2:0),newSize[2]+(border ? 2:0),(border ? 1:0),format,type,NULL);break;
-#else
-#warning "Texture loading is currently not supportet for Windows"
 #endif
 		default:
 			SGLprintError("Ungültiges Texturformat (%dD) beim Prüfen der Texturdaten",sizeCnt);return false;break;
@@ -334,6 +331,9 @@ short SGLBaseTex::multitex_layer=0;
 
 short SGLBaseTex::def2dim(GLenum def)
 {
+#ifdef WIN32 //texture on Win32-OpenGL is broken beyond repair
+	return 0;
+#else
 	switch(def)
 	{
 	case GL_TEXTURE_1D:return 1;
@@ -341,6 +341,7 @@ short SGLBaseTex::def2dim(GLenum def)
 	case GL_TEXTURE_3D:return 3;
 	default:{SGLprintWarning("Die Angegebene Dimension %d ist unbekannt",def);return 0;}
 	}
+#endif
 }
 
 /*!
@@ -379,11 +380,6 @@ GLint SGLBaseTex::getTexElemBitSize()
 	GET_CHAN_SIZE(LUMINANCE,lum);
 	GET_CHAN_SIZE(INTENSITY,intens);
 
-#ifndef WIN32
-#else
-#warning Youre compiling on WIN32, so your OpenGL implementation is broken
-#warning If you try to run on an ATI Card you might get problems
-#endif
 	index=0;
 	if(unload)unloadTex();
 	return r+b+b+alpha+lum+intens+index;
@@ -396,6 +392,7 @@ GLint SGLBaseTex::getTexElemBitSize()
  */
 GLint SGLBaseTex::getTexByteSize()
 {
+#ifndef WIN32 //texture on Win32-OpenGL is broken beyond repair
 	bool unload=false;
 	GLint w,h,d;
 	double fakt=getTexElemBitSize()/8.;
@@ -412,6 +409,7 @@ GLint SGLBaseTex::getTexByteSize()
 	  return int(NZ(w)*NZ(d)*NZ(h)*fakt);
 	}
 	#undef NZ
+#endif
 	return 0;
 }
 
@@ -439,11 +437,14 @@ void SGLBaseTex::freeTexture()
  */
 bool SGLBaseTex::checkForMultiText(unsigned short cnt)
 {
+#ifndef WIN32 //texture on Win32-OpenGL is broken beyond repair
 	if(sglChkExt("GL_ARB_multitexture","",0))
 	{
 		return (sglGeti(GL_MAX_TEXTURE_UNITS_ARB)>=cnt);
 	}
-	else return false;
+	else
+#endif
+		return false;
 }
 
 SGLBaseTex::updateSlot::updateSlot(SGLBaseTex *obj){this->mytex =obj;}
@@ -524,3 +525,4 @@ void SGLBaseTex::delMTex(SGLshPtr<SGLBaseTex> delTex,bool call_changed)
 			else mtex=mtex->multitex;
 	}
 }
+
